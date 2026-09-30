@@ -97,12 +97,13 @@ header{background:none;backdrop-filter:none;border:0;padding:0}
 .ngrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;padding:0 16px}
 @media(max-width:820px){.nwrap{grid-template-columns:1fr}.nhero{min-height:300px}}
 @media(max-width:480px){.nside{grid-template-columns:1fr}}
+.crumb{max-width:1068px;margin:0 auto;padding:6px 16px 2px;color:var(--mu);font-size:13px}.crumb b{color:var(--tx);font-size:16px;margin:0 6px}.crumb i{font-style:normal;color:var(--ac)}
 </style>
 </head>
 <body>
 <header><div class="bar">
   <a class="logo" href="#"><span>ONSPORTS</span>.UZ</a>
-  <nav><a href="#yangilik" data-tab="yangilik" class="on">Yangiliklar</a><a href="#oyinlar" data-tab="oyinlar">O'yinlar</a><a href="#jadval" data-tab="jadval">Jadval</a><a class="tgb" href="https://t.me/onsportsuz" target="_blank" rel="noopener">Telegram</a></nav>
+  <nav><a href="#yangilik" data-tab="yangilik" class="on">Asosiy</a><a href="#oyinlar" data-tab="oyinlar">O'yinlar</a><a href="#jadval" data-tab="jadval">Jadval</a><a class="tgb" href="https://t.me/onsportsuz" target="_blank" rel="noopener">Telegram</a></nav>
 </div></header>
 
 <div class="page">
@@ -279,7 +280,7 @@ const ncard=x=>`<a class="ncard" href="${esc(x.link)}" target="_blank" rel="noop
 function renderNews(){
   const a=news||[];if(!a.length)return;
   const f=a[0];
-  let h=`<div class="nwrap"><a class="nhero" href="${esc(f.link)}" target="_blank" rel="noopener">${f.img?`<img src="${esc(f.img)}" alt="">`:""}<div class="ov"><h2>${esc(f.title)}</h2>${f.text?`<p>${esc(f.text)}</p>`:""}<small>${when(f.date)}</small></div></a>`
+  let h=`<div class="crumb">Asosiy › <b>Yangiliklar</b> <i>•</i> ${a.length}</div><div class="nwrap"><a class="nhero" href="${esc(f.link)}" target="_blank" rel="noopener">${f.img?`<img src="${esc(f.img)}" alt="">`:""}<div class="ov"><h2>${esc(f.title)}</h2>${f.text?`<p>${esc(f.text)}</p>`:""}<small>${when(f.date)}</small></div></a>`
     +`<div class="nside">${a.slice(1,5).map(ncard).join("")}</div></div>`;
   if(a.length>5)h+=`<div class="more">Davomi</div><div class="ngrid">${a.slice(5).map(ncard).join("")}</div>`;
   $("#news").innerHTML=h;
