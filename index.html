@@ -71,30 +71,55 @@ footer{border-top:1px solid var(--line);color:var(--mu);text-align:center;paddin
 .bar nav a.on{background:var(--card);color:var(--tx)}
 .err{color:var(--mu);font-size:12px;margin-top:8px}
 @media(max-width:640px){.bar nav a{padding:7px 10px;font-size:13px}.logo{font-size:19px}.bar{gap:6px}}
+
+/* news portal layout */
+header{background:none;backdrop-filter:none;border:0;padding:0}
+.bar{width:calc(100% - 32px);max-width:1068px;margin:10px auto;padding:0 12px;height:56px;border:1px solid var(--line);border-radius:18px;background:var(--card)}
+.page{max-width:1100px}
+.narrow{max-width:760px;margin:0 auto}
+.nwrap{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;padding:8px 16px 0}
+.nhero{position:relative;display:block;border-radius:20px;overflow:hidden;min-height:380px;background:linear-gradient(135deg,#17335a,#0f1729);color:#fff;text-decoration:none}
+.nhero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.nhero .ov{position:absolute;inset:0;padding:22px;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(transparent 25%,rgba(0,0,0,.88))}
+.nhero h2{margin:0 0 8px;font-size:clamp(20px,3vw,30px);line-height:1.2}
+.nhero p{margin:0 0 10px;color:#d5dcea;font-size:15px}
+.nhero small{color:#ffffffb8;font-size:12px}
+.nside{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.ncard{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;text-decoration:none}
+.ncard:hover{border-color:var(--ac)}
+.nimg{aspect-ratio:16/10;background:linear-gradient(135deg,#17335a,#0f1729);display:grid;place-items:center;color:var(--ac);font-weight:800;font-size:13px;overflow:hidden}
+.nimg img{width:100%;height:100%;object-fit:cover}
+.nbody{padding:12px 14px 14px;display:flex;flex-direction:column;gap:8px}
+.nbody h3{margin:0;font-size:15px;line-height:1.3;font-weight:700}
+.nbody small{color:var(--mu);font-size:12px}
+.more{display:flex;align-items:center;gap:14px;margin:30px 16px 16px;color:var(--mu);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+.more::before,.more::after{content:"";flex:1;height:1px;background:var(--line)}
+.ngrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;padding:0 16px}
+@media(max-width:820px){.nwrap{grid-template-columns:1fr}.nhero{min-height:300px}}
+@media(max-width:480px){.nside{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header><div class="bar">
   <a class="logo" href="#"><span>ONSPORTS</span>.UZ</a>
-  <nav><a href="#oyinlar" data-tab="oyinlar" class="on">O'yinlar</a><a href="#jadval" data-tab="jadval">Jadval</a><a href="#yangilik" data-tab="yangilik">Yangiliklar</a><a class="tgb" href="https://t.me/onsportsuz" target="_blank" rel="noopener">Telegram</a></nav>
+  <nav><a href="#yangilik" data-tab="yangilik" class="on">Yangiliklar</a><a href="#oyinlar" data-tab="oyinlar">O'yinlar</a><a href="#jadval" data-tab="jadval">Jadval</a><a class="tgb" href="https://t.me/onsportsuz" target="_blank" rel="noopener">Telegram</a></nav>
 </div></header>
 
 <div class="page">
   <main>
-    <section id="oyinlar" class="tab">
+    <section id="yangilik" class="tab">
+      <div id="news"><div class="empty">Yuklanmoqda…</div></div>
+    </section>
+    <section id="oyinlar" class="tab narrow" hidden>
       <h2 class="pt">O'yinlar<small>ONSPORTS.UZ</small></h2>
       <div class="chips" id="days"></div>
       <div class="chips" id="comps"></div>
       <div id="out"><div class="empty">Yuklanmoqda…</div></div>
     </section>
-    <section id="jadval" class="tab" hidden>
+    <section id="jadval" class="tab narrow" hidden>
       <h2 class="pt">Turnir jadvali</h2>
       <div class="chips" id="lgs"></div>
       <div class="card" id="tbl"><div class="empty">Yuklanmoqda…</div></div>
-    </section>
-    <section id="yangilik" class="tab" hidden>
-      <h2 class="pt">Yangiliklar<small>ONSPORTS.UZ GAZETA</small></h2>
-      <div id="news"><div class="empty">Yuklanmoqda…</div></div>
     </section>
   </main>
   <a class="tgcta" href="https://t.me/onsportsuz" target="_blank" rel="noopener"><b>@onsportsuz</b><span>Natijalar va yangiliklar Telegram kanalimizda</span></a>
@@ -227,7 +252,7 @@ function renderTable(){
 
 async function loadNews(){
   const src="https://t.me/s/onsportsuz";
-  const px=[u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u),u=>"https://corsproxy.io/?url="+encodeURIComponent(u)];
+  const px=[u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u),u=>"https://corsproxy.io/?url="+encodeURIComponent(u),u=>"https://api.codetabs.com/v1/proxy?quest="+encodeURIComponent(u)];
   for(const p of px){
     try{
       const r=await fetch(p(src));if(!r.ok)continue;
@@ -241,21 +266,24 @@ async function loadNews(){
         const t=el.querySelector("time");
         const dec=s=>{const x=document.createElement("textarea");x.innerHTML=s;return x.value};
         if(!lines.length&&!mm)return null;
-        return {title:dec(lines[0]||"").slice(0,140),img:mm?mm[1]:"",date:t?t.getAttribute("datetime"):"",link:"https://t.me/"+post};
-      }).filter(Boolean).reverse().slice(0,9);
-      if(items.length){news=items;renderNews();return;}
+        return {title:dec(lines[0]||"").slice(0,140),text:dec(lines.slice(1).join(" ")).slice(0,220),img:mm?mm[1]:"",date:t?t.getAttribute("datetime"):"",link:"https://t.me/"+post};
+      }).filter(Boolean).reverse().slice(0,25);
+      if(items.length){news=items;try{localStorage.setItem("news",JSON.stringify(items))}catch(e){}renderNews();return;}
     }catch(e){}
   }
   if(!news)$("#news").innerHTML=`<a class="tgcta" href="https://t.me/onsportsuz" target="_blank" rel="noopener"><b>Yangiliklar Telegramda</b><span>Hozir bu yerda ko'rsatib bo'lmadi. Kanalni ochish uchun bosing.</span></a>`;
 }
+function when(d){if(!d)return"";const k=x=>new Date(x).toLocaleDateString("sv",{timeZone:TZ});
+  const day=k(d)===k(Date.now())?"Bugun":k(d)===k(Date.now()-864e5)?"Kecha":dshort(d);return `${ago(d)} · ${day}, ${tm(d)}`;}
+const ncard=x=>`<a class="ncard" href="${esc(x.link)}" target="_blank" rel="noopener"><div class="nimg">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy" onerror="this.remove()">`:"<span>ONSPORTS.UZ</span>"}</div><div class="nbody"><h3>${esc(x.title)}</h3><small>${when(x.date)}</small></div></a>`;
 function renderNews(){
   const a=news||[];if(!a.length)return;
-  let h="",rest=a;
-  if(a[0].img){const f=a[0];rest=a.slice(1);
-    h+=`<a class="hero" href="${esc(f.link)}" target="_blank" rel="noopener"><img src="${esc(f.img)}" alt=""><div class="ov"><small><b>ONSPORTS.UZ</b> ${ago(f.date)}</small><h2>${esc(f.title)}</h2></div></a>`;}
-  $("#news").innerHTML=h+`<div class="card">`+rest.map(x=>`<a class="nr" href="${esc(x.link)}" target="_blank" rel="noopener"><div><small><b>ONSPORTS.UZ</b> ${ago(x.date)}</small><h4>${esc(x.title)}</h4></div>${x.img?`<img class="th" src="${esc(x.img)}" alt="" loading="lazy" onerror="this.remove()">`:""}</a>`).join("")+`</div>`;
+  const f=a[0];
+  let h=`<div class="nwrap"><a class="nhero" href="${esc(f.link)}" target="_blank" rel="noopener">${f.img?`<img src="${esc(f.img)}" alt="">`:""}<div class="ov"><h2>${esc(f.title)}</h2>${f.text?`<p>${esc(f.text)}</p>`:""}<small>${when(f.date)}</small></div></a>`
+    +`<div class="nside">${a.slice(1,5).map(ncard).join("")}</div></div>`;
+  if(a.length>5)h+=`<div class="more">Davomi</div><div class="ngrid">${a.slice(5).map(ncard).join("")}</div>`;
+  $("#news").innerHTML=h;
 }
-
 document.addEventListener("click",e=>{
   const d=e.target.closest("[data-d]"),c=e.target.closest("[data-c]"),l=e.target.closest("[data-l]");
   const tb=e.target.closest("[data-tab]");
@@ -264,9 +292,10 @@ document.addEventListener("click",e=>{
   else if(c){cf=c.dataset.c;renderMatches();}
   else if(l){lg=l.dataset.l;loadTable(lg);}
 });
-function showTab(t){if(!document.querySelector(".tab#"+t))t="oyinlar";document.querySelectorAll(".tab").forEach(x=>x.hidden=x.id!==t);
+function showTab(t){if(!document.querySelector(".tab#"+t))t="yangilik";document.querySelectorAll(".tab").forEach(x=>x.hidden=x.id!==t);
   document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("on",x.dataset.tab===t));window.scrollTo(0,0);}
-showTab((location.hash||"").slice(1).replace(/^$/,"oyinlar"));
+showTab((location.hash||"").slice(1).replace(/^$/,"yangilik"));
+try{news=JSON.parse(localStorage.getItem("news")||"null");if(news)renderNews();}catch(e){}
 renderMatches();loadAll();loadTable(lg);loadNews();
 setInterval(()=>{const hasLive=M.some(isLive);if(hasLive||!window.__t||Date.now()-window.__t>3e5){window.__t=Date.now();loadAll();}},30000);
 setInterval(loadNews,6e5);
