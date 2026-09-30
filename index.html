@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ONSPORTS.UZ — futbol natijalari va yangiliklar</title>
 <meta name="description" content="ONSPORTS.UZ: jonli futbol natijalari, o'yinlar jadvali, liga turnir jadvallari va yangiliklar o'zbek tilida.">
+<script>try{if(localStorage.getItem("theme")==="light")document.documentElement.dataset.theme="light"}catch(e){}</script>
 <style>
 :root{--bg:#0b1220;--card:#131c30;--line:#22304d;--tx:#eef2fa;--mu:#8a98b5;--ac:#2fd08a;--live:#ff5a5f}
 *{box-sizing:border-box}
@@ -98,54 +99,120 @@ header{background:none;backdrop-filter:none;border:0;padding:0}
 @media(max-width:820px){.nwrap{grid-template-columns:1fr}.nhero{min-height:300px}}
 @media(max-width:480px){.nside{grid-template-columns:1fr}}
 .crumb{max-width:1068px;margin:0 auto;padding:6px 16px 2px;color:var(--mu);font-size:13px}.crumb b{color:var(--tx);font-size:16px;margin:0 6px}.crumb i{font-style:normal;color:var(--ac)}
+
+:root[data-theme="light"]{--bg:#f3f6fb;--card:#ffffff;--line:#dde4ee;--tx:#101828;--mu:#667085;--ac:#0fa968;--live:#e5383b}
+[data-theme="light"] .c{background:#eef2f8}
+[data-theme="light"] .c.live{background:#fdecee;border-color:#f5c6cb}
+[data-theme="light"] .nimg{background:linear-gradient(135deg,#dbe7f7,#eef2f8)}
+[data-theme="light"] .tgcta{background:linear-gradient(135deg,#d9f5e8,#e6edf8)}
+[data-theme="light"] .tgcta span{color:#475467}
+[data-theme="light"] .nbody small,[data-theme="light"] .nhero small{}
+.tools{display:flex;align-items:center;gap:2px;margin-left:8px;padding:3px;border:1px solid var(--line);border-radius:99px}
+.ib{width:36px;height:36px;border:0;background:none;border-radius:50%;color:var(--tx);display:grid;place-items:center}
+.ib:hover{background:var(--bg)}
+.ib svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#sq{background:none;border:0;color:var(--tx);font:inherit;width:170px;padding:0 8px;outline:none}
+#sq[hidden]{display:none}
+@media(max-width:640px){.bar nav a.tgb{display:none}#sq{width:110px}.tools{margin-left:4px}}
+
+.lb{width:auto;padding:0 10px;gap:6px;display:flex;align-items:center;border-left:1px solid var(--line);border-radius:0 99px 99px 0;font-weight:700;font-size:13px;margin-left:2px}
+.lb svg{width:18px;height:18px}
+@media(max-width:640px){.bar{height:auto;flex-wrap:wrap;padding:8px 12px;row-gap:6px}.bar nav{order:3;width:100%;justify-content:space-around}}
 </style>
 </head>
 <body>
 <header><div class="bar">
   <a class="logo" href="#"><span>ONSPORTS</span>.UZ</a>
-  <nav><a href="#yangilik" data-tab="yangilik" class="on">Asosiy</a><a href="#oyinlar" data-tab="oyinlar">O'yinlar</a><a href="#jadval" data-tab="jadval">Jadval</a><a class="tgb" href="https://t.me/onsportsuz" target="_blank" rel="noopener">Telegram</a></nav>
+  <nav><a href="#yangilik" data-tab="yangilik" class="on" data-i="home">Asosiy</a><a href="#oyinlar" data-tab="oyinlar" data-i="games">O'yinlar</a><a href="#jadval" data-tab="jadval" data-i="tab">Jadval</a><a class="tgb" href="https://t.me/onsportsuz" target="_blank" rel="noopener">Telegram</a></nav>
+  <div class="tools"><input id="sq" type="search" placeholder="Qidirish…" aria-label="Qidirish" hidden><button id="sb" class="ib" aria-label="Qidirish"></button><button id="tb" class="ib" aria-label="Kun/tun rejimi"></button><button id="lb" class="ib lb" aria-label="Til"></button></div>
 </div></header>
 
 <div class="page">
   <main>
     <section id="yangilik" class="tab">
-      <div id="news"><div class="empty">Yuklanmoqda…</div></div>
+      <div id="news"><div class="empty" data-i="loading">Yuklanmoqda…</div></div>
     </section>
     <section id="oyinlar" class="tab narrow" hidden>
-      <h2 class="pt">O'yinlar<small>ONSPORTS.UZ</small></h2>
+      <h2 class="pt"><span data-i="games">O'yinlar</span><small>ONSPORTS.UZ</small></h2>
       <div class="chips" id="days"></div>
       <div class="chips" id="comps"></div>
-      <div id="out"><div class="empty">Yuklanmoqda…</div></div>
+      <div id="out"><div class="empty" data-i="loading">Yuklanmoqda…</div></div>
     </section>
     <section id="jadval" class="tab narrow" hidden>
-      <h2 class="pt">Turnir jadvali</h2>
+      <h2 class="pt" data-i="tableT">Turnir jadvali</h2>
       <div class="chips" id="lgs"></div>
-      <div class="card" id="tbl"><div class="empty">Yuklanmoqda…</div></div>
+      <div class="card" id="tbl"><div class="empty" data-i="loading">Yuklanmoqda…</div></div>
     </section>
   </main>
-  <a class="tgcta" href="https://t.me/onsportsuz" target="_blank" rel="noopener"><b>@onsportsuz</b><span>Natijalar va yangiliklar Telegram kanalimizda</span></a>
+  <a class="tgcta" href="https://t.me/onsportsuz" target="_blank" rel="noopener"><b>@onsportsuz</b><span data-i="tgcta">Natijalar va yangiliklar Telegram kanalimizda</span></a>
 </div>
 <footer>© 2026 ONSPORTS.UZ</footer>
 
 <script>
+let lang="uz";try{lang=localStorage.getItem("lang")==="ru"?"ru":"uz"}catch(e){}
+const UZN={"England": "Angliya", "Spain": "Ispaniya", "Germany": "Germaniya", "France": "Fransiya", "Italy": "Italiya", "Netherlands": "Niderlandiya", "Holland": "Niderlandiya", "Portugal": "Portugaliya", "Belgium": "Belgiya", "Croatia": "Xorvatiya", "Serbia": "Serbiya", "Switzerland": "Shveytsariya", "Austria": "Avstriya", "Denmark": "Daniya", "Sweden": "Shvetsiya", "Norway": "Norvegiya", "Finland": "Finlyandiya", "Iceland": "Islandiya", "Poland": "Polsha", "Czech Republic": "Chexiya", "Czechia": "Chexiya", "Slovakia": "Slovakiya", "Slovenia": "Sloveniya", "Hungary": "Vengriya", "Romania": "Ruminiya", "Bulgaria": "Bolgariya", "Greece": "Gretsiya", "Turkey": "Turkiya", "Türkiye": "Turkiya", "Turkiye": "Turkiya", "Ukraine": "Ukraina", "Russia": "Rossiya", "Belarus": "Belarus", "Moldova": "Moldova", "Georgia": "Gruziya", "Armenia": "Armaniston", "Azerbaijan": "Ozarbayjon", "Kazakhstan": "Qozog'iston", "Uzbekistan": "O'zbekiston", "Kyrgyzstan": "Qirg'iziston", "Tajikistan": "Tojikiston", "Turkmenistan": "Turkmaniston", "Scotland": "Shotlandiya", "Wales": "Uels", "Northern Ireland": "Shimoliy Irlandiya", "Republic of Ireland": "Irlandiya", "Ireland": "Irlandiya", "Albania": "Albaniya", "Bosnia and Herzegovina": "Bosniya va Gertsegovina", "Bosnia-Herzegovina": "Bosniya va Gertsegovina", "Bosnia & Herzegovina": "Bosniya va Gertsegovina", "Bosnia": "Bosniya va Gertsegovina", "North Macedonia": "Shimoliy Makedoniya", "Macedonia": "Shimoliy Makedoniya", "Montenegro": "Chernogoriya", "Kosovo": "Kosovo", "Luxembourg": "Lyuksemburg", "Malta": "Malta", "Cyprus": "Kipr", "Estonia": "Estoniya", "Latvia": "Latviya", "Lithuania": "Litva", "Andorra": "Andorra", "San Marino": "San-Marino", "Liechtenstein": "Lixtenshteyn", "Gibraltar": "Gibraltar", "Faroe Islands": "Farer orollari", "Israel": "Isroil", "Brazil": "Braziliya", "Argentina": "Argentina", "Uruguay": "Urugvay", "Colombia": "Kolumbiya", "Chile": "Chili", "Peru": "Peru", "Ecuador": "Ekvador", "Paraguay": "Paragvay", "Bolivia": "Boliviya", "Venezuela": "Venesuela", "Mexico": "Meksika", "United States": "AQSh", "USA": "AQSh", "United States of America": "AQSh", "Canada": "Kanada", "Costa Rica": "Kosta-Rika", "Panama": "Panama", "Jamaica": "Yamayka", "Honduras": "Gonduras", "Japan": "Yaponiya", "South Korea": "Janubiy Koreya", "Korea Republic": "Janubiy Koreya", "Korea, Republic of": "Janubiy Koreya", "China": "Xitoy", "China PR": "Xitoy", "Iran": "Eron", "Iraq": "Iroq", "Saudi Arabia": "Saudiya Arabistoni", "Qatar": "Qatar", "United Arab Emirates": "BAA", "UAE": "BAA", "Australia": "Avstraliya", "New Zealand": "Yangi Zelandiya", "India": "Hindiston", "Thailand": "Tailand", "Vietnam": "Vyetnam", "Indonesia": "Indoneziya", "Jordan": "Iordaniya", "Oman": "Ummon", "Bahrain": "Bahrayn", "Kuwait": "Quvayt", "Syria": "Suriya", "Lebanon": "Livan", "Palestine": "Falastin", "Egypt": "Misr", "Morocco": "Marokash", "Algeria": "Jazoir", "Tunisia": "Tunis", "Nigeria": "Nigeriya", "Senegal": "Senegal", "Ghana": "Gana", "Cameroon": "Kamerun", "Ivory Coast": "Kot-d'Ivuar", "Cote d'Ivoire": "Kot-d'Ivuar", "Côte d'Ivoire": "Kot-d'Ivuar", "South Africa": "Janubiy Afrika", "DR Congo": "Kongo DR", "Congo DR": "Kongo DR", "Mali": "Mali", "Man United": "Manchester Yunayted", "Manchester United": "Manchester Yunayted", "Manchester Utd": "Manchester Yunayted", "Man Utd": "Manchester Yunayted", "Man City": "Manchester Siti", "Manchester City": "Manchester Siti", "Liverpool": "Liverpul", "Arsenal": "Arsenal", "Chelsea": "Chelsi", "Tottenham": "Tottenxem", "Tottenham Hotspur": "Tottenxem", "Spurs": "Tottenxem", "Newcastle": "Nyukasl", "Newcastle United": "Nyukasl", "Aston Villa": "Aston Villa", "West Ham": "Vest Xem", "West Ham United": "Vest Xem", "Brighton": "Brayton", "Brighton & Hove Albion": "Brayton", "Brighton Hove": "Brayton", "Everton": "Everton", "Fulham": "Fulxem", "Crystal Palace": "Kristal Pelas", "Wolves": "Vulverxempton", "Wolverhampton": "Vulverxempton", "Wolverhampton Wanderers": "Vulverxempton", "Brentford": "Brentford", "Bournemouth": "Bornmut", "Nottingham Forest": "Nottingem Forest", "Nottm Forest": "Nottingem Forest", "Forest": "Nottingem Forest", "Leeds": "Lids", "Leeds United": "Lids", "Burnley": "Bernli", "Sunderland": "Sanderlend", "Leicester": "Lester", "Leicester City": "Lester", "Southampton": "Sautgempton", "Ipswich": "Ipsvich", "Ipswich Town": "Ipsvich", "Real Madrid": "Real Madrid", "Barcelona": "Barselona", "Barça": "Barselona", "Barca": "Barselona", "Atlético Madrid": "Atletiko Madrid", "Atletico Madrid": "Atletiko Madrid", "Atleti": "Atletiko Madrid", "Club Atlético de Madrid": "Atletiko Madrid", "Sevilla": "Sevilya", "Valencia": "Valensiya", "Villarreal": "Vilyarreal", "Real Sociedad": "Real Sosyedad", "Athletic": "Atletik Bilbao", "Athletic Club": "Atletik Bilbao", "Athletic Bilbao": "Atletik Bilbao", "Real Betis": "Betis", "Betis": "Betis", "Girona": "Jirona", "Celta": "Selta", "Celta Vigo": "Selta", "RC Celta": "Selta", "Getafe": "Xetafe", "Osasuna": "Osasuna", "Mallorca": "Malyorka", "RCD Mallorca": "Malyorka", "Rayo Vallecano": "Rayo Vallekano", "Rayo": "Rayo Vallekano", "Espanyol": "Espanyol", "RCD Espanyol": "Espanyol", "Alavés": "Alaves", "Alaves": "Alaves", "Deportivo Alavés": "Alaves", "Las Palmas": "Las-Palmas", "Levante": "Levante", "Levante UD": "Levante", "Elche": "Elche", "Real Oviedo": "Oviedo", "Oviedo": "Oviedo", "Valladolid": "Valyadolid", "Real Valladolid": "Valyadolid", "Leganés": "Leganes", "Leganes": "Leganes", "Bayern": "Bavariya", "Bayern Munich": "Bavariya", "Bayern München": "Bavariya", "Bayern Munchen": "Bavariya", "Dortmund": "Borussiya Dortmund", "Borussia Dortmund": "Borussiya Dortmund", "Leverkusen": "Bayer Leverkuzen", "Bayer Leverkusen": "Bayer Leverkuzen", "Bayer 04 Leverkusen": "Bayer Leverkuzen", "RB Leipzig": "RB Leypsig", "Leipzig": "RB Leypsig", "Eintracht Frankfurt": "Eyntraxt Frankfurt", "Frankfurt": "Eyntraxt Frankfurt", "Stuttgart": "Shtutgart", "VfB Stuttgart": "Shtutgart", "Wolfsburg": "Volfsburg", "VfL Wolfsburg": "Volfsburg", "Freiburg": "Freyburg", "SC Freiburg": "Freyburg", "Hoffenheim": "Xofenxaym", "TSG Hoffenheim": "Xofenxaym", "TSG 1899 Hoffenheim": "Xofenxaym", "Werder Bremen": "Verder Bremen", "Bremen": "Verder Bremen", "Mainz": "Maynts", "Mainz 05": "Maynts", "1. FSV Mainz 05": "Maynts", "Union Berlin": "Union Berlin", "1. FC Union Berlin": "Union Berlin", "Augsburg": "Augsburg", "Gladbach": "Borussiya Menxengladbax", "M'gladbach": "Borussiya Menxengladbax", "Mönchengladbach": "Borussiya Menxengladbax", "Monchengladbach": "Borussiya Menxengladbax", "Borussia Mönchengladbach": "Borussiya Menxengladbax", "Borussia Monchengladbach": "Borussiya Menxengladbax", "St. Pauli": "Sankt-Pauli", "St Pauli": "Sankt-Pauli", "FC St. Pauli": "Sankt-Pauli", "Köln": "Kyoln", "Koln": "Kyoln", "Cologne": "Kyoln", "1. FC Köln": "Kyoln", "Hamburg": "Gamburg", "Hamburger SV": "Gamburg", "HSV": "Gamburg", "Heidenheim": "Xaydenxaym", "1. FC Heidenheim": "Xaydenxaym", "Bochum": "Boxum", "VfL Bochum": "Boxum", "Holstein Kiel": "Golshteyn", "Juventus": "Yuventus", "Juve": "Yuventus", "Inter": "Inter", "Inter Milan": "Inter", "Internazionale": "Inter", "FC Internazionale Milano": "Inter", "Milan": "Milan", "AC Milan": "Milan", "AC Milano": "Milan", "Napoli": "Napoli", "SSC Napoli": "Napoli", "Roma": "Roma", "AS Roma": "Roma", "Lazio": "Lasio", "SS Lazio": "Lasio", "Atalanta": "Atalanta", "Atalanta BC": "Atalanta", "Fiorentina": "Fiorentina", "ACF Fiorentina": "Fiorentina", "Bologna": "Bolonya", "Bologna FC 1909": "Bolonya", "Torino": "Torino", "Genoa": "Jenoa", "Genoa CFC": "Jenoa", "Udinese": "Udineze", "Sassuolo": "Sassuolo", "US Sassuolo": "Sassuolo", "Cagliari": "Kalyari", "Parma": "Parma", "Como": "Komo", "Como 1907": "Komo", "Lecce": "Lechche", "US Lecce": "Lechche", "Verona": "Verona", "Hellas Verona": "Verona", "Cremonese": "Kremoneze", "US Cremonese": "Kremoneze", "Pisa": "Piza", "AC Pisa 1909": "Piza", "Empoli": "Empoli", "Monza": "Monza", "AC Monza": "Monza", "Venezia": "Venetsiya", "PSG": "PSJ", "Paris Saint-Germain": "PSJ", "Paris Saint Germain": "PSJ", "Paris SG": "PSJ", "Marseille": "Marsel", "Olympique Marseille": "Marsel", "Olympique de Marseille": "Marsel", "OM": "Marsel", "Lyon": "Lion", "Olympique Lyonnais": "Lion", "Olympique Lyon": "Lion", "OL": "Lion", "Monaco": "Monako", "AS Monaco": "Monako", "Lille": "Lill", "LOSC": "Lill", "LOSC Lille": "Lill", "Nice": "Nitssa", "OGC Nice": "Nitssa", "Rennes": "Renn", "Rennais": "Renn", "Stade Rennais": "Renn", "Stade Rennais FC": "Renn", "Lens": "Lans", "RC Lens": "Lans", "Strasbourg": "Strasburg", "RC Strasbourg": "Strasburg", "Racing Strasbourg": "Strasburg", "Nantes": "Nant", "FC Nantes": "Nant", "Toulouse": "Tuluza", "Toulouse FC": "Tuluza", "Brest": "Brest", "Stade Brestois": "Brest", "Stade Brestois 29": "Brest", "Reims": "Reyms", "Stade de Reims": "Reyms", "Montpellier": "Monpelye", "Montpellier HSC": "Monpelye", "Auxerre": "Oser", "AJ Auxerre": "Oser", "Angers": "Anje", "Angers SCO": "Anje", "Le Havre": "Gavr", "Le Havre AC": "Gavr", "Lorient": "Lorian", "FC Lorient": "Lorian", "Metz": "Mets", "FC Metz": "Mets", "Paris FC": "Parij FK", "Saint-Étienne": "Sent-Etyen", "Saint-Etienne": "Sent-Etyen", "AS Saint-Étienne": "Sent-Etyen", "Benfica": "Benfika", "SL Benfica": "Benfika", "Porto": "Portu", "FC Porto": "Portu", "Sporting CP": "Sportin", "Sporting": "Sportin", "Sporting Lisbon": "Sportin", "Sporting Clube de Portugal": "Sportin", "Braga": "Braga", "SC Braga": "Braga", "Sporting Braga": "Braga", "Ajax": "Ayaks", "AFC Ajax": "Ayaks", "PSV": "PSV", "PSV Eindhoven": "PSV", "Feyenoord": "Feyenoord", "Celtic": "Seltik", "Rangers": "Reynjers", "Galatasaray": "Galatasaray", "Fenerbahçe": "Fenerbaxche", "Fenerbahce": "Fenerbaxche", "Beşiktaş": "Beshiktash", "Besiktas": "Beshiktash", "Club Brugge": "Bryugge", "Club Brugge KV": "Bryugge", "Brugge": "Bryugge", "Anderlecht": "Anderlext", "RSC Anderlecht": "Anderlext", "Union Saint-Gilloise": "Sen-Jilluaz", "Union SG": "Sen-Jilluaz", "Royal Union Saint-Gilloise": "Sen-Jilluaz", "Shakhtar Donetsk": "Shaxtyor", "Shakhtar": "Shaxtyor", "Dynamo Kyiv": "Dinamo Kiyev", "Dynamo Kiev": "Dinamo Kiyev", "Dinamo Kyiv": "Dinamo Kiyev", "Red Star Belgrade": "Crvena Zvezda", "Crvena Zvezda": "Crvena Zvezda", "Red Star": "Crvena Zvezda", "Red Bull Salzburg": "Zalsburg", "Salzburg": "Zalsburg", "FC Salzburg": "Zalsburg", "Young Boys": "Yang Boyz", "BSC Young Boys": "Yang Boyz", "Copenhagen": "Kopengagen", "FC Copenhagen": "Kopengagen", "FC København": "Kopengagen", "Kobenhavn": "Kopengagen", "Olympiacos": "Olimpiakos", "Olympiakos": "Olimpiakos", "PAOK": "PAOK", "PAOK Thessaloniki": "PAOK", "Slavia Praha": "Slaviya Praga", "Slavia Prague": "Slaviya Praga", "Sparta Praha": "Sparta Praga", "Sparta Prague": "Sparta Praga", "Qarabag": "Qorabog'", "Qarabağ": "Qorabog'", "Qarabag FK": "Qorabog'", "Bodø/Glimt": "Bode/Glimt", "Bodo/Glimt": "Bode/Glimt", "Bodo Glimt": "Bode/Glimt", "Bodø Glimt": "Bode/Glimt", "Pafos": "Pafos", "Pafos FC": "Pafos", "Kairat": "Qayrat", "Kairat Almaty": "Qayrat", "Dinamo Zagreb": "Dinamo Zagreb", "Dynamo Zagreb": "Dinamo Zagreb", "Maccabi Tel Aviv": "Makkabi Tel-Aviv", "Pakhtakor": "Paxtakor", "Paxtakor": "Paxtakor", "Pakhtakor Tashkent": "Paxtakor", "Paxtakor Toshkent": "Paxtakor", "Bunyodkor": "Bunyodkor", "Nasaf": "Nasaf", "Nasaf Qarshi": "Nasaf", "Nasaf Karshi": "Nasaf", "Neftchi": "Neftchi", "Neftchi Fergana": "Neftchi", "Neftchi Farg'ona": "Neftchi", "Navbahor": "Navbahor", "Navbahor Namangan": "Navbahor", "AGMK": "Olmaliq AGMK", "Olmaliq": "Olmaliq AGMK", "Almalyk": "Olmaliq AGMK", "Olmaliq AGMK": "Olmaliq AGMK", "Lokomotiv Tashkent": "Lokomotiv", "Lokomotiv Toshkent": "Lokomotiv", "Dinamo Samarqand": "Dinamo Samarqand", "Dinamo Samarkand": "Dinamo Samarqand", "Dynamo Samarkand": "Dinamo Samarqand", "Andijan": "Andijon", "Andijon": "Andijon", "Kokand 1912": "Qo'qon 1912", "Qo'qon 1912": "Qo'qon 1912", "Kokand": "Qo'qon 1912", "Bukhara": "Buxoro", "Buxoro": "Buxoro", "Surkhon": "Surxon", "Surxon": "Surxon", "Surkhon Termez": "Surxon", "Surxon Termiz": "Surxon", "Kyzylkum": "Qizilqum", "Qizilqum": "Qizilqum", "Qizilqum Zarafshon": "Qizilqum", "Sogdiana": "Sog'diyona", "Sogdiana Jizzakh": "Sog'diyona", "Sog'diyona": "Sog'diyona", "Mashal": "Mash'al", "Mash'al": "Mash'al", "Mashal Mubarek": "Mash'al", "Turon": "Turon", "Turon Yaypan": "Turon", "Metallurg": "Metallurg", "Metallurg Bekabad": "Metallurg", "Khorezm": "Xorazm", "Xorazm": "Xorazm", "Nurafshon": "Nurafshon", "Oqtepa": "Oqtepa", "Burkina Faso": "Burkina-Faso", "Guinea": "Gvineya", "Gabon": "Gabon", "Zambia": "Zambiya", "Angola": "Angola", "Cape Verde": "Kabo-Verde", "Cabo Verde": "Kabo-Verde", "Cape Verde Islands": "Kabo-Verde", "Benin": "Benin", "Togo": "Togo", "Kenya": "Keniya", "Uganda": "Uganda", "Tanzania": "Tanzaniya", "Zimbabwe": "Zimbabve", "Mozambique": "Mozambik", "Namibia": "Namibiya", "Sudan": "Sudan", "Libya": "Liviya", "Equatorial Guinea": "Ekvatorial Gvineya", "Guinea-Bissau": "Gvineya-Bisau", "Guinea Bissau": "Gvineya-Bisau", "Sierra Leone": "Syerra-Leone", "Liberia": "Liberiya", "Gambia": "Gambiya", "The Gambia": "Gambiya", "Mauritania": "Mavritaniya", "Madagascar": "Madagaskar", "Comoros": "Komor orollari", "Congo": "Kongo", "Republic of the Congo": "Kongo", "Congo Republic": "Kongo", "Ethiopia": "Efiopiya", "Rwanda": "Ruanda", "Botswana": "Botsvana", "Malawi": "Malavi", "Haiti": "Gaiti", "Curacao": "Kyurasao", "Curaçao": "Kyurasao", "Trinidad and Tobago": "Trinidad va Tobago", "Trinidad & Tobago": "Trinidad va Tobago", "El Salvador": "Salvador", "Guatemala": "Gvatemala", "Cuba": "Kuba", "Nicaragua": "Nikaragua", "Suriname": "Surinam", "North Korea": "Shimoliy Koreya", "Korea DPR": "Shimoliy Koreya", "DPR Korea": "Shimoliy Koreya", "Philippines": "Filippin", "Malaysia": "Malayziya", "Singapore": "Singapur", "Myanmar": "Myanma", "Hong Kong": "Gonkong", "Chinese Taipei": "Xitoy Taybey", "Taiwan": "Xitoy Taybey", "Yemen": "Yaman", "Afghanistan": "Afg'oniston", "Nepal": "Nepal", "Bangladesh": "Bangladesh", "Pakistan": "Pokiston", "Sri Lanka": "Shri-Lanka", "Mongolia": "Mongoliya", "Cambodia": "Kambodja", "Laos": "Laos", "Maldives": "Maldiv orollari", "Bhutan": "Butan", "Dominican Republic": "Dominikana", "Guyana": "Gayana", "New Caledonia": "Yangi Kaledoniya", "Tahiti": "Taiti", "Fiji": "Fidji", "Papua New Guinea": "Papua — Yangi Gvineya"},SW=new Set(["ac", "afc", "as", "bsc", "ca", "calcio", "cd", "cf", "club", "fc", "fk", "fsv", "ogc", "rc", "rcd", "sc", "sk", "ss", "ssc", "ssd", "sv", "the", "tsg", "ud", "us", "vfb", "vfl"]);
+const nk=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().split(/[^a-z0-9]+/).filter(t=>t&&!SW.has(t)&&!/^\d{1,2}$/.test(t)).join("");
+const UK={};Object.keys(UZN).forEach(k=>{const z=nk(k);if(z)UK[z]=UZN[k]});
+const SUF=/\s+(U[- ]?\d{2}|Women|W|Olympic|Olympics)$/i;
+const sfx=x=>/^u/i.test(x)?"U-"+x.replace(/\D/g,""):/^w/i.test(x)?(lang==="ru"?"(жен.)":"(ayollar)"):x;
+const un=n=>{if(!n)return n;const v=UK[nk(n)];if(v)return v;const m=String(n).match(SUF);
+  if(m){const b=UK[nk(String(n).slice(0,m.index))];if(b)return b+" "+sfx(m[1]);}return n;};
+const TD={united:"Юнайтед",city:"Сити",real:"Реал",fc:"ФК",cf:"КФ",sporting:"Спортинг",athletic:"Атлетик",atletico:"Атлетико",borussia:"Боруссия",bayern:"Бавария",olympique:"Олимпик",inter:"Интер",club:"Клуб",sc:"СК",afc:"АФК",dynamo:"Динамо",spartak:"Спартак",lokomotiv:"Локомотив"};
+function tl(n){
+  if(!n||!/[A-Za-z]/.test(n))return n;
+  const M=[["sch","щ"],["sh","ш"],["ch","ч"],["zh","ж"],["kh","х"],["ts","ц"],["ya","я"],["yu","ю"],["yo","ё"],["ph","ф"],["th","т"],["ck","к"],["ee","и"],["oo","у"],["ou","у"],["qu","кв"]];
+  const S={a:"а",b:"б",c:"к",d:"д",e:"е",f:"ф",g:"г",h:"х",i:"и",j:"дж",k:"к",l:"л",m:"м",n:"н",o:"о",p:"п",q:"к",r:"р",s:"с",t:"т",u:"у",v:"в",w:"в",x:"кс",y:"и",z:"з"};
+  return n.split(/(\s+|-)/).map(w=>{
+    if(!/[A-Za-z]/.test(w))return w;
+    const lw=w.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+    let r=TD[lw];
+    if(!r){r="";for(let i=0;i<lw.length;){const m=M.find(([k])=>lw.startsWith(k,i));
+      if(m){r+=m[1];i+=m[0].length;continue;}
+      const c=lw[i];r+=c==="c"&&/[eiy]/.test(lw[i+1]||"")?"с":(S[c]??c);i++;}}
+    return /^[A-Z]{2,3}$/.test(w)?r.toUpperCase():r.charAt(0).toUpperCase()+r.slice(1);
+  }).join("");
+}
+const RUC=(()=>{const m={};try{const en=new Intl.DisplayNames(["en"],{type:"region"}),ru=new Intl.DisplayNames(["ru"],{type:"region"});
+  for(let a=65;a<91;a++)for(let b=65;b<91;b++){const c=String.fromCharCode(a,b);try{const e=en.of(c),r=ru.of(c);if(e&&r&&e!==c&&r!==c)m[nk(e)]=r;}catch(x){}}
+  const al={"USA":"US","United States":"US","South Korea":"KR","Korea Republic":"KR","Ivory Coast":"CI","Czech Republic":"CZ","Turkey":"TR","Türkiye":"TR","Iran":"IR","Russia":"RU","Cape Verde":"CV","DR Congo":"CD","Bosnia-Herzegovina":"BA","Bosnia and Herzegovina":"BA","North Macedonia":"MK","Holland":"NL","Netherlands":"NL","Curacao":"CW"};
+  for(const k in al){try{m[nk(k)]=ru.of(al[k]);}catch(x){}}
+}catch(x){}
+Object.assign(m,{[nk("USA")]:"США",[nk("United States")]:"США",[nk("Paxtakor")]:"Пахтакор",[nk("Pakhtakor")]:"Пахтакор",[nk("Nasaf")]:"Насаф",[nk("Neftchi")]:"Нефтчи",[nk("Navbahor")]:"Навбахор",[nk("Bukhara")]:"Бухара",[nk("Andijan")]:"Андижан",[nk("England")]:"Англия",[nk("Scotland")]:"Шотландия",[nk("Wales")]:"Уэльс",[nk("Northern Ireland")]:"Северная Ирландия",[nk("Republic of Ireland")]:"Ирландия"});return m;})();
+const rn=n=>{if(!n)return n;const k=RUC[nk(n)];if(k)return k;const m=String(n).match(SUF);
+  if(m){const b=RUC[nk(String(n).slice(0,m.index))];if(b)return b+" "+sfx(m[1]);}return tl(n);};
+const tn=n=>lang==="ru"?rn(n):un(n);
+const I={
+uz:{home:"Asosiy",games:"O'yinlar",tab:"Jadval",tableT:"Turnir jadvali",search:"Qidirish…",loading:"Yuklanmoqda…",tgcta:"Natijalar va yangiliklar Telegram kanalimizda",
+ yest:"Kecha",today:"Bugun",tom:"Ertaga",all:"Hammasi",live1:"jonli",live2:"Jonli",pause:"Tanaffus",ft:"Tugadi",postp:"Kechiktirildi",canc:"Bekor",
+ nogames:"Bu kunda o'yin yo'q",soon:"Yaqinda",team:"Jamoa",pl:"O",pts:"Ochko",notable:"Bu liga uchun jadval topilmadi",more:"Davomi",news:"Yangiliklar",
+ searchT:"Qidiruv",nothing:"Hech narsa topilmadi",tgnews:"Yangiliklar Telegramda",tgnewsd:"Hozir bu yerda ko'rsatib bo'lmadi. Kanalni ochish uchun bosing.",
+ loadfail1:"O'yinlar yuklanmadi.",loadfail2:"Reklama bloklovchini (AdBlock) o'chirib, sahifani yangilang.",agoM:"daq oldin",agoH:"soat oldin",agoD:"kun oldin"},
+ru:{home:"Главная",games:"Матчи",tab:"Таблица",tableT:"Турнирная таблица",search:"Поиск…",loading:"Загрузка…",tgcta:"Результаты и новости в нашем Telegram-канале",
+ yest:"Вчера",today:"Сегодня",tom:"Завтра",all:"Все",live1:"live",live2:"Идёт",pause:"Перерыв",ft:"Завершён",postp:"Перенесён",canc:"Отменён",
+ nogames:"В этот день матчей нет",soon:"Скоро",team:"Команда",pl:"И",pts:"Очки",notable:"Таблица для этой лиги не найдена",more:"Ещё",news:"Новости",
+ searchT:"Поиск",nothing:"Ничего не найдено",tgnews:"Новости в Telegram",tgnewsd:"Сейчас показать здесь не получилось. Нажмите, чтобы открыть канал.",
+ loadfail1:"Матчи не загрузились.",loadfail2:"Отключите блокировщик рекламы (AdBlock) и обновите страницу.",agoM:"мин назад",agoH:"ч назад",agoD:"дн назад"}};
+const T=k=>(I[lang]&&I[lang][k])||I.uz[k];
+const NAMER={"uzb.1":"Суперлига Узбекистана","uefa.champions":"Лига чемпионов","eng.1":"Английская Премьер-лига","esp.1":"Ла Лига","ita.1":"Серия A","ger.1":"Бундеслига","fra.1":"Лига 1","uefa.europa":"Лига Европы","uefa.europa.conf":"Лига конференций","uefa.nations":"Лига наций УЕФА","afc.champions":"Лига чемпионов АФК","afc.cup":"Лига чемпионов АФК 2","fifa.friendly":"Товарищеские матчи","tur.1":"Суперлига Турции","ned.1":"Эредивизи","por.1":"Лига Португалии","ksa.1":"Про-лига Саудовской Аравии","usa.1":"МЛС","eng.2":"Чемпионшип Англии"};
 const ESPN="https://site.api.espn.com/apis/site/v2/sports/soccer/";
 const ESPN2="https://site.api.espn.com/apis/v2/sports/soccer/";
 const TZ="Asia/Tashkent";
 const LEAGUES=[["uzb.1","O'zbekiston Superligasi"],["uefa.champions","Chempionlar ligasi"],["eng.1","Angliya Premer-ligasi"],["esp.1","Ispaniya La Ligasi"],["ita.1","Italiya Serie A"],["ger.1","Germaniya Bundesligasi"],["fra.1","Fransiya Liga 1"],["uefa.europa","Yevropa ligasi"],["uefa.europa.conf","Konferensiya ligasi"],["uefa.nations","UEFA Millatlar ligasi"],["afc.champions","AFC Chempionlar ligasi"],["afc.cup","AFC Chempionlar ligasi 2"],["fifa.friendly","O'rtoqlik uchrashuvlari"],["tur.1","Turkiya Superligasi"],["ned.1","Niderlandiya Eredivisie"],["por.1","Portugaliya ligasi"],["ksa.1","Saudiya Pro ligasi"],["usa.1","AQSh MLS"],["eng.2","Angliya Chempionship"]];
 const TABS=["eng.1","esp.1","ita.1","ger.1","fra.1","uzb.1","uefa.champions","uefa.europa","tur.1","ned.1","por.1","ksa.1"];
 const NAME=Object.fromEntries(LEAGUES);
-const WD=["Yak","Dush","Sesh","Chor","Pay","Juma","Shan"],MO=["yan","fev","mar","apr","may","iyn","iyl","avg","sen","okt","noy","dek"];
+const LN=s=>lang==="ru"?(NAMER[s]||NAME[s]||s):(NAME[s]||s);
+const WDS={uz:["Yak","Dush","Sesh","Chor","Pay","Juma","Shan"],ru:["Вс","Пн","Вт","Ср","Чт","Пт","Сб"]},MOS={uz:["yan","fev","mar","apr","may","iyn","iyl","avg","sen","okt","noy","dek"],ru:["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"]};
 let M=[],TB={},news=null,day=0,cf="*",lg="eng.1",failed=0;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const img=u=>u?`<img src="${esc(u)}" alt="" loading="lazy" onerror="this.remove()">`:"";
 const tm=u=>new Date(u).toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit",timeZone:TZ});
 const dkey=u=>new Date(u).toLocaleDateString("sv",{timeZone:TZ});
-const dshort=u=>{const d=new Date(new Date(u).toLocaleString("en-US",{timeZone:TZ}));return `${WD[d.getDay()]}, ${d.getDate()}-${MO[d.getMonth()]}`};
+const dshort=u=>{const d=new Date(new Date(u).toLocaleString("en-US",{timeZone:TZ}));return `${WDS[lang][d.getDay()]}, ${d.getDate()}${lang==="ru"?" ":"-"}${MOS[lang][d.getMonth()]}`};
 const isLive=m=>m.st==="IN_PLAY"||m.st==="PAUSED";
 const ymd=o=>{const d=new Date(Date.now()+o*864e5);return d.toISOString().slice(0,10).replace(/-/g,"")};
 function ago(d){if(!d)return"";const m=Math.max(1,Math.round((Date.now()-new Date(d))/6e4));
-  return m<60?`${m} daq oldin`:m<1440?`${Math.round(m/60)} soat oldin`:`${Math.round(m/1440)} kun oldin`;}
+  return m<60?`${m} ${T("agoM")}`:m<1440?`${Math.round(m/60)} ${T("agoH")}`:`${Math.round(m/1440)} ${T("agoD")}`;}
 async function jget(url,ms=12000){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
   try{const r=await fetch(url,{signal:c.signal});if(!r.ok)throw new Error(r.status);return await r.json();}finally{clearTimeout(t);}}
 const num=v=>{const n=parseInt(v);return isNaN(n)?null:n};
@@ -167,7 +234,7 @@ function parseEvents(d,slug){
       const ht=home.team||{},at=away.team||{};
       const sc=["IN_PLAY","PAUSED","FINISHED"].includes(st);
       const h=ht.shortDisplayName||ht.displayName||"",a=at.shortDisplayName||at.displayName||"";
-      out.push({id:"e"+e.id,slug,comp:NAME[slug]||slug,utc:new Date(e.date).toISOString(),st,h,a,
+      out.push({id:"e"+e.id,slug,comp:LN(slug),utc:new Date(e.date).toISOString(),st,h,a,
         hc:ht.logo||"",ac:at.logo||"",hs:sc?num(home.score):null,as:sc?num(away.score):null,
         clk:st==="IN_PLAY"?(so.displayClock||""):"",
         uz:slug==="uzb.1"||/uzbekistan/i.test(h+" "+a)});
@@ -194,7 +261,7 @@ async function loadLeague(slug){
 async function loadAll(){
   failed=0;
   await Promise.allSettled(LEAGUES.map(([s])=>loadLeague(s)));
-  if(failed===LEAGUES.length)$("#out").innerHTML=`<div class="empty">O'yinlar yuklanmadi.<br>Reklama bloklovchini (AdBlock) o'chirib, sahifani yangilang.<div class="err">${esc(lastErr)}</div></div>`;
+  if(failed===LEAGUES.length)$("#out").innerHTML=`<div class="empty">${T("loadfail1")}<br>${T("loadfail2")}<div class="err">${esc(lastErr)}</div></div>`;
 }
 
 function cards(ms,dt){
@@ -203,11 +270,11 @@ function cards(ms,dt){
   for(const m of ms){
     const live=isLive(m),done=m.st==="FINISHED",off=m.st==="POSTPONED"||m.st==="CANCELLED";
     if(m.comp!==comp){if(comp!==null)h+="</div>";comp=m.comp;
-      h+=`<div class="lg"><div class="lgh"><b>${esc(comp)}</b>${lc[comp]?`<em>${lc[comp]} jonli</em>`:""}</div>`;}
+      h+=`<div class="lg"><div class="lgh"><b>${esc(comp)}</b>${lc[comp]?`<em>${lc[comp]} ${T("live1")}</em>`:""}</div>`;}
     const mid=live||done
-      ?`<div class="c ${live?"live":""}">${m.hs??0} – ${m.as??0}<small>${live?(m.st==="PAUSED"?"Tanaffus":esc(m.clk)||"Jonli"):"Tugadi"}</small></div>`
-      :`<div class="c">${off?"–":tm(m.utc)}<small>${off?(m.st==="POSTPONED"?"Kechiktirildi":"Bekor"):dt?dshort(m.utc):""}</small></div>`;
-    h+=`<div class="m ${live?"lv":""}"><div class="t r"><b>${esc(m.h)}</b>${img(m.hc)}</div>${mid}<div class="t">${img(m.ac)}<b>${esc(m.a)}</b></div></div>`;
+      ?`<div class="c ${live?"live":""}">${m.hs??0} – ${m.as??0}<small>${live?(m.st==="PAUSED"?T("pause"):esc(m.clk)||T("live2")):T("ft")}</small></div>`
+      :`<div class="c">${off?"–":tm(m.utc)}<small>${off?(m.st==="POSTPONED"?T("postp"):T("canc")):dt?dshort(m.utc):""}</small></div>`;
+    h+=`<div class="m ${live?"lv":""}"><div class="t r"><b>${esc(tn(m.h))}</b>${img(m.hc)}</div>${mid}<div class="t">${img(m.ac)}<b>${esc(tn(m.a))}</b></div></div>`;
   }
   return h+(comp!==null?"</div>":"");
 }
@@ -216,22 +283,22 @@ function sortMs(ms){return ms.slice().sort((a,b)=>ord(a)-ord(b)||(a.utc<b.utc?-1
 function dayMs(d){const k=new Date(Date.now()+d*864e5).toLocaleDateString("sv",{timeZone:TZ});return M.filter(m=>dkey(m.utc)===k);}
 
 function renderMatches(){
-  $("#days").innerHTML=[["-1","Kecha"],["0","Bugun"],["1","Ertaga"]].map(([k,v])=>`<button class="chip ${k==String(day)?"on":""}" data-d="${k}">${v}</button>`).join("");
+  $("#days").innerHTML=[["-1",T("yest")],["0",T("today")],["1",T("tom")]].map(([k,v])=>`<button class="chip ${k==String(day)?"on":""}" data-d="${k}">${v}</button>`).join("");
   const all=sortMs(dayMs(day)),comps=[...new Set(all.map(m=>m.comp))];
   if(cf!=="*"&&!comps.includes(cf))cf="*";
-  $("#comps").innerHTML=all.length?`<button class="chip ${cf==="*"?"on":""}" data-c="*">Hammasi<i>${all.length}</i></button>`
+  $("#comps").innerHTML=all.length?`<button class="chip ${cf==="*"?"on":""}" data-c="*">${T("all")}<i>${all.length}</i></button>`
     +comps.map(c=>`<button class="chip ${c===cf?"on":""}" data-c="${esc(c)}">${esc(c)}<i>${all.filter(m=>m.comp===c).length}</i></button>`).join(""):"";
   if(!all.length){
-    if(!M.length&&failed<LEAGUES.length){$("#out").innerHTML=`<div class="empty">Yuklanmoqda…</div>`;return;}
+    if(!M.length&&failed<LEAGUES.length){$("#out").innerHTML=`<div class="empty">${T("loading")}</div>`;return;}
     const nw=new Date().toISOString(),up=sortMs(M.filter(m=>m.utc>nw&&m.st==="TIMED")).sort((a,b)=>a.utc<b.utc?-1:1).slice(0,10);
-    $("#out").innerHTML=`<div class="empty">Bu kunda o'yin yo'q</div>`+(up.length?`<h3 class="sec">Yaqinda</h3>`+cards(up,true):"");
+    $("#out").innerHTML=`<div class="empty">${T("nogames")}</div>`+(up.length?`<h3 class="sec">${T("soon")}</h3>`+cards(up,true):"");
     return;}
   $("#out").innerHTML=cards(cf==="*"?all:all.filter(m=>m.comp===cf),false);
 }
 
 async function loadTable(slug){
   const c=TB[slug];if(c&&Date.now()-c.t<6e5)return renderTable();
-  $("#tbl").innerHTML=`<div class="empty">Yuklanmoqda…</div>`;
+  $("#tbl").innerHTML=`<div class="empty">${T("loading")}</div>`;
   try{
     const d=await jget(`${ESPN2}${slug}/standings`);
     const en=(((d.children||[])[0]||{}).standings||{}).entries||[];
@@ -244,11 +311,11 @@ async function loadTable(slug){
   renderTable();
 }
 function renderTable(){
-  $("#lgs").innerHTML=TABS.map(k=>`<button class="chip ${k===lg?"on":""}" data-l="${k}">${esc(NAME[k]||k)}</button>`).join("");
+  $("#lgs").innerHTML=TABS.map(k=>`<button class="chip ${k===lg?"on":""}" data-l="${k}">${esc(LN(k))}</button>`).join("");
   const c=TB[lg];if(!c)return;
-  $("#tbl").innerHTML=c.rows.length?`<div class="row h"><span>#</span><span>Jamoa</span><span>O</span><span>+/-</span><span>Ochko</span></div>`
-    +c.rows.map(r=>`<div class="row"><span>${esc(r.pos)}</span><div class="n">${img(r.c)}<span>${esc(r.n)}</span></div><span>${esc(r.p)}</span><span>${esc(r.gd)}</span><b>${esc(r.pts)}</b></div>`).join("")
-    :`<div class="empty">Bu liga uchun jadval topilmadi</div>`;
+  $("#tbl").innerHTML=c.rows.length?`<div class="row h"><span>#</span><span>${T("team")}</span><span>${T("pl")}</span><span>+/-</span><span>${T("pts")}</span></div>`
+    +c.rows.map(r=>`<div class="row"><span>${esc(r.pos)}</span><div class="n">${img(r.c)}<span>${esc(tn(r.n))}</span></div><span>${esc(r.p)}</span><span>${esc(r.gd)}</span><b>${esc(r.pts)}</b></div>`).join("")
+    :`<div class="empty">${T("notable")}</div>`;
 }
 
 async function loadNews(){
@@ -272,19 +339,37 @@ async function loadNews(){
       if(items.length){news=items;try{localStorage.setItem("news",JSON.stringify(items))}catch(e){}renderNews();return;}
     }catch(e){}
   }
-  if(!news)$("#news").innerHTML=`<a class="tgcta" href="https://t.me/onsportsuz" target="_blank" rel="noopener"><b>Yangiliklar Telegramda</b><span>Hozir bu yerda ko'rsatib bo'lmadi. Kanalni ochish uchun bosing.</span></a>`;
+  if(!news)$("#news").innerHTML=`<a class="tgcta" href="https://t.me/onsportsuz" target="_blank" rel="noopener"><b>${T("tgnews")}</b><span>${T("tgnewsd")}</span></a>`;
 }
 function when(d){if(!d)return"";const k=x=>new Date(x).toLocaleDateString("sv",{timeZone:TZ});
-  const day=k(d)===k(Date.now())?"Bugun":k(d)===k(Date.now()-864e5)?"Kecha":dshort(d);return `${ago(d)} · ${day}, ${tm(d)}`;}
+  const day=k(d)===k(Date.now())?T("today"):k(d)===k(Date.now()-864e5)?T("yest"):dshort(d);return `${ago(d)} · ${day}, ${tm(d)}`;}
 const ncard=x=>`<a class="ncard" href="${esc(x.link)}" target="_blank" rel="noopener"><div class="nimg">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy" onerror="this.remove()">`:"<span>ONSPORTS.UZ</span>"}</div><div class="nbody"><h3>${esc(x.title)}</h3><small>${when(x.date)}</small></div></a>`;
+const IC={s:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
+ m:'<svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>',
+ u:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>'};
+let q="";
 function renderNews(){
   const a=news||[];if(!a.length)return;
+  if(q){const r=a.filter(x=>((x.title||"")+" "+(x.text||"")).toLowerCase().includes(q));
+    $("#news").innerHTML=`<div class="crumb">${T("home")} › <b>${T("searchT")}</b> <i>•</i> ${r.length}</div>`+(r.length?`<div class="ngrid">${r.map(ncard).join("")}</div>`:`<div class="empty">${T("nothing")}</div>`);return;}
   const f=a[0];
-  let h=`<div class="crumb">Asosiy › <b>Yangiliklar</b> <i>•</i> ${a.length}</div><div class="nwrap"><a class="nhero" href="${esc(f.link)}" target="_blank" rel="noopener">${f.img?`<img src="${esc(f.img)}" alt="">`:""}<div class="ov"><h2>${esc(f.title)}</h2>${f.text?`<p>${esc(f.text)}</p>`:""}<small>${when(f.date)}</small></div></a>`
+  let h=`<div class="crumb">${T("home")} › <b>${T("news")}</b> <i>•</i> ${a.length}</div><div class="nwrap"><a class="nhero" href="${esc(f.link)}" target="_blank" rel="noopener">${f.img?`<img src="${esc(f.img)}" alt="">`:""}<div class="ov"><h2>${esc(f.title)}</h2>${f.text?`<p>${esc(f.text)}</p>`:""}<small>${when(f.date)}</small></div></a>`
     +`<div class="nside">${a.slice(1,5).map(ncard).join("")}</div></div>`;
-  if(a.length>5)h+=`<div class="more">Davomi</div><div class="ngrid">${a.slice(5).map(ncard).join("")}</div>`;
+  if(a.length>5)h+=`<div class="more">${T("more")}</div><div class="ngrid">${a.slice(5).map(ncard).join("")}</div>`;
   $("#news").innerHTML=h;
 }
+function setTheme(t){document.documentElement.dataset.theme=t;try{localStorage.setItem("theme",t)}catch(e){}$("#tb").innerHTML=t==="light"?IC.u:IC.m;}
+$("#sb").innerHTML=IC.s;setTheme(document.documentElement.dataset.theme==="light"?"light":"dark");
+$("#tb").onclick=()=>setTheme(document.documentElement.dataset.theme==="light"?"dark":"light");
+$("#sb").onclick=()=>{showTab("yangilik");const i=$("#sq");i.hidden=!i.hidden;if(!i.hidden)i.focus();else{i.value="";q="";renderNews();}};
+$("#sq").oninput=e=>{q=e.target.value.trim().toLowerCase();renderNews();};
+IC.g='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>';
+function applyStatic(){document.querySelectorAll("[data-i]").forEach(e=>e.textContent=T(e.dataset.i));
+  $("#sq").placeholder=T("search");document.documentElement.lang=lang;
+  $("#lb").innerHTML=IC.g+`<span>${lang==="ru"?"РУ":"O'Z"}</span>`;}
+$("#lb").onclick=()=>{lang=lang==="uz"?"ru":"uz";try{localStorage.setItem("lang",lang)}catch(e){}
+  M.forEach(m=>m.comp=LN(m.slug));cf="*";applyStatic();renderMatches();renderTable();renderNews();};
+applyStatic();
 document.addEventListener("click",e=>{
   const d=e.target.closest("[data-d]"),c=e.target.closest("[data-c]"),l=e.target.closest("[data-l]");
   const tb=e.target.closest("[data-tab]");
