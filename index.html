@@ -25,8 +25,7 @@ header{position:sticky;top:0;z-index:5;background:rgba(11,18,32,.92);backdrop-fi
 .bar nav a.tgb:hover{background:var(--ac);color:#052015}
 .pt{margin:18px 16px 4px;font-size:24px}
 .pt small{display:block;color:var(--mu);font:600 12px system-ui;letter-spacing:1px;margin-top:2px}
-.chips{display:flex;gap:8px;overflow-x:auto;padding:8px 16px;scrollbar-width:none}
-.chips::-webkit-scrollbar{display:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:8px 16px}
 .chip{border:1px solid var(--line);background:none;color:var(--mu);padding:7px 14px;border-radius:99px;white-space:nowrap}
 .chip.on{background:var(--ac);border-color:var(--ac);color:#052015;font-weight:700}
 .chip i{font-style:normal;opacity:.7;margin-left:4px;font-size:12px}
@@ -106,7 +105,7 @@ footer{border-top:1px solid var(--line);color:var(--mu);text-align:center;paddin
 const ESPN="https://site.api.espn.com/apis/site/v2/sports/soccer/";
 const ESPN2="https://site.api.espn.com/apis/v2/sports/soccer/";
 const TZ="Asia/Tashkent";
-const LEAGUES=[["uzb.1","O'zbekiston Superligasi"],["uefa.champions","Champions League"],["eng.1","Premier League"],["esp.1","La Liga"],["ita.1","Serie A"],["ger.1","Bundesliga"],["fra.1","Ligue 1"],["uefa.europa","Europa League"],["uefa.europa.conf","Conference League"],["uefa.nations","UEFA Nations League"],["afc.champions","AFC Champions League Elite"],["afc.cup","AFC Champions League Two"],["fifa.friendly","International Friendly"],["tur.1","Turkish Super Lig"],["ned.1","Eredivisie"],["por.1","Liga Portugal"],["ksa.1","Saudi Pro League"],["usa.1","MLS"],["eng.2","Championship"]];
+const LEAGUES=[["uzb.1","O'zbekiston Superligasi"],["uefa.champions","Chempionlar ligasi"],["eng.1","Angliya Premer-ligasi"],["esp.1","Ispaniya La Ligasi"],["ita.1","Italiya Serie A"],["ger.1","Germaniya Bundesligasi"],["fra.1","Fransiya Liga 1"],["uefa.europa","Yevropa ligasi"],["uefa.europa.conf","Konferensiya ligasi"],["uefa.nations","UEFA Millatlar ligasi"],["afc.champions","AFC Chempionlar ligasi"],["afc.cup","AFC Chempionlar ligasi 2"],["fifa.friendly","O'rtoqlik uchrashuvlari"],["tur.1","Turkiya Superligasi"],["ned.1","Niderlandiya Eredivisie"],["por.1","Portugaliya ligasi"],["ksa.1","Saudiya Pro ligasi"],["usa.1","AQSh MLS"],["eng.2","Angliya Chempionship"]];
 const TABS=["eng.1","esp.1","ita.1","ger.1","fra.1","uzb.1","uefa.champions","uefa.europa","tur.1","ned.1","por.1","ksa.1"];
 const NAME=Object.fromEntries(LEAGUES);
 const WD=["Yak","Dush","Sesh","Chor","Pay","Juma","Shan"],MO=["yan","fev","mar","apr","may","iyn","iyl","avg","sen","okt","noy","dek"];
