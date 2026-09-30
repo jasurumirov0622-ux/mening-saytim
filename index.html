@@ -23,19 +23,14 @@ header{position:sticky;top:0;z-index:5;background:rgba(11,18,32,.92);backdrop-fi
 .bar nav a:hover{color:var(--tx);background:var(--card)}
 .bar nav a.tgb{border:1px solid var(--ac);color:var(--ac)}
 .bar nav a.tgb:hover{background:var(--ac);color:#052015}
-.cols{max-width:1080px;margin:0 auto;padding:8px 0 60px;display:grid;grid-template-columns:1fr;gap:0 24px}
-@media(min-width:960px){.cols{grid-template-columns:1.25fr 1fr;align-items:start;padding:12px 16px 60px}.side{position:sticky;top:76px}}
 .pt{margin:18px 16px 4px;font-size:24px}
 .pt small{display:block;color:var(--mu);font:600 12px system-ui;letter-spacing:1px;margin-top:2px}
-@media(min-width:960px){.pt{margin-left:0;margin-right:0}}
 .chips{display:flex;gap:8px;overflow-x:auto;padding:8px 16px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
-@media(min-width:960px){.chips{padding-left:0;padding-right:0}}
 .chip{border:1px solid var(--line);background:none;color:var(--mu);padding:7px 14px;border-radius:99px;white-space:nowrap}
 .chip.on{background:var(--ac);border-color:var(--ac);color:#052015;font-weight:700}
 .chip i{font-style:normal;opacity:.7;margin-left:4px;font-size:12px}
 .lg,.card{background:var(--card);border:1px solid var(--line);border-radius:18px;margin:10px 16px;overflow:hidden}
-@media(min-width:960px){.lg,.card{margin-left:0;margin-right:0}}
 .card{padding:4px 0}
 .lgh{display:flex;align-items:center;gap:10px;padding:12px 14px;font-size:15px;background:linear-gradient(90deg,rgba(47,120,214,.22),transparent 70%)}
 .lgh em{font-style:normal;color:var(--live);font-size:13px;font-weight:700}
@@ -50,7 +45,6 @@ header{position:sticky;top:0;z-index:5;background:rgba(11,18,32,.92);backdrop-fi
 .c.live small{color:var(--live)}
 .empty{text-align:center;color:var(--mu);padding:40px 16px}
 h3.sec{margin:16px 16px 6px;font-size:14px;color:var(--mu);font-weight:600}
-@media(min-width:960px){h3.sec{margin-left:0}}
 .row{display:grid;grid-template-columns:24px 1fr 28px 34px 34px;align-items:center;gap:8px;margin:0 16px;padding:9px 0;border-bottom:1px solid var(--line)}
 .row:last-child{border:0}
 .row.h{color:var(--mu);font-size:12px}
@@ -58,7 +52,6 @@ h3.sec{margin:16px 16px 6px;font-size:14px;color:var(--mu);font-weight:600}
 .row .n span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .row>*:nth-child(n+3){text-align:right}
 .hero{display:block;position:relative;margin:10px 16px;border-radius:20px;overflow:hidden;height:230px;color:#fff;text-decoration:none;background:#000}
-@media(min-width:960px){.hero{margin-left:0;margin-right:0}}
 .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .hero .ov{position:absolute;inset:0;padding:16px;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(transparent 30%,rgba(0,0,0,.88))}
 .hero h2{margin:4px 0 0;font-size:20px;line-height:1.25}
@@ -71,38 +64,41 @@ h3.sec{margin:16px 16px 6px;font-size:14px;color:var(--mu);font-weight:600}
 .nr small b,.hero small b{color:var(--ac)}
 .hero small{color:#ffffffb0}
 .tgcta{display:block;margin:10px 16px;padding:18px;border-radius:22px;background:linear-gradient(135deg,#0f5a44,#12233a 75%);border:1px solid var(--line);text-decoration:none}
-@media(min-width:960px){.tgcta{margin-left:0;margin-right:0}}
 .tgcta b{display:block;font-size:18px}
 .tgcta span{color:#b7c6d6;font-size:14px}
 footer{border-top:1px solid var(--line);color:var(--mu);text-align:center;padding:22px 16px;font-size:13px}
-@media(max-width:640px){.bar nav a:not(.tgb){display:none}}
+.page{max-width:760px;margin:0 auto;padding:8px 0 60px}
+.tab[hidden]{display:none}
+.bar nav a.on{background:var(--card);color:var(--tx)}
+.err{color:var(--mu);font-size:12px;margin-top:8px}
+@media(max-width:640px){.bar nav a{padding:7px 10px;font-size:13px}.logo{font-size:19px}.bar{gap:6px}}
 </style>
 </head>
 <body>
 <header><div class="bar">
   <a class="logo" href="#"><span>ONSPORTS</span>.UZ</a>
-  <nav><a href="#oyinlar">O'yinlar</a><a href="#jadval">Jadval</a><a href="#yangilik">Yangiliklar</a><a class="tgb" href="https://t.me/onsportsuz" target="_blank" rel="noopener">Telegram</a></nav>
+  <nav><a href="#oyinlar" data-tab="oyinlar" class="on">O'yinlar</a><a href="#jadval" data-tab="jadval">Jadval</a><a href="#yangilik" data-tab="yangilik">Yangiliklar</a><a class="tgb" href="https://t.me/onsportsuz" target="_blank" rel="noopener">Telegram</a></nav>
 </div></header>
 
-<div class="cols">
-  <main id="oyinlar">
-    <h2 class="pt">O'yinlar<small>ONSPORTS.UZ</small></h2>
-    <div class="chips" id="days"></div>
-    <div class="chips" id="comps"></div>
-    <div id="out"><div class="empty">Yuklanmoqda…</div></div>
-  </main>
-  <aside class="side">
-    <section id="jadval">
+<div class="page">
+  <main>
+    <section id="oyinlar" class="tab">
+      <h2 class="pt">O'yinlar<small>ONSPORTS.UZ</small></h2>
+      <div class="chips" id="days"></div>
+      <div class="chips" id="comps"></div>
+      <div id="out"><div class="empty">Yuklanmoqda…</div></div>
+    </section>
+    <section id="jadval" class="tab" hidden>
       <h2 class="pt">Turnir jadvali</h2>
       <div class="chips" id="lgs"></div>
       <div class="card" id="tbl"><div class="empty">Yuklanmoqda…</div></div>
     </section>
-    <section id="yangilik">
+    <section id="yangilik" class="tab" hidden>
       <h2 class="pt">Yangiliklar<small>ONSPORTS.UZ GAZETA</small></h2>
-      <div id="news"></div>
+      <div id="news"><div class="empty">Yuklanmoqda…</div></div>
     </section>
-    <a class="tgcta" href="https://t.me/onsportsuz" target="_blank" rel="noopener"><b>@onsportsuz</b><span>Natijalar va yangiliklar Telegram kanalimizda</span></a>
-  </aside>
+  </main>
+  <a class="tgcta" href="https://t.me/onsportsuz" target="_blank" rel="noopener"><b>@onsportsuz</b><span>Natijalar va yangiliklar Telegram kanalimizda</span></a>
 </div>
 <footer>© 2026 ONSPORTS.UZ</footer>
 
@@ -154,16 +150,26 @@ function parseEvents(d,slug){
   }
   return out;
 }
+let lastErr="";
+const ESPN_B=["https://site.api.espn.com/apis/site/v2/sports/soccer/","https://site.web.api.espn.com/apis/site/v2/sports/soccer/"];
 async function loadLeague(slug){
-  const url=`${ESPN}${slug}/scoreboard?dates=${ymd(-1)}-${ymd(2)}`;
-  try{const d=await jget(url);M=M.filter(m=>m.slug!==slug).concat(parseEvents(d,slug));}
-  catch(e){failed++;}
+  let evs=null;
+  for(const b of ESPN_B){
+    try{evs=parseEvents(await jget(`${b}${slug}/scoreboard?dates=${ymd(-1)}-${ymd(2)}`),slug);break;}
+    catch(e){lastErr=e.name==="AbortError"?"vaqt tugadi":String(e.message||e);}
+  }
+  if(evs===null){
+    const rs=await Promise.allSettled([-1,0,1,2].map(o=>jget(`${ESPN_B[0]}${slug}/scoreboard?dates=${ymd(o)}`)));
+    const ok=rs.filter(r=>r.status==="fulfilled");
+    if(ok.length){const seen=new Map();ok.forEach(r=>parseEvents(r.value,slug).forEach(m=>seen.set(m.id,m)));evs=[...seen.values()];}
+  }
+  if(evs===null)failed++;else M=M.filter(m=>m.slug!==slug).concat(evs);
   renderMatches();
 }
 async function loadAll(){
   failed=0;
   await Promise.allSettled(LEAGUES.map(([s])=>loadLeague(s)));
-  if(failed===LEAGUES.length)$("#out").innerHTML=`<div class="empty">Ma'lumot yuklanmadi. Internetni tekshirib, sahifani yangilang.</div>`;
+  if(failed===LEAGUES.length)$("#out").innerHTML=`<div class="empty">O'yinlar yuklanmadi.<br>Reklama bloklovchini (AdBlock) o'chirib, sahifani yangilang.<div class="err">${esc(lastErr)}</div></div>`;
 }
 
 function cards(ms,dt){
@@ -253,10 +259,15 @@ function renderNews(){
 
 document.addEventListener("click",e=>{
   const d=e.target.closest("[data-d]"),c=e.target.closest("[data-c]"),l=e.target.closest("[data-l]");
+  const tb=e.target.closest("[data-tab]");
+  if(tb){e.preventDefault();showTab(tb.dataset.tab);return;}
   if(d){day=+d.dataset.d;cf="*";renderMatches();}
   else if(c){cf=c.dataset.c;renderMatches();}
   else if(l){lg=l.dataset.l;loadTable(lg);}
 });
+function showTab(t){if(!document.querySelector(".tab#"+t))t="oyinlar";document.querySelectorAll(".tab").forEach(x=>x.hidden=x.id!==t);
+  document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("on",x.dataset.tab===t));window.scrollTo(0,0);}
+showTab((location.hash||"").slice(1).replace(/^$/,"oyinlar"));
 renderMatches();loadAll();loadTable(lg);loadNews();
 setInterval(()=>{const hasLive=M.some(isLive);if(hasLive||!window.__t||Date.now()-window.__t>3e5){window.__t=Date.now();loadAll();}},30000);
 setInterval(loadNews,6e5);
