@@ -484,7 +484,8 @@ function paintModal(){
   if(!up){tabs.push(["st",T("stt")],["ev",T("tabEv")]);}
   else tabs.push(["h2h",T("tabH2")],["fm",T("tabFm")]);
   const cur=tabs.some(t=>t[0]===mTab)?mTab:tabs[0][0];
-  if(isLive(m))h+=`<a class="efbtn" href="${esc(efUrl(m))}" target="_blank" rel="noopener noreferrer"><span class="ld"></span>${T("efwatch")}</a>`;
+  if(EFIR[m.id]&&m.st!=="FINISHED")h+=`<a class="efbtn" href="#" data-ef="${esc(m.id)}"><span class="ld"></span>${T("efwatch")}</a>`;
+  else if(isLive(m))h+=`<a class="efbtn" href="${esc(efUrl(m))}" target="_blank" rel="noopener noreferrer"><span class="ld"></span>${T("efwatch")}</a>`;
   h+=`<div class="mt" role="tablist">${tabs.map(t=>`<button role="tab" data-mt="${t[0]}" class="${t[0]===cur?"on":""}">${esc(t[1])}</button>`).join("")}</div><div class="mp">`;
   if(cur==="ev"){
     const all=evList(m,d),main=all.filter(x=>!x.so),sh=all.filter(x=>x.so&&(x.k==="g"||x.k==="pg"||x.k==="pm"));
@@ -570,7 +571,7 @@ async function tsdFetch(m){
 /* ===== SOFASCORE (asosiy manba) =====
    Sofascore brauzerdan to'g'ridan-to'g'ri ochilmasligi mumkin (CORS/403). Eng ishonchli yo'l — o'z Cloudflare Worker proxy'ingiz:
    SOFA_PROXY="https://sizning-worker.workers.dev/?url="  (pastda worker kodi izohda). Bo'sh bo'lsa — to'g'ridan-to'g'ri va ochiq proxy'lar sinab ko'riladi. */
-const SOFA_PROXY="";
+const SOFA_PROXY="https://bold-band-499d.jasurumirov0622.workers.dev/?url=";
 const SOFA="https://api.sofascore.com/api/v1/";
 const SFK={ballPossession:"possessionPct",totalShotsOnGoal:"totalShots",shotsOnGoal:"shotsOnTarget",cornerKicks:"wonCorners",fouls:"foulsCommitted",offsides:"offsides",yellowCards:"yellowCards",redCards:"redCards",goalkeeperSaves:"saves"};
 const SFC={};
@@ -757,6 +758,38 @@ function openMatch(id){
 const EFIR_URL="https://t.me/onsportsuz";
 const EFIR_LINKS={};
 const efUrl=m=>EFIR_LINKS[m.id]||EFIR_URL;
+/* ===== Jonli efir: Worker orqali sayt ichida ===== */
+const WORKER="https://bold-band-499d.jasurumirov0622.workers.dev";
+let EFIR={},_pl=null;
+async function loadEfir(){try{const r=await fetch(WORKER+"/efir");if(r.ok){const n=await r.json();const ch=Object.keys(n).sort().join()!==Object.keys(EFIR).sort().join();EFIR=n;if(ch&&!curM&&typeof renderMatches==="function"&&$("#oyinlar")&&!$("#oyinlar").hidden)renderMatches();}}catch(e){}}
+loadEfir();setInterval(loadEfir,30000);
+const _ld={};
+function loadJs(u){return _ld[u]||(_ld[u]=new Promise((ok,no)=>{const s=document.createElement("script");s.src=u;s.onload=ok;s.onerror=()=>{delete _ld[u];no();};document.head.appendChild(s);}));}
+function closeEfir(){if(_pl){try{_pl.destroy();}catch(e){}_pl=null;}const o=document.getElementById("efp");if(o)o.remove();}
+async function openEfir(id){
+  const e=EFIR[id];if(!e)return;
+  closeEfir();
+  const o=document.createElement("div");o.id="efp";
+  o.style.cssText="position:fixed;inset:0;z-index:99999;background:#000;display:flex;flex-direction:column";
+  o.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;color:#fff;font:700 14px system-ui"><span>'+esc(e.h)+' \u2014 '+esc(e.a)+'</span><button id="efx" style="background:#e5484d;color:#fff;border:0;border-radius:8px;padding:6px 14px;font:700 16px system-ui;cursor:pointer">\u00d7</button></div><video id="efv" controls autoplay playsinline style="flex:1;width:100%;min-height:0;background:#000"></video><div id="efm" style="color:#fff;padding:8px 14px;font:13px system-ui;opacity:.85"></div>';
+  document.body.appendChild(o);
+  const v=o.querySelector("#efv"),msg=o.querySelector("#efm"),src=WORKER+"/p?id="+encodeURIComponent(id);
+  o.querySelector("#efx").onclick=closeEfir;
+  try{
+    if(e.k==="hls"){
+      if(v.canPlayType("application/vnd.apple.mpegurl")){v.src=src;}
+      else{
+        await loadJs("https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.17/hls.min.js");
+        const h=new Hls();_pl=h;h.loadSource(src);h.attachMedia(v);
+        h.on(Hls.Events.ERROR,(_,d)=>{if(d.fatal)msg.textContent="Efir ochilmadi. Birozdan keyin qayta urinib ko'ring.";});
+      }
+    }else{
+      await loadJs("https://cdn.jsdelivr.net/npm/mpegts.js@1.7.3/dist/mpegts.js");
+      const p=mpegts.createPlayer({type:"mpegts",isLive:true,url:src});_pl=p;p.attachMediaElement(v);p.load();
+    }
+    const pr=v.play();if(pr&&pr.catch)pr.catch(()=>{});
+  }catch(er){msg.textContent="Player yuklanmadi. Sahifani yangilab qayta urinib ko'ring.";}
+}
 function closeMatch(){$("#mc").innerHTML="";curM=null;clearInterval(mt);$("#mo").hidden=true;document.body.style.overflow="";}
 
 async function loadTable(slug){
@@ -834,6 +867,7 @@ $("#lb").onclick=()=>{lang=lang==="uz"?"ru":"uz";try{localStorage.setItem("lang"
   M.forEach(m=>m.comp=LN(m.slug));cf="*";applyStatic();renderMatches();renderTable();renderNews();if(curM)paintModal();};
 applyStatic();
 document.addEventListener("click",e=>{
+  const efb=e.target.closest("[data-ef]");if(efb){e.preventDefault();openEfir(efb.dataset.ef);return;}
   const d=e.target.closest("[data-d]"),c=e.target.closest("[data-c]"),l=e.target.closest("[data-l]");
   const tb=e.target.closest("[data-tab]"),mm=e.target.closest("[data-m]");
   if(e.target.id==="mo"||e.target.closest(".mx")){closeMatch();return;}
