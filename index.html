@@ -565,18 +565,90 @@ async function tsdFetch(m){
   }catch(e){out.dbg.push("tsd stat xato: "+(e.message||e.name));}
   return out;
 }
+
+/* ===== SOFASCORE (asosiy manba) =====
+   Sofascore brauzerdan to'g'ridan-to'g'ri ochilmasligi mumkin (CORS/403). Eng ishonchli yo'l — o'z Cloudflare Worker proxy'ingiz:
+   SOFA_PROXY="https://sizning-worker.workers.dev/?url="  (pastda worker kodi izohda). Bo'sh bo'lsa — to'g'ridan-to'g'ri va ochiq proxy'lar sinab ko'riladi. */
+const SOFA_PROXY="";
+const SOFA="https://api.sofascore.com/api/v1/";
+const SFK={ballPossession:"possessionPct",totalShotsOnGoal:"totalShots",shotsOnGoal:"shotsOnTarget",cornerKicks:"wonCorners",fouls:"foulsCommitted",offsides:"offsides",yellowCards:"yellowCards",redCards:"redCards",goalkeeperSaves:"saves"};
+const SFC={};
+async function sofaGet(path,ms=8000){
+  const u=SOFA+path;
+  const ways=SOFA_PROXY?[x=>SOFA_PROXY+encodeURIComponent(x)]:[x=>x,x=>"https://corsproxy.io/?url="+encodeURIComponent(x),x=>"https://api.allorigins.win/raw?url="+encodeURIComponent(x)];
+  let err;
+  for(const w of ways){try{return await jget(w(u),ms);}catch(e){err=e;}}
+  throw err||new Error("sofa");
+}
+async function sofaFetch(m){
+  const out={ev:[],st:{h:{},a:{}},dbg:[]};
+  try{
+    const days=[...new Set([m.utc.slice(0,10),dkey(m.utc)])],t0=new Date(m.utc).getTime()/1e3,h=nz(m.h),a=nz(m.a);
+    const ok=(x,y)=>x&&y&&(x.includes(y)||y.includes(x));
+    let ev=SFC[m.id]||null,swap=false;
+    for(const dy of days){
+      if(ev)break;
+      const j=await sofaGet(`sport/football/scheduled-events/${dy}`);
+      for(const e of (j.events||[])){
+        if(Math.abs((e.startTimestamp||0)-t0)>7200)continue;
+        const H=nz(e.homeTeam&&e.homeTeam.name),A=nz(e.awayTeam&&e.awayTeam.name);
+        const H2=nz(e.homeTeam&&e.homeTeam.shortName),A2=nz(e.awayTeam&&e.awayTeam.shortName);
+        if((ok(H,h)||ok(H2,h))&&(ok(A,a)||ok(A2,a))){ev=e;swap=false;break;}
+        if((ok(H,a)||ok(H2,a))&&(ok(A,h)||ok(A2,h))){ev=e;swap=true;break;}
+      }
+    }
+    if(!ev){out.dbg.push("sofa: o'yin topilmadi");return out;}
+    SFC[m.id]=ev;out.dbg.push("sofa: o'yin topildi #"+ev.id);
+    try{
+      const j=await sofaGet(`event/${ev.id}/incidents`);
+      out.ev=(j.incidents||[]).slice().reverse().map(i=>{
+        const ty=i.incidentType,cl=i.incidentClass;let k="";
+        if(ty==="goal")k=cl==="ownGoal"?"og":cl==="penalty"?"pg":"g";
+        else if(ty==="card")k=cl==="red"||cl==="yellowRed"?"r":"y";
+        else if(ty==="substitution")k="s";
+        else if(ty==="inGamePenalty"&&/miss|save/i.test(cl||""))k="pm";
+        if(!k)return null;
+        let sd=i.isHome?"h":"a";if(swap)sd=sd==="h"?"a":"h";
+        const nm=o=>o&&(o.shortName||o.name)||"";
+        const p=k==="s"?[nm(i.playerIn),nm(i.playerOut)].filter(Boolean):[nm(i.player)].filter(Boolean);
+        return {k,so:false,t:i.time!=null?i.time+(i.addedTime?"+"+i.addedTime:"")+"'":"",s:sd,p};
+      }).filter(Boolean);
+      out.dbg.push("sofa voqea: "+out.ev.length);
+    }catch(e){out.dbg.push("sofa voqea xato: "+(e.message||e.name));}
+    try{
+      const j=await sofaGet(`event/${ev.id}/statistics`);
+      const all=(j.statistics||[]).find(z=>z.period==="ALL")||(j.statistics||[])[0];
+      ((all&&all.groups)||[]).forEach(g=>(g.statisticsItems||[]).forEach(z=>{
+        const k=SFK[z.key];if(!k)return;
+        let x=z.homeValue!=null?z.homeValue:parseFloat(z.home),y=z.awayValue!=null?z.awayValue:parseFloat(z.away);
+        if(swap)[x,y]=[y,x];
+        out.st.h[k]=String(x);out.st.a[k]=String(y);
+      }));
+      out.dbg.push("sofa stat: "+Object.keys(out.st.h).length);
+    }catch(e){out.dbg.push("sofa stat xato: "+(e.message||e.name));}
+  }catch(e){out.dbg.push("sofa xato: "+(e.message||e.name));}
+  return out;
+}
+/* Cloudflare Worker (bepul) — SOFA_PROXY uchun:
+export default{async fetch(r){const u=new URL(r.url).searchParams.get("url");
+ if(!u||!u.startsWith("https://api.sofascore.com/"))return new Response("no",{status:400});
+ const x=await fetch(u,{headers:{"User-Agent":"Mozilla/5.0","Referer":"https://www.sofascore.com/"}});
+ return new Response(x.body,{status:x.status,headers:{"Access-Control-Allow-Origin":"*","Content-Type":"application/json"}});}} */
 async function loadExtra(m){
   const id=m.id,lv=isLive(m),x=SX[id]||(SX[id]={ev:[],st:{h:{},a:{}},n:0,t:0,ok:false,busy:false});
   if(x.busy)return;
-  if(lv){if(Date.now()-x.t<9000)return;}else if(x.ok||x.n>=3)return;
+  if(lv){if(Date.now()-x.t<2500)return;}else if(x.ok||x.n>=3)return;
   x.busy=true;x.n++;x.t=Date.now();
   try{
-    let r=await coreFetch(m);x.dbg=r.dbg.slice();
     const hasSt=o=>Object.keys(o.st.h).length+Object.keys(o.st.a).length>0;
-    if(!r.ev.length||!hasSt(r)){
-      const t=await tsdFetch(m);x.dbg=x.dbg.concat(t.dbg);
-      if(t.ev.length>r.ev.length)r.ev=t.ev;
-      ["h","a"].forEach(sd=>Object.keys(t.st[sd]).forEach(k=>{if(r.st[sd][k]==null)r.st[sd][k]=t.st[sd][k];}));
+    const mergeIn=(r,t)=>{if(t.ev.length>r.ev.length)r.ev=t.ev;
+      ["h","a"].forEach(sd=>Object.keys(t.st[sd]).forEach(k=>{if(r.st[sd][k]==null)r.st[sd][k]=t.st[sd][k];}));};
+    let r=await sofaFetch(m);x.dbg=r.dbg.slice();           /* 1) Sofascore */
+    if(!r.ev.length||!hasSt(r)){                              /* 2) ESPN core */
+      const c=await coreFetch(m);x.dbg=x.dbg.concat(c.dbg);mergeIn(r,c);
+    }
+    if(!r.ev.length||!hasSt(r)){                              /* 3) TheSportsDB */
+      const t=await tsdFetch(m);x.dbg=x.dbg.concat(t.dbg);mergeIn(r,t);
     }
     if(r.ev.length>=x.ev.length)x.ev=r.ev;
     ["h","a"].forEach(sd=>Object.assign(x.st[sd],r.st[sd]));
@@ -673,7 +745,7 @@ async function loadSum(){
 function openMatch(id){
   curM=id;mTab=null;mFT="h";$("#mo").hidden=false;document.body.style.overflow="hidden";
   paintModal();loadSum();clearInterval(mt);
-  mt=setInterval(()=>{const m=M.find(x=>x.id===curM);if(m&&isLive(m)&&!document.hidden)loadSum();},10000);
+  mt=setInterval(()=>{const m=M.find(x=>x.id===curM);if(m&&isLive(m)&&!document.hidden&&!window.__sumBusy){window.__sumBusy=1;loadSum().finally(()=>{window.__sumBusy=0;});}},3000);
 }
 /* ===== Jonli efir: tashqi havola (yangi oynada ochiladi) ===== */
 /* Efir sahifasi havolasini shu yerga yozing. Kerak bo'lsa, ayrim o'yinlar uchun alohida havola: EFIR_LINKS["match_id"]="https://..." */
@@ -781,9 +853,10 @@ renderMatches();loadAll();loadTable(lg);loadNews();
 setInterval(()=>{
   if(document.hidden)return;
   const lv=M.filter(isLive);
-  if(lv.length){[...new Set(lv.map(m=>m.slug))].forEach(loadLeague);}
+  window.__lb=window.__lb||{};
+  if(lv.length){[...new Set(lv.map(m=>m.slug))].forEach(sl=>{if(window.__lb[sl])return;window.__lb[sl]=1;loadLeague(sl).finally(()=>{window.__lb[sl]=0;});});}
   if(!window.__t||Date.now()-window.__t>12e4){window.__t=Date.now();loadAll();}
-},10000);
+},3000);
 setInterval(loadNews,6e5);
 let lastLiveN=-1;setInterval(()=>{const n=M.filter(isLive).length;if(lastLiveN!==-1&&n!==lastLiveN&&!curM&&$("#oyinlar")&&!$("#oyinlar").hidden)renderMatches();lastLiveN=n;},30000);
 </script>
