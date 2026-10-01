@@ -155,6 +155,26 @@ header{background:none;backdrop-filter:none;border:0;padding:0}
 .fb{margin-top:8px}.fb>b{display:flex;align-items:center;gap:8px;font-size:14px;margin:10px 0 2px}.fb>b img{width:20px;height:20px}
 .fl{display:grid;grid-template-columns:74px 1fr 56px 26px;gap:6px;align-items:center;padding:6px 0;border-top:1px solid var(--line);font-size:13px}
 .fl small{color:var(--mu)}.fl .s{text-align:center;font-weight:800;font-variant-numeric:tabular-nums}
+
+/* modal tabs & cards */
+.mt{display:flex;gap:4px;margin:16px 0 8px;padding:4px;background:var(--bg);border:1px solid var(--line);border-radius:14px}
+.mt button{flex:1;border:0;background:none;color:var(--mu);padding:9px 4px;border-radius:10px;font:inherit;font-size:13px;font-weight:700;white-space:nowrap;cursor:pointer}
+.mt button.on{background:var(--ac);color:#052015}
+.h2s{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px 0}
+.h2s>div{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px 6px;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
+.h2s>div b{display:block;font-size:26px;line-height:1.1}
+.h2s>div span{font-weight:700}
+.h2s>div.dw{color:var(--mu)}
+.h2s>div.w:first-child b{color:var(--ac)}.h2s>div.w:last-child b{color:#4a7bd8}
+.h2,.fl{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:6px}
+.h2 .s{background:var(--card);border-radius:8px;padding:4px 0}
+.fs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.fs button{display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:none;color:var(--mu);padding:10px 8px;border-radius:12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;min-width:0}
+.fs button span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fs button.on{background:var(--ac);border-color:var(--ac);color:#052015}
+.fs img{width:20px;height:20px;flex:none}
+.fp{display:flex;justify-content:center;gap:6px;margin:4px 0 12px}
+.fp .fc{width:30px;height:30px;font-size:13px;margin:0}
 </style>
 </head>
 <body>
@@ -224,12 +244,12 @@ uz:{home:"Asosiy",games:"O'yinlar",tab:"Jadval",tableT:"Turnir jadvali",search:"
  yest:"Kecha",today:"Bugun",tom:"Ertaga",all:"Hammasi",live1:"jonli",live2:"Jonli",pause:"Tanaffus",ft:"Tugadi",postp:"Kechiktirildi",canc:"Bekor",
  nogames:"Bu kunda o'yin yo'q",soon:"Yaqinda",team:"Jamoa",pl:"O",pts:"Ochko",notable:"Bu liga uchun jadval topilmadi",more:"Davomi",news:"Yangiliklar",
  searchT:"Qidiruv",nothing:"Hech narsa topilmadi",tgnews:"Yangiliklar Telegramda",tgnewsd:"Hozir bu yerda ko'rsatib bo'lmadi. Kanalni ochish uchun bosing.",
- loadfail1:"O'yinlar yuklanmadi.",loadfail2:"Reklama bloklovchini (AdBlock) o'chirib, sahifani yangilang.",agoM:"daq oldin",agoH:"soat oldin",agoD:"kun oldin",pens:"Penaltilar",pen:"pen.",penw:"Penaltilarda g'olib",aet:"Q.V.",evs:"O'yin voqealari",stt:"Statistika",shoot:"Penalti seriyasi",noev:"Hozircha voqealar yo'q",pgt:"penalti",ogt:"o'z darvozasiga",goal:"Gol",noh2h:"So'nggi yillarda o'zaro o'yin topilmadi",h2h:"O'zaro uchrashuvlar",form:"Oxirgi 5 ta o'yin",win:"g'alaba",draw:"Durang",noh:"Bu o'yin uchun ma'lumot topilmadi",fW:"G",fD:"D",fL:"M"},
+ loadfail1:"O'yinlar yuklanmadi.",loadfail2:"Reklama bloklovchini (AdBlock) o'chirib, sahifani yangilang.",agoM:"daq oldin",agoH:"soat oldin",agoD:"kun oldin",pens:"Penaltilar",pen:"pen.",penw:"Penaltilarda g'olib",aet:"Q.V.",evs:"O'yin voqealari",stt:"Statistika",shoot:"Penalti seriyasi",noev:"Hozircha voqealar yo'q",pgt:"penalti",ogt:"o'z darvozasiga",goal:"Gol",noh2h:"So'nggi yillarda o'zaro o'yin topilmadi",h2h:"O'zaro uchrashuvlar",tabEv:"Voqealar",tabH2:"O'zaro",tabFm:"Forma",form:"Oxirgi 5 ta o'yin",win:"g'alaba",draw:"Durang",noh:"Bu o'yin uchun ma'lumot topilmadi",fW:"G",fD:"D",fL:"M"},
 ru:{home:"Главная",games:"Матчи",tab:"Таблица",tableT:"Турнирная таблица",search:"Поиск…",loading:"Загрузка…",tgcta:"Результаты и новости в нашем Telegram-канале",
  yest:"Вчера",today:"Сегодня",tom:"Завтра",all:"Все",live1:"live",live2:"Идёт",pause:"Перерыв",ft:"Завершён",postp:"Перенесён",canc:"Отменён",
  nogames:"В этот день матчей нет",soon:"Скоро",team:"Команда",pl:"И",pts:"Очки",notable:"Таблица для этой лиги не найдена",more:"Ещё",news:"Новости",
  searchT:"Поиск",nothing:"Ничего не найдено",tgnews:"Новости в Telegram",tgnewsd:"Сейчас показать здесь не получилось. Нажмите, чтобы открыть канал.",
- loadfail1:"Матчи не загрузились.",loadfail2:"Отключите блокировщик рекламы (AdBlock) и обновите страницу.",agoM:"мин назад",agoH:"ч назад",agoD:"дн назад",pens:"Пенальти",pen:"пен.",penw:"Победа по пенальти",aet:"доп. время",evs:"События матча",stt:"Статистика",shoot:"Серия пенальти",noev:"Событий пока нет",pgt:"пенальти",ogt:"автогол",goal:"Гол",noh2h:"Личных встреч за последние годы не найдено",h2h:"Личные встречи",form:"Последние 5 матчей",win:"победа",draw:"Ничьи",noh:"Данных по этому матчу нет",fW:"В",fD:"Н",fL:"П"}};
+ loadfail1:"Матчи не загрузились.",loadfail2:"Отключите блокировщик рекламы (AdBlock) и обновите страницу.",agoM:"мин назад",agoH:"ч назад",agoD:"дн назад",pens:"Пенальти",pen:"пен.",penw:"Победа по пенальти",aet:"доп. время",evs:"События матча",stt:"Статистика",shoot:"Серия пенальти",noev:"Событий пока нет",pgt:"пенальти",ogt:"автогол",goal:"Гол",noh2h:"Личных встреч за последние годы не найдено",h2h:"Личные встречи",tabEv:"События",tabH2:"Встречи",tabFm:"Форма",form:"Последние 5 матчей",win:"победа",draw:"Ничьи",noh:"Данных по этому матчу нет",fW:"В",fD:"Н",fL:"П"}};
 const T=k=>(I[lang]&&I[lang][k])||I.uz[k];
 const NAMER={"uzb.1":"Суперлига Узбекистана","uefa.champions":"Лига чемпионов","eng.1":"Английская Премьер-лига","esp.1":"Ла Лига","ita.1":"Серия A","ger.1":"Бундеслига","fra.1":"Лига 1","uefa.europa":"Лига Европы","uefa.europa.conf":"Лига конференций","uefa.nations":"Лига наций УЕФА","afc.champions":"Лига чемпионов АФК","afc.cup":"Лига чемпионов АФК 2","fifa.friendly":"Товарищеские матчи","tur.1":"Суперлига Турции","ned.1":"Эредивизи","por.1":"Лига Португалии","ksa.1":"Про-лига Саудовской Аравии","usa.1":"МЛС","eng.2":"Чемпионшип Англии"};
 const ESPN="https://site.api.espn.com/apis/site/v2/sports/soccer/";
@@ -345,7 +365,7 @@ function renderMatches(){
 
 
 /* ===== O'yin tafsilotlari (modal) ===== */
-let curM=null,SM={},SF={},mt=null;
+let curM=null,SM={},SF={},mt=null,mTab=null,mFT="h";
 const SK=["possessionPct","totalShots","shotsOnTarget","wonCorners","foulsCommitted","offsides","yellowCards","redCards","saves"];
 const SL={uz:{possessionPct:"To'pga egalik",totalShots:"Zarbalar",shotsOnTarget:"Darvoza tomon zarbalar",wonCorners:"Burchak zarbalari",foulsCommitted:"Qoidabuzarliklar",offsides:"Ofsayd",yellowCards:"Sariq kartochkalar",redCards:"Qizil kartochkalar",saves:"Seyvlar"},
  ru:{possessionPct:"Владение мячом",totalShots:"Удары",shotsOnTarget:"Удары в створ",wonCorners:"Угловые",foulsCommitted:"Фолы",offsides:"Офсайды",yellowCards:"Жёлтые карточки",redCards:"Красные карточки",saves:"Сейвы"}};
@@ -402,7 +422,7 @@ function h2hHtml(m,d){
   let wh=0,wa=0,dr=0;
   L.forEach(g=>{const hg=g.hi===m.hid?g.hs:g.as,ag=g.hi===m.hid?g.as:g.hs;if(hg>ag)wh++;else if(ag>hg)wa++;else dr++;});
   const nm=id=>esc(tn(id===m.hid?m.h:id===m.aid?m.a:""));
-  return `<div class="sec2">${T("h2h")}</div><div class="h2s"><div><b>${wh}</b>${esc(tn(m.h))}<br><small>${T("win")}</small></div><div><b>${dr}</b>${T("draw")}</div><div><b>${wa}</b>${esc(tn(m.a))}<br><small>${T("win")}</small></div></div>`
+  return `<div class="h2s"><div class="w"><b>${wh}</b><span>${esc(tn(m.h))}</span><small>${T("win")}</small></div><div class="dw"><b>${dr}</b><span>${T("draw")}</span></div><div class="w"><b>${wa}</b><span>${esc(tn(m.a))}</span><small>${T("win")}</small></div></div>`
    +L.map(g=>`<div class="h2"><small>${fdate(g.u)}</small><div class="a">${nm(g.hi)}</div><div class="s">${g.hs} – ${g.as}</div><div>${nm(g.ai)}</div></div>`).join("");
 }
 function normForm(e,tid){
@@ -417,8 +437,11 @@ function formHtml(m,d){
   let A=by[m.hid]||[],B=by[m.aid]||[];
   if(!A.length&&!B.length&&SF[m.id]){A=SF[m.id].form[m.hid]||[];B=SF[m.id].form[m.aid]||[];}
   if(!A.length&&!B.length)return"";
-  const blk=(nm,lg,L)=>`<div class="fb"><b>${img(lg)}${esc(tn(nm))}</b>`+(L.length?L.map(g=>`<div class="fl"><small>${g.u?fdate(g.u):""}</small><div>${esc(tn(g.on))}</div><div class="s">${esc(g.sc)}</div>${g.r?`<span class="fc ${g.r}">${T("f"+g.r)}</span>`:"<span></span>"}</div>`).join(""):`<div class="empty" style="padding:8px">—</div>`)+`</div>`;
-  return `<div class="sec2">${T("form")}</div>`+blk(m.h,m.hc,A)+blk(m.a,m.ac,B);
+  const L=mFT==="a"?B:A;
+  const sw=`<div class="fs"><button data-ft="h" class="${mFT!=="a"?"on":""}">${img(m.hc)}<span>${esc(tn(m.h))}</span></button><button data-ft="a" class="${mFT==="a"?"on":""}">${img(m.ac)}<span>${esc(tn(m.a))}</span></button></div>`;
+  const pills=L.some(g=>g.r)?`<div class="fp">${[...L].reverse().map(g=>g.r?`<span class="fc ${g.r}">${T("f"+g.r)}</span>`:"").join("")}</div>`:"";
+  const rows=L.length?L.map(g=>`<div class="fl"><small>${g.u?fdate(g.u):""}</small><div>${esc(tn(g.on))}</div><div class="s">${esc(g.sc)}</div>${g.r?`<span class="fc ${g.r}">${T("f"+g.r)}</span>`:"<span></span>"}</div>`).join(""):`<div class="empty" style="padding:14px">—</div>`;
+  return sw+pills+rows;
 }
 function paintModal(){
   const m=M.find(x=>x.id===curM);if(!m)return;
@@ -428,17 +451,20 @@ function paintModal(){
   let h=`<div class="mcomp">${esc(m.comp)} · ${dshort(m.utc)}, ${tm(m.utc)}</div>`
    +`<div class="mh"><div class="t">${img(m.hc)}<b>${esc(tn(m.h))}</b></div>${mid}<div class="t">${img(m.ac)}<b>${esc(tn(m.a))}</b></div></div>`;
   if(pw)h+=`<div style="display:flex;justify-content:center;margin-top:10px"><span class="pwr">${bdg()}<b>${esc(tn(pw==="h"?m.h:m.a))}</b> <small style="color:var(--mu)">— ${esc(T("penw"))}</small></span></div>`;
-  if(!up){
+  const sr=up?"":statRows(m,d),hh=h2hHtml(m,d),fm=formHtml(m,d),sf=SF[m.id];
+  const tabs=[];
+  if(!up){tabs.push(["ev",T("tabEv")]);if(sr)tabs.push(["st",T("stt")]);if(hh)tabs.push(["h2h",T("tabH2")]);if(fm)tabs.push(["fm",T("tabFm")]);}
+  else tabs.push(["h2h",T("tabH2")],["fm",T("tabFm")]);
+  const cur=tabs.some(t=>t[0]===mTab)?mTab:tabs[0][0];
+  h+=`<div class="mt" role="tablist">${tabs.map(t=>`<button role="tab" data-mt="${t[0]}" class="${t[0]===cur?"on":""}">${esc(t[1])}</button>`).join("")}</div><div class="mp">`;
+  if(cur==="ev"){
     const all=evList(m,d),main=all.filter(x=>!x.so),sh=all.filter(x=>x.so&&(x.k==="g"||x.k==="pg"||x.k==="pm"));
-    h+=`<div class="sec2">${T("evs")}</div>`+(main.length?main.map(evRow).join(""):`<div class="empty" style="padding:14px">${T("noev")}</div>`);
+    h+=(main.length?main.map(evRow).join(""):`<div class="empty" style="padding:14px">${T("noev")}</div>`);
     if(sh.length)h+=`<div class="sec2">${T("shoot")}</div>`+sh.map(x=>`<div class="pk"><span>${esc(x.p[0]||"")}</span><span>${esc(tn(x.s==="h"?m.h:m.a))}</span><span class="${x.k==="pm"?"no":"ok"}">${x.k==="pm"?"✗":"✓"}</span></div>`).join("");
-    const sr=statRows(m,d);
-    if(sr)h+=`<div class="sec2">${T("stt")}</div>`+sr;
-  }
-  const hh=h2hHtml(m,d),fm=formHtml(m,d),sf=SF[m.id];
-  const hx=(up&&!hh&&sf)?`<div class="sec2">${T("h2h")}</div><div class="empty" style="padding:12px">${sf.hd?T("noh2h"):T("loading")}</div>`:"";
-  h+=hh+hx+fm;
-  if(up&&!hh&&!fm&&!sf)h+=`<div class="empty" style="padding:18px">${T("loading")}</div>`;
+  }else if(cur==="st"){h+=sr;}
+  else if(cur==="h2h"){h+=hh||`<div class="empty" style="padding:18px">${sf&&sf.hd?T("noh2h"):T("loading")}</div>`;}
+  else{h+=fm||`<div class="empty" style="padding:18px">${sf?T("noh"):T("loading")}</div>`;}
+  h+=`</div>`;
   $("#mc").innerHTML=h;
 }
 async function getSum(m){
@@ -506,7 +532,7 @@ async function loadSum(){
   if(!SF[id].hd&&!sumH&&SF[id].h2h.length<5&&!SF[id].busy){SF[id].busy=1;await loadH2H(m);SF[id].busy=0;if(curM===id)paintModal();}
 }
 function openMatch(id){
-  curM=id;$("#mo").hidden=false;document.body.style.overflow="hidden";
+  curM=id;mTab=null;mFT="h";$("#mo").hidden=false;document.body.style.overflow="hidden";
   paintModal();loadSum();clearInterval(mt);
   mt=setInterval(()=>{const m=M.find(x=>x.id===curM);if(m&&isLive(m))loadSum();},30000);
 }
@@ -590,6 +616,9 @@ document.addEventListener("click",e=>{
   const d=e.target.closest("[data-d]"),c=e.target.closest("[data-c]"),l=e.target.closest("[data-l]");
   const tb=e.target.closest("[data-tab]"),mm=e.target.closest("[data-m]");
   if(e.target.id==="mo"||e.target.closest(".mx")){closeMatch();return;}
+  const mtb=e.target.closest("[data-mt]"),ftb=e.target.closest("[data-ft]");
+  if(mtb){mTab=mtb.dataset.mt;paintModal();return;}
+  if(ftb){mFT=ftb.dataset.ft;paintModal();return;}
   if(mm){openMatch(mm.dataset.m);return;}
   if(tb){e.preventDefault();showTab(tb.dataset.tab);return;}
   if(d){day=+d.dataset.d;cf="*";renderMatches();}
