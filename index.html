@@ -488,7 +488,7 @@ function paintModal(){
   h+=`<div class="mt" role="tablist">${tabs.map(t=>`<button role="tab" data-mt="${t[0]}" class="${t[0]===cur?"on":""}">${esc(t[1])}</button>`).join("")}</div><div class="mp">`;
   if(cur==="ev"){
     const all=evList(m,d),main=all.filter(x=>!x.so),sh=all.filter(x=>x.so&&(x.k==="g"||x.k==="pg"||x.k==="pm"));
-    h+=(main.length?main.map(evRow).join(""):`<div class="empty" style="padding:14px">${T("noev")}${SX[m.id]&&SX[m.id].dbg?`<div style="font-size:11px;opacity:.6;margin-top:8px;line-height:1.5">${SX[m.id].dbg.map(esc).join("<br>")}</div>`:""}</div>`);
+    h+=(main.length?main.map(evRow).join(""):`<div class="empty" style="padding:14px">${T("noev")}${(m.st==="FINISHED"||isLive(m))?`<div style="margin-top:10px"><button class="retry" data-retry="${esc(m.id)}" style="padding:7px 14px;border-radius:10px;border:1px solid var(--bd,#2a3550);background:transparent;color:inherit;cursor:pointer">↻ ${lang==="ru"?"Обновить":"Qayta urinish"}</button></div>`:""}${(DEBUG&&SX[m.id]&&SX[m.id].dbg)?`<div style="font-size:11px;opacity:.6;margin-top:8px;line-height:1.5">${SX[m.id].dbg.map(esc).join("<br>")}</div>`:""}</div>`);
     if(sh.length)h+=`<div class="sec2">${T("shoot")}</div>`+sh.map(x=>`<div class="pk"><span>${esc(x.p[0]||"")}</span><span>${esc(tn(x.s==="h"?m.h:m.a))}</span><span class="${x.k==="pm"?"no":"ok"}">${x.k==="pm"?"✗":"✓"}</span></div>`).join("");
   }else if(cur==="st"){h+=sr;}
   else if(cur==="h2h"){h+=hh||`<div class="empty" style="padding:18px">${sf&&sf.hd?T("noh2h"):T("loading")}</div>`;}
@@ -499,6 +499,7 @@ function paintModal(){
 
 /* ===== Qo'shimcha manbalar: ESPN core API + TheSportsDB (ESPN summary bo'sh bo'lsa) ===== */
 const SX={};
+const DEBUG=/[?&]debug/.test(location.search);
 const CORE="https://sports.core.api.espn.com/v2/sports/soccer/leagues/";
 const TSD="https://www.thesportsdb.com/api/v1/json/3/";
 const tidOf=r=>{const x=String((r&&r.$ref)||"").match(/teams\/(\d+)/);return x?x[1]:"";};
@@ -573,12 +574,16 @@ const SOFA_PROXY="";
 const SOFA="https://api.sofascore.com/api/v1/";
 const SFK={ballPossession:"possessionPct",totalShotsOnGoal:"totalShots",shotsOnGoal:"shotsOnTarget",cornerKicks:"wonCorners",fouls:"foulsCommitted",offsides:"offsides",yellowCards:"yellowCards",redCards:"redCards",goalkeeperSaves:"saves"};
 const SFC={};
-async function sofaGet(path,ms=8000){
-  const u=SOFA+path;
-  const ways=SOFA_PROXY?[x=>SOFA_PROXY+encodeURIComponent(x)]:[x=>x,x=>"https://corsproxy.io/?url="+encodeURIComponent(x),x=>"https://api.allorigins.win/raw?url="+encodeURIComponent(x)];
-  let err;
-  for(const w of ways){try{return await jget(w(u),ms);}catch(e){err=e;}}
-  throw err||new Error("sofa");
+let SOFA_OK=-1;
+async function sofaGet(path,ms=6000){
+  const hosts=["https://api.sofascore.com/api/v1/","https://www.sofascore.com/api/v1/"];
+  const wrap=SOFA_PROXY?[x=>SOFA_PROXY+encodeURIComponent(x)]
+    :[x=>x,x=>"https://corsproxy.io/?url="+encodeURIComponent(x),x=>"https://api.allorigins.win/raw?url="+encodeURIComponent(x),x=>"https://api.codetabs.com/v1/proxy?quest="+encodeURIComponent(x)];
+  const tries=[];hosts.forEach(h=>wrap.forEach((w,i)=>tries.push([i,w(h+path)])));
+  const order=SOFA_OK>=0?tries.filter(t=>t[0]===SOFA_OK).concat(tries.filter(t=>t[0]!==SOFA_OK)):tries;
+  /* hammasi bir vaqtda — birinchi muvaffaqiyatli javob olinadi */
+  return await Promise.any(order.map(async([i,u])=>{const j=await jget(u,ms);if(!j||typeof j!=="object")throw new Error("bo'sh");SOFA_OK=i;return j;}))
+    .catch(e=>{throw new Error("sofa: barcha yo'llar yopiq");});
 }
 async function sofaFetch(m){
   const out={ev:[],st:{h:{},a:{}},dbg:[]};
@@ -637,7 +642,7 @@ export default{async fetch(r){const u=new URL(r.url).searchParams.get("url");
 async function loadExtra(m){
   const id=m.id,lv=isLive(m),x=SX[id]||(SX[id]={ev:[],st:{h:{},a:{}},n:0,t:0,ok:false,busy:false});
   if(x.busy)return;
-  if(lv){if(Date.now()-x.t<2500)return;}else if(x.ok||x.n>=3)return;
+  if(lv){if(Date.now()-x.t<2500)return;}else if(x.ok||x.n>=12||Date.now()-x.t<20000)return;
   x.busy=true;x.n++;x.t=Date.now();
   try{
     const hasSt=o=>Object.keys(o.st.h).length+Object.keys(o.st.a).length>0;
@@ -677,7 +682,7 @@ function applySum(m,d){
   }catch(e){return false;}
 }
 async function getSum(m){
-  for(const b of ESPN_B){try{return await jget(`${b}${m.slug}/summary?event=${m.id.slice(1)}&_=${Date.now()}`,8000);}catch(e){}}
+  for(const sl of [m.slug,"all"])for(const b of ESPN_B){try{const d=await jget(`${b}${sl}/summary?event=${m.id.slice(1)}&_=${Date.now()}`,8000);if(d&&(d.header||d.keyEvents||d.boxscore))return d;}catch(e){}}
   return null;
 }
 const scr=x=>{const v=x&&x.score;return num(v&&typeof v==="object"?(v.displayValue??v.value):v);};
@@ -832,6 +837,8 @@ document.addEventListener("click",e=>{
   const d=e.target.closest("[data-d]"),c=e.target.closest("[data-c]"),l=e.target.closest("[data-l]");
   const tb=e.target.closest("[data-tab]"),mm=e.target.closest("[data-m]");
   if(e.target.id==="mo"||e.target.closest(".mx")){closeMatch();return;}
+  const rt=e.target.closest("[data-retry]");
+  if(rt){const mm2=M.find(x=>x.id===rt.dataset.retry);if(mm2){const x=SX[mm2.id];if(x){x.n=0;x.ok=false;x.t=0;}delete SFC[mm2.id];loadExtra(mm2);getSum(mm2).then(d=>{if(d){SM[mm2.id]=d;if(applySum(mm2,d))renderMatches();}if(curM===mm2.id)paintModal();});}return;}
   const mtb=e.target.closest("[data-mt]"),ftb=e.target.closest("[data-ft]");
   if(mtb){mTab=mtb.dataset.mt;paintModal();return;}
   if(ftb){mFT=ftb.dataset.ft;paintModal();return;}
