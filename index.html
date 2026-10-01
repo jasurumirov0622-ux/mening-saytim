@@ -152,6 +152,9 @@ header{background:none;backdrop-filter:none;border:0;padding:0}
 .fm{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fm>div{text-align:center}.fm b{display:block;font-size:13px;margin-bottom:6px}
 .fc{display:inline-grid;place-items:center;width:24px;height:24px;margin:0 2px;border-radius:6px;font-size:12px;font-weight:800;color:#fff}
 .fc.W{background:#1fa971}.fc.D{background:#8a98b5}.fc.L{background:#e5484d}
+.fb{margin-top:8px}.fb>b{display:flex;align-items:center;gap:8px;font-size:14px;margin:10px 0 2px}.fb>b img{width:20px;height:20px}
+.fl{display:grid;grid-template-columns:74px 1fr 56px 26px;gap:6px;align-items:center;padding:6px 0;border-top:1px solid var(--line);font-size:13px}
+.fl small{color:var(--mu)}.fl .s{text-align:center;font-weight:800;font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
@@ -221,12 +224,12 @@ uz:{home:"Asosiy",games:"O'yinlar",tab:"Jadval",tableT:"Turnir jadvali",search:"
  yest:"Kecha",today:"Bugun",tom:"Ertaga",all:"Hammasi",live1:"jonli",live2:"Jonli",pause:"Tanaffus",ft:"Tugadi",postp:"Kechiktirildi",canc:"Bekor",
  nogames:"Bu kunda o'yin yo'q",soon:"Yaqinda",team:"Jamoa",pl:"O",pts:"Ochko",notable:"Bu liga uchun jadval topilmadi",more:"Davomi",news:"Yangiliklar",
  searchT:"Qidiruv",nothing:"Hech narsa topilmadi",tgnews:"Yangiliklar Telegramda",tgnewsd:"Hozir bu yerda ko'rsatib bo'lmadi. Kanalni ochish uchun bosing.",
- loadfail1:"O'yinlar yuklanmadi.",loadfail2:"Reklama bloklovchini (AdBlock) o'chirib, sahifani yangilang.",agoM:"daq oldin",agoH:"soat oldin",agoD:"kun oldin",pens:"Penaltilar",pen:"pen.",penw:"Penaltilarda g'olib",aet:"Q.V.",evs:"O'yin voqealari",stt:"Statistika",shoot:"Penalti seriyasi",noev:"Hozircha voqealar yo'q",pgt:"penalti",ogt:"o'z darvozasiga",goal:"Gol",h2h:"O'zaro uchrashuvlar",form:"Oxirgi o'yinlar",win:"g'alaba",draw:"Durang",noh:"Bu o'yin uchun ma'lumot topilmadi",fW:"G",fD:"D",fL:"M"},
+ loadfail1:"O'yinlar yuklanmadi.",loadfail2:"Reklama bloklovchini (AdBlock) o'chirib, sahifani yangilang.",agoM:"daq oldin",agoH:"soat oldin",agoD:"kun oldin",pens:"Penaltilar",pen:"pen.",penw:"Penaltilarda g'olib",aet:"Q.V.",evs:"O'yin voqealari",stt:"Statistika",shoot:"Penalti seriyasi",noev:"Hozircha voqealar yo'q",pgt:"penalti",ogt:"o'z darvozasiga",goal:"Gol",h2h:"O'zaro uchrashuvlar",form:"Oxirgi 5 ta o'yin",win:"g'alaba",draw:"Durang",noh:"Bu o'yin uchun ma'lumot topilmadi",fW:"G",fD:"D",fL:"M"},
 ru:{home:"Главная",games:"Матчи",tab:"Таблица",tableT:"Турнирная таблица",search:"Поиск…",loading:"Загрузка…",tgcta:"Результаты и новости в нашем Telegram-канале",
  yest:"Вчера",today:"Сегодня",tom:"Завтра",all:"Все",live1:"live",live2:"Идёт",pause:"Перерыв",ft:"Завершён",postp:"Перенесён",canc:"Отменён",
  nogames:"В этот день матчей нет",soon:"Скоро",team:"Команда",pl:"И",pts:"Очки",notable:"Таблица для этой лиги не найдена",more:"Ещё",news:"Новости",
  searchT:"Поиск",nothing:"Ничего не найдено",tgnews:"Новости в Telegram",tgnewsd:"Сейчас показать здесь не получилось. Нажмите, чтобы открыть канал.",
- loadfail1:"Матчи не загрузились.",loadfail2:"Отключите блокировщик рекламы (AdBlock) и обновите страницу.",agoM:"мин назад",agoH:"ч назад",agoD:"дн назад",pens:"Пенальти",pen:"пен.",penw:"Победа по пенальти",aet:"доп. время",evs:"События матча",stt:"Статистика",shoot:"Серия пенальти",noev:"Событий пока нет",pgt:"пенальти",ogt:"автогол",goal:"Гол",h2h:"Личные встречи",form:"Последние матчи",win:"победа",draw:"Ничьи",noh:"Данных по этому матчу нет",fW:"В",fD:"Н",fL:"П"}};
+ loadfail1:"Матчи не загрузились.",loadfail2:"Отключите блокировщик рекламы (AdBlock) и обновите страницу.",agoM:"мин назад",agoH:"ч назад",agoD:"дн назад",pens:"Пенальти",pen:"пен.",penw:"Победа по пенальти",aet:"доп. время",evs:"События матча",stt:"Статистика",shoot:"Серия пенальти",noev:"Событий пока нет",pgt:"пенальти",ogt:"автогол",goal:"Гол",h2h:"Личные встречи",form:"Последние 5 матчей",win:"победа",draw:"Ничьи",noh:"Данных по этому матчу нет",fW:"В",fD:"Н",fL:"П"}};
 const T=k=>(I[lang]&&I[lang][k])||I.uz[k];
 const NAMER={"uzb.1":"Суперлига Узбекистана","uefa.champions":"Лига чемпионов","eng.1":"Английская Премьер-лига","esp.1":"Ла Лига","ita.1":"Серия A","ger.1":"Бундеслига","fra.1":"Лига 1","uefa.europa":"Лига Европы","uefa.europa.conf":"Лига конференций","uefa.nations":"Лига наций УЕФА","afc.champions":"Лига чемпионов АФК","afc.cup":"Лига чемпионов АФК 2","fifa.friendly":"Товарищеские матчи","tur.1":"Суперлига Турции","ned.1":"Эредивизи","por.1":"Лига Португалии","ksa.1":"Про-лига Саудовской Аравии","usa.1":"МЛС","eng.2":"Чемпионшип Англии"};
 const ESPN="https://site.api.espn.com/apis/site/v2/sports/soccer/";
@@ -342,7 +345,7 @@ function renderMatches(){
 
 
 /* ===== O'yin tafsilotlari (modal) ===== */
-let curM=null,SM={},mt=null;
+let curM=null,SM={},SF={},mt=null;
 const SK=["possessionPct","totalShots","shotsOnTarget","wonCorners","foulsCommitted","offsides","yellowCards","redCards","saves"];
 const SL={uz:{possessionPct:"To'pga egalik",totalShots:"Zarbalar",shotsOnTarget:"Darvoza tomon zarbalar",wonCorners:"Burchak zarbalari",foulsCommitted:"Qoidabuzarliklar",offsides:"Ofsayd",yellowCards:"Sariq kartochkalar",redCards:"Qizil kartochkalar",saves:"Seyvlar"},
  ru:{possessionPct:"Владение мячом",totalShots:"Удары",shotsOnTarget:"Удары в створ",wonCorners:"Угловые",foulsCommitted:"Фолы",offsides:"Офсайды",yellowCards:"Жёлтые карточки",redCards:"Красные карточки",saves:"Сейвы"}};
@@ -393,7 +396,8 @@ function h2hHtml(m,d){
     if(!e.gameDate||hs==null||as==null||!hi||!ai)return;
     seen.set(e.gameDate+hi+ai,{u:e.gameDate,hi,ai,hs,as,lg:e.leagueName||e.leagueAbbreviation||""});
   }));
-  const L=[...seen.values()].sort((x,y)=>x.u<y.u?1:-1).slice(0,6);
+  let L=[...seen.values()].sort((x,y)=>x.u<y.u?1:-1).slice(0,5);
+  if(!L.length&&SF[m.id])L=SF[m.id].h2h.slice(0,5);
   if(!L.length)return"";
   let wh=0,wa=0,dr=0;
   L.forEach(g=>{const hg=g.hi===m.hid?g.hs:g.as,ag=g.hi===m.hid?g.as:g.hs;if(hg>ag)wh++;else if(ag>hg)wa++;else dr++;});
@@ -401,14 +405,20 @@ function h2hHtml(m,d){
   return `<div class="sec2">${T("h2h")}</div><div class="h2s"><div><b>${wh}</b>${esc(tn(m.h))}<br><small>${T("win")}</small></div><div><b>${dr}</b>${T("draw")}</div><div><b>${wa}</b>${esc(tn(m.a))}<br><small>${T("win")}</small></div></div>`
    +L.map(g=>`<div class="h2"><small>${fdate(g.u)}</small><div class="a">${nm(g.hi)}</div><div class="s">${g.hs} – ${g.as}</div><div>${nm(g.ai)}</div></div>`).join("");
 }
+function normForm(e,tid){
+  const r=String(e.gameResult||"").toUpperCase().charAt(0);
+  let sc="";const hi=String(e.homeTeamId||""),hs=num(e.homeTeamScore),as=num(e.awayTeamScore);
+  if(hs!=null&&as!=null&&hi)sc=(hi===String(tid)?hs+" – "+as:as+" – "+hs);else if(e.score)sc=String(e.score).replace("-"," – ");
+  return {u:e.gameDate||"",r:"WDL".includes(r)&&r?r:"",sc,on:((e.opponent||{}).displayName)||((e.opponent||{}).shortDisplayName)||""};
+}
 function formHtml(m,d){
   const fm=(((d||{}).boxscore||{}).form)||[],by={};
-  fm.forEach(t=>{by[String((t.team||{}).id)]=(t.events||[]).slice(0,5);});
-  const A=by[m.hid]||[],B=by[m.aid]||[];
+  fm.forEach(t=>{const id=String((t.team||{}).id);by[id]=(t.events||[]).slice(0,5).map(e=>normForm(e,id));});
+  let A=by[m.hid]||[],B=by[m.aid]||[];
+  if(!A.length&&!B.length&&SF[m.id]){A=SF[m.id].form[m.hid]||[];B=SF[m.id].form[m.aid]||[];}
   if(!A.length&&!B.length)return"";
-  const chips=ev=>ev.map(e=>{const r=String(e.gameResult||"").toUpperCase().charAt(0);if(!"WDL".includes(r)||!r)return"";
-    return `<span class="fc ${r}" title="${esc((e.atVs||"")+" "+((e.opponent||{}).displayName||"")+" "+(e.score||""))}">${T("f"+r)}</span>`;}).join("");
-  return `<div class="sec2">${T("form")}</div><div class="fm"><div><b>${esc(tn(m.h))}</b>${chips(A)}</div><div><b>${esc(tn(m.a))}</b>${chips(B)}</div></div>`;
+  const blk=(nm,lg,L)=>`<div class="fb"><b>${img(lg)}${esc(tn(nm))}</b>`+(L.length?L.map(g=>`<div class="fl"><small>${g.u?fdate(g.u):""}</small><div>${esc(tn(g.on))}</div><div class="s">${esc(g.sc)}</div>${g.r?`<span class="fc ${g.r}">${T("f"+g.r)}</span>`:"<span></span>"}</div>`).join(""):`<div class="empty" style="padding:8px">—</div>`)+`</div>`;
+  return `<div class="sec2">${T("form")}</div>`+blk(m.h,m.hc,A)+blk(m.a,m.ac,B);
 }
 function paintModal(){
   const m=M.find(x=>x.id===curM);if(!m)return;
@@ -427,17 +437,46 @@ function paintModal(){
   }
   const hh=h2hHtml(m,d),fm=formHtml(m,d);
   h+=hh+fm;
-  if(up&&!hh&&!fm)h+=`<div class="empty" style="padding:18px">${SM[m.id]===undefined?T("loading"):T("noh")}</div>`;
+  if(up&&!hh&&!fm)h+=`<div class="empty" style="padding:18px">${(SM[m.id]===undefined||SF[m.id]===undefined)?T("loading"):T("noh")}</div>`;
   $("#mc").innerHTML=h;
 }
 async function getSum(m){
   for(const b of ESPN_B){try{return await jget(`${b}${m.slug}/summary?event=${m.id.slice(1)}`);}catch(e){}}
   return null;
 }
+const scr=x=>{const v=x&&x.score;return num(v&&typeof v==="object"?(v.displayValue??v.value):v);};
+const cid=x=>String(x?((x.team||{}).id??x.id??""):"");
+function parseSched(d,tid){
+  return ((d&&d.events)||[]).map(e=>{
+    try{
+      const c=(e.competitions||[{}])[0],cs=c.competitors||[],st=((c.status||e.status||{}).type)||{};
+      const me=cs.find(x=>cid(x)===String(tid)),op=cs.find(x=>x!==me);
+      if(!me||!op||!(st.completed||st.state==="post"))return null;
+      const ms=scr(me),os=scr(op);if(ms==null||os==null)return null;
+      return {u:e.date||c.date||"",ms,os,oid:cid(op),home:me.homeAway==="home",on:((op.team||{}).displayName)||""};
+    }catch(x){return null;}
+  }).filter(Boolean).sort((a,b)=>a.u<b.u?1:-1);
+}
+const NAT=["fifa.friendly","fifa.world","fifa.worldq.afc","fifa.worldq.uefa","afc.asian","afc.asian.qual","uefa.euro","uefa.euroq","uefa.nations"];
+async function loadSched(m){
+  const res={h2h:[],form:{}};
+  try{
+    const slugs=[m.slug];if(m.slug==="fifa.friendly"||m.slug==="uefa.nations")NAT.forEach(x=>{if(!slugs.includes(x))slugs.push(x);});
+    const get=async tid=>{const out=new Map();
+      await Promise.all(slugs.map(async sl=>{for(const b of ESPN_B){try{parseSched(await jget(`${b}${sl}/teams/${tid}/schedule`),tid).forEach(g=>out.set(g.u+g.oid,g));break;}catch(e){}}}));
+      return [...out.values()].sort((a,b)=>a.u<b.u?1:-1);};
+    const [A,B]=await Promise.all([get(m.hid),get(m.aid)]);
+    const fm=L=>L.slice(0,5).map(g=>({u:g.u,r:g.ms>g.os?"W":g.ms<g.os?"L":"D",sc:g.ms+" – "+g.os,on:g.on}));
+    res.form[m.hid]=fm(A);res.form[m.aid]=fm(B);
+    res.h2h=A.filter(g=>g.oid===m.aid).map(g=>({u:g.u,hi:g.home?m.hid:m.aid,ai:g.home?m.aid:m.hid,hs:g.home?g.ms:g.os,as:g.home?g.os:g.ms}));
+  }catch(e){}
+  SF[m.id]=res;
+}
 async function loadSum(){
   const id=curM,m=M.find(x=>x.id===id);if(!m)return;
   const d=await getSum(m);SM[id]=d||SM[id]||false;
   if(curM===id)paintModal();
+  if(m.st==="TIMED"&&SF[id]===undefined&&!h2hHtml(m,SM[id])&&!formHtml(m,SM[id])){await loadSched(m);if(curM===id)paintModal();}
 }
 function openMatch(id){
   curM=id;$("#mo").hidden=false;document.body.style.overflow="hidden";
