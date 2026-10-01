@@ -328,7 +328,7 @@ const ESPN_B=["https://site.api.espn.com/apis/site/v2/sports/soccer/","https://s
 async function loadLeague(slug){
   let evs=null;
   for(const b of ESPN_B){
-    try{evs=parseEvents(await jget(`${b}${slug}/scoreboard?dates=${ymd(-1)}-${ymd(2)}`),slug);break;}
+    try{evs=parseEvents(await jget(`${b}${slug}/scoreboard?dates=${ymd(-1)}-${ymd(2)}&_=${Date.now()}`),slug);break;}
     catch(e){lastErr=e.name==="AbortError"?"vaqt tugadi":String(e.message||e);}
   }
   if(evs===null){
@@ -336,6 +336,7 @@ async function loadLeague(slug){
     const ok=rs.filter(r=>r.status==="fulfilled");
     if(ok.length){const seen=new Map();ok.forEach(r=>parseEvents(r.value,slug).forEach(m=>seen.set(m.id,m)));evs=[...seen.values()];}
   }
+  if(evs!==null)evs.forEach(n=>{const o=SU[n.id];if(o&&Date.now()-o.t<120000&&((o.hs??0)+(o.as??0))>=((n.hs??0)+(n.as??0))&&(n.st==="TIMED"||n.st==="IN_PLAY")){n.hs=o.hs;n.as=o.as;n.st=o.st;if(o.clk)n.clk=o.clk;}});
   if(evs===null)failed++;else M=M.filter(m=>m.slug!==slug).concat(evs);
   renderMatches();if(curM)paintModal();
 }
@@ -426,7 +427,7 @@ function statRows(m,d){
     A.goals=String(m.hs??0);B.goals=String(m.as??0);
     if(A.yellowCards==null&&B.yellowCards==null){A.yellowCards=String(cnt("y","h"));B.yellowCards=String(cnt("y","a"));}
     if(A.redCards==null&&B.redCards==null){A.redCards=String(cnt("r","h"));B.redCards=String(cnt("r","a"));}
-    if(A.offsides==null&&B.offsides==null){A.offsides="0";B.offsides="0";}
+    if(A.offsides==null&&B.offsides==null){A.offsides="–";B.offsides="–";}
     const top=["goals","yellowCards","redCards","offsides"];
     keys=top.concat(SK.filter(k=>!top.includes(k)));
   }
@@ -498,8 +499,27 @@ function paintModal(){
   h+=`</div>`;
   $("#mc").innerHTML=h;
 }
+const SU={};
+function applySum(m,d){
+  try{
+    const c=(((d||{}).header||{}).competitions||[])[0];if(!c)return false;
+    const cs=c.competitors||[],home=cs.find(x=>x.homeAway==="home"),away=cs.find(x=>x.homeAway==="away");
+    const so=c.status||{},tp=so.type||{},nm=(tp.name||"").toUpperCase(),state=tp.state;
+    let st=m.st;
+    if(nm.includes("POSTPONED"))st="POSTPONED";else if(nm.includes("CANCEL")||nm.includes("ABANDON"))st="CANCELLED";
+    else if(nm.replace(/_/g,"").includes("HALFTIME"))st="PAUSED";
+    else if(state==="in")st="IN_PLAY";else if(state==="post")st="FINISHED";
+    let hs=m.hs,as=m.as;
+    if(home&&away&&st!=="TIMED"){const a=scr(home),b=scr(away);if(a!=null)hs=a;if(b!=null)as=b;}
+    const clk=st==="IN_PLAY"?(so.displayClock||m.clk):"";
+    const ch=hs!==m.hs||as!==m.as||st!==m.st||clk!==m.clk;
+    m.hs=hs;m.as=as;m.st=st;m.clk=clk;m.pk=nm.includes("SHOOTOUT");
+    SU[m.id]={hs,as,st,clk,t:Date.now()};
+    return ch;
+  }catch(e){return false;}
+}
 async function getSum(m){
-  for(const b of ESPN_B){try{return await jget(`${b}${m.slug}/summary?event=${m.id.slice(1)}`);}catch(e){}}
+  for(const b of ESPN_B){try{return await jget(`${b}${m.slug}/summary?event=${m.id.slice(1)}&_=${Date.now()}`,8000);}catch(e){}}
   return null;
 }
 const scr=x=>{const v=x&&x.score;return num(v&&typeof v==="object"?(v.displayValue??v.value):v);};
@@ -552,6 +572,7 @@ async function loadH2H(m){
 async function loadSum(){
   const id=curM,m=M.find(x=>x.id===id);if(!m)return;
   const d=await getSum(m);SM[id]=d||SM[id]||false;
+  if(d&&applySum(m,d))renderMatches();
   if(curM===id)paintModal();
   if(m.st!=="TIMED"||isLive(m))return;
   const sumH=!!h2hHtml(m,SM[id]);
@@ -565,7 +586,7 @@ async function loadSum(){
 function openMatch(id){
   curM=id;mTab=null;mFT="h";$("#mo").hidden=false;document.body.style.overflow="hidden";
   paintModal();loadSum();clearInterval(mt);
-  mt=setInterval(()=>{const m=M.find(x=>x.id===curM);if(m&&isLive(m))loadSum();},30000);
+  mt=setInterval(()=>{const m=M.find(x=>x.id===curM);if(m&&isLive(m)&&!document.hidden)loadSum();},10000);
 }
 /* ===== Jonli efir: tashqi havola (yangi oynada ochiladi) ===== */
 /* Efir sahifasi havolasini shu yerga yozing. Kerak bo'lsa, ayrim o'yinlar uchun alohida havola: EFIR_LINKS["match_id"]="https://..." */
@@ -670,7 +691,12 @@ function showTab(t){if(!document.querySelector(".tab#"+t))t="yangilik";document.
 showTab((location.hash||"").slice(1).replace(/^$/,"yangilik"));
 try{news=JSON.parse(localStorage.getItem("news")||"null");if(news)renderNews();}catch(e){}
 renderMatches();loadAll();loadTable(lg);loadNews();
-setInterval(()=>{const hasLive=M.some(isLive);if(hasLive||!window.__t||Date.now()-window.__t>3e5){window.__t=Date.now();loadAll();}},30000);
+setInterval(()=>{
+  if(document.hidden)return;
+  const lv=M.filter(isLive);
+  if(lv.length){[...new Set(lv.map(m=>m.slug))].forEach(loadLeague);}
+  if(!window.__t||Date.now()-window.__t>12e4){window.__t=Date.now();loadAll();}
+},10000);
 setInterval(loadNews,6e5);
 let lastLiveN=-1;setInterval(()=>{const n=M.filter(isLive).length;if(lastLiveN!==-1&&n!==lastLiveN&&!curM&&$("#oyinlar")&&!$("#oyinlar").hidden)renderMatches();lastLiveN=n;},30000);
 </script>
