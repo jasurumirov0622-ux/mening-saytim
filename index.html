@@ -175,6 +175,23 @@ header{background:none;backdrop-filter:none;border:0;padding:0}
 .fs img{width:20px;height:20px;flex:none}
 .fp{display:flex;justify-content:center;gap:6px;margin:4px 0 12px}
 .fp .fc{width:30px;height:30px;font-size:13px;margin:0}
+
+/* jonli efir */
+.mt{overflow-x:auto;scrollbar-width:none}.mt::-webkit-scrollbar{display:none}
+.mt button{flex:1 0 auto;padding:9px 12px}
+.mt button.ef{color:#ff6b6b}.mt button.ef.on{background:#e5484d;color:#fff}
+.chip.lvc{display:inline-flex;align-items:center;gap:6px;border-color:#e5484d;color:#ff6b6b;font-weight:700}
+.chip.lvc.on{background:#e5484d;border-color:#e5484d;color:#fff}
+.ld{width:8px;height:8px;border-radius:50%;background:currentColor;animation:bl 1.2s infinite}
+@keyframes bl{50%{opacity:.25}}
+.efs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.efs button{border:1px solid var(--line);background:none;color:var(--mu);padding:7px 14px;border-radius:99px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.efs button.on{background:var(--ac);border-color:var(--ac);color:#052015}
+.efv{position:relative;background:#000;border-radius:14px;overflow:hidden;aspect-ratio:16/9}
+.efv video{width:100%;height:100%;display:block;background:#000}
+.efm{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:13px;text-align:center;padding:12px;pointer-events:none}
+.efbtn{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:14px;padding:12px;border-radius:12px;background:#e5484d;color:#fff;font-weight:800;text-decoration:none}
+.efbtn .ld{background:#fff}
 </style>
 </head>
 <body>
@@ -244,12 +261,12 @@ uz:{home:"Asosiy",games:"O'yinlar",tab:"Jadval",tableT:"Turnir jadvali",search:"
  yest:"Kecha",today:"Bugun",tom:"Ertaga",all:"Hammasi",live1:"jonli",live2:"Jonli",pause:"Tanaffus",ft:"Tugadi",postp:"Kechiktirildi",canc:"Bekor",
  nogames:"Bu kunda o'yin yo'q",soon:"Yaqinda",team:"Jamoa",pl:"O",pts:"Ochko",notable:"Bu liga uchun jadval topilmadi",more:"Davomi",news:"Yangiliklar",
  searchT:"Qidiruv",nothing:"Hech narsa topilmadi",tgnews:"Yangiliklar Telegramda",tgnewsd:"Hozir bu yerda ko'rsatib bo'lmadi. Kanalni ochish uchun bosing.",
- loadfail1:"O'yinlar yuklanmadi.",loadfail2:"Reklama bloklovchini (AdBlock) o'chirib, sahifani yangilang.",agoM:"daq oldin",agoH:"soat oldin",agoD:"kun oldin",pens:"Penaltilar",pen:"pen.",penw:"Penaltilarda g'olib",aet:"Q.V.",evs:"O'yin voqealari",stt:"Statistika",shoot:"Penalti seriyasi",noev:"Hozircha voqealar yo'q",pgt:"penalti",ogt:"o'z darvozasiga",goal:"Gol",noh2h:"So'nggi yillarda o'zaro o'yin topilmadi",h2h:"O'zaro uchrashuvlar",tabEv:"Voqealar",tabH2:"O'zaro",tabFm:"Forma",form:"Oxirgi 5 ta o'yin",win:"g'alaba",draw:"Durang",noh:"Bu o'yin uchun ma'lumot topilmadi",fW:"G",fD:"D",fL:"M"},
+ loadfail1:"O'yinlar yuklanmadi.",loadfail2:"Reklama bloklovchini (AdBlock) o'chirib, sahifani yangilang.",agoM:"daq oldin",agoH:"soat oldin",agoD:"kun oldin",pens:"Penaltilar",pen:"pen.",penw:"Penaltilarda g'olib",aet:"Q.V.",evs:"O'yin voqealari",stt:"Statistika",shoot:"Penalti seriyasi",noev:"Hozircha voqealar yo'q",pgt:"penalti",ogt:"o'z darvozasiga",goal:"Gol",noh2h:"So'nggi yillarda o'zaro o'yin topilmadi",h2h:"O'zaro uchrashuvlar",tabEv:"Voqealar",tabLive:"Jonli efir",efwatch:"Jonli efirda ko'rish",tabEf:"📺 Efir",nolive:"Hozir jonli o'yinlar yo'q",efnone:"Efir manbalari hali ulanmagan.",efload:"Efir yuklanmoqda…",eferr:"Efir ochilmadi. Boshqa kanalni tanlang yoki keyinroq urinib ko'ring.",tabH2:"O'zaro",tabFm:"Forma",form:"Oxirgi 5 ta o'yin",win:"g'alaba",draw:"Durang",noh:"Bu o'yin uchun ma'lumot topilmadi",fW:"G",fD:"D",fL:"M"},
 ru:{home:"Главная",games:"Матчи",tab:"Таблица",tableT:"Турнирная таблица",search:"Поиск…",loading:"Загрузка…",tgcta:"Результаты и новости в нашем Telegram-канале",
  yest:"Вчера",today:"Сегодня",tom:"Завтра",all:"Все",live1:"live",live2:"Идёт",pause:"Перерыв",ft:"Завершён",postp:"Перенесён",canc:"Отменён",
  nogames:"В этот день матчей нет",soon:"Скоро",team:"Команда",pl:"И",pts:"Очки",notable:"Таблица для этой лиги не найдена",more:"Ещё",news:"Новости",
  searchT:"Поиск",nothing:"Ничего не найдено",tgnews:"Новости в Telegram",tgnewsd:"Сейчас показать здесь не получилось. Нажмите, чтобы открыть канал.",
- loadfail1:"Матчи не загрузились.",loadfail2:"Отключите блокировщик рекламы (AdBlock) и обновите страницу.",agoM:"мин назад",agoH:"ч назад",agoD:"дн назад",pens:"Пенальти",pen:"пен.",penw:"Победа по пенальти",aet:"доп. время",evs:"События матча",stt:"Статистика",shoot:"Серия пенальти",noev:"Событий пока нет",pgt:"пенальти",ogt:"автогол",goal:"Гол",noh2h:"Личных встреч за последние годы не найдено",h2h:"Личные встречи",tabEv:"События",tabH2:"Встречи",tabFm:"Форма",form:"Последние 5 матчей",win:"победа",draw:"Ничьи",noh:"Данных по этому матчу нет",fW:"В",fD:"Н",fL:"П"}};
+ loadfail1:"Матчи не загрузились.",loadfail2:"Отключите блокировщик рекламы (AdBlock) и обновите страницу.",agoM:"мин назад",agoH:"ч назад",agoD:"дн назад",pens:"Пенальти",pen:"пен.",penw:"Победа по пенальти",aet:"доп. время",evs:"События матча",stt:"Статистика",shoot:"Серия пенальти",noev:"Событий пока нет",pgt:"пенальти",ogt:"автогол",goal:"Гол",noh2h:"Личных встреч за последние годы не найдено",h2h:"Личные встречи",tabEv:"События",tabLive:"Прямой эфир",efwatch:"Смотреть в прямом эфире",tabEf:"📺 Эфир",nolive:"Сейчас нет матчей в прямом эфире",efnone:"Источники трансляции ещё не подключены.",efload:"Загрузка трансляции…",eferr:"Трансляция не открылась. Выберите другой канал или попробуйте позже.",tabH2:"Встречи",tabFm:"Форма",form:"Последние 5 матчей",win:"победа",draw:"Ничьи",noh:"Данных по этому матчу нет",fW:"В",fD:"Н",fL:"П"}};
 const T=k=>(I[lang]&&I[lang][k])||I.uz[k];
 const NAMER={"uzb.1":"Суперлига Узбекистана","uefa.champions":"Лига чемпионов","eng.1":"Английская Премьер-лига","esp.1":"Ла Лига","ita.1":"Серия A","ger.1":"Бундеслига","fra.1":"Лига 1","uefa.europa":"Лига Европы","uefa.europa.conf":"Лига конференций","uefa.nations":"Лига наций УЕФА","afc.champions":"Лига чемпионов АФК","afc.cup":"Лига чемпионов АФК 2","fifa.friendly":"Товарищеские матчи","tur.1":"Суперлига Турции","ned.1":"Эредивизи","por.1":"Лига Португалии","ksa.1":"Про-лига Саудовской Аравии","usa.1":"МЛС","eng.2":"Чемпионшип Англии"};
 const ESPN="https://site.api.espn.com/apis/site/v2/sports/soccer/";
@@ -347,10 +364,10 @@ function cards(ms,dt){
 }
 const ord=m=>(m.uz?-1:0)*100+LEAGUES.findIndex(l=>l[0]===m.slug);
 function sortMs(ms){return ms.slice().sort((a,b)=>ord(a)-ord(b)||(a.utc<b.utc?-1:1));}
-function dayMs(d){const k=new Date(Date.now()+d*864e5).toLocaleDateString("sv",{timeZone:TZ});return M.filter(m=>dkey(m.utc)===k);}
+function dayMs(d){if(d==="live")return M.filter(isLive);const k=new Date(Date.now()+d*864e5).toLocaleDateString("sv",{timeZone:TZ});return M.filter(m=>dkey(m.utc)===k);}
 
 function renderMatches(){
-  $("#days").innerHTML=[["-1",T("yest")],["0",T("today")],["1",T("tom")]].map(([k,v])=>`<button class="chip ${k==String(day)?"on":""}" data-d="${k}">${v}</button>`).join("");
+  $("#days").innerHTML=[["-1",T("yest")],["0",T("today")],["1",T("tom")]].map(([k,v])=>`<button class="chip ${k==String(day)?"on":""}" data-d="${k}">${v}</button>`).join("")+`<button class="chip lvc ${day==="live"?"on":""}" data-d="live"><span class="ld"></span>${T("tabLive")}<i>${M.filter(isLive).length}</i></button>`;
   const all=sortMs(dayMs(day)),comps=[...new Set(all.map(m=>m.comp))];
   if(cf!=="*"&&!comps.includes(cf))cf="*";
   $("#comps").innerHTML=all.length?`<button class="chip ${cf==="*"?"on":""}" data-c="*">${T("all")}<i>${all.length}</i></button>`
@@ -358,7 +375,7 @@ function renderMatches(){
   if(!all.length){
     if(!M.length&&failed<LEAGUES.length){$("#out").innerHTML=`<div class="empty">${T("loading")}</div>`;return;}
     const nw=new Date().toISOString(),up=sortMs(M.filter(m=>m.utc>nw&&m.st==="TIMED")).sort((a,b)=>a.utc<b.utc?-1:1).slice(0,10);
-    $("#out").innerHTML=`<div class="empty">${T("nogames")}</div>`+(up.length?`<h3 class="sec">${T("soon")}</h3>`+cards(up,true):"");
+    $("#out").innerHTML=`<div class="empty">${day==="live"?T("nolive"):T("nogames")}</div>`+(up.length?`<h3 class="sec">${T("soon")}</h3>`+cards(up,true):"");
     return;}
   $("#out").innerHTML=cards(cf==="*"?all:all.filter(m=>m.comp===cf),false);
 }
@@ -456,6 +473,7 @@ function paintModal(){
   if(!up){tabs.push(["ev",T("tabEv")]);if(sr)tabs.push(["st",T("stt")]);if(hh)tabs.push(["h2h",T("tabH2")]);if(fm)tabs.push(["fm",T("tabFm")]);}
   else tabs.push(["h2h",T("tabH2")],["fm",T("tabFm")]);
   const cur=tabs.some(t=>t[0]===mTab)?mTab:tabs[0][0];
+  if(isLive(m))h+=`<a class="efbtn" href="${esc(efUrl(m))}" target="_blank" rel="noopener noreferrer"><span class="ld"></span>${T("efwatch")}</a>`;
   h+=`<div class="mt" role="tablist">${tabs.map(t=>`<button role="tab" data-mt="${t[0]}" class="${t[0]===cur?"on":""}">${esc(t[1])}</button>`).join("")}</div><div class="mp">`;
   if(cur==="ev"){
     const all=evList(m,d),main=all.filter(x=>!x.so),sh=all.filter(x=>x.so&&(x.k==="g"||x.k==="pg"||x.k==="pm"));
@@ -536,7 +554,12 @@ function openMatch(id){
   paintModal();loadSum();clearInterval(mt);
   mt=setInterval(()=>{const m=M.find(x=>x.id===curM);if(m&&isLive(m))loadSum();},30000);
 }
-function closeMatch(){curM=null;clearInterval(mt);$("#mo").hidden=true;document.body.style.overflow="";}
+/* ===== Jonli efir: tashqi havola (yangi oynada ochiladi) ===== */
+/* Efir sahifasi havolasini shu yerga yozing. Kerak bo'lsa, ayrim o'yinlar uchun alohida havola: EFIR_LINKS["match_id"]="https://..." */
+const EFIR_URL="https://t.me/onsportsuz";
+const EFIR_LINKS={};
+const efUrl=m=>EFIR_LINKS[m.id]||EFIR_URL;
+function closeMatch(){$("#mc").innerHTML="";curM=null;clearInterval(mt);$("#mo").hidden=true;document.body.style.overflow="";}
 
 async function loadTable(slug){
   const c=TB[slug];if(c&&Date.now()-c.t<6e5)return renderTable();
@@ -621,7 +644,7 @@ document.addEventListener("click",e=>{
   if(ftb){mFT=ftb.dataset.ft;paintModal();return;}
   if(mm){openMatch(mm.dataset.m);return;}
   if(tb){e.preventDefault();showTab(tb.dataset.tab);return;}
-  if(d){day=+d.dataset.d;cf="*";renderMatches();}
+  if(d){day=d.dataset.d==="live"?"live":+d.dataset.d;cf="*";renderMatches();}
   else if(c){cf=c.dataset.c;renderMatches();}
   else if(l){lg=l.dataset.l;loadTable(lg);}
 });
