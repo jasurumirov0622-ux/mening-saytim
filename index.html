@@ -146,6 +146,12 @@ header{background:none;backdrop-filter:none;border:0;padding:0}
 .sb{display:flex;gap:3px;height:5px;margin-top:4px}.sb i{display:block;border-radius:3px;background:var(--ac)}.sb i.b{background:#4a7bd8}
 .pk{display:flex;gap:10px;justify-content:space-between;padding:6px 0;border-top:1px solid var(--line);font-size:14px}
 .pk .ok{color:var(--ac);font-weight:800}.pk .no{color:var(--live);font-weight:800}
+.h2{display:grid;grid-template-columns:78px 1fr 62px 1fr;gap:6px;align-items:center;padding:7px 0;border-top:1px solid var(--line);font-size:13px}
+.h2 small{color:var(--mu)}.h2 .a{text-align:right}.h2 .s{text-align:center;font-weight:800;font-variant-numeric:tabular-nums}
+.h2s{display:flex;justify-content:space-around;text-align:center;font-size:13px;margin-bottom:6px}.h2s b{display:block;font-size:20px}
+.fm{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fm>div{text-align:center}.fm b{display:block;font-size:13px;margin-bottom:6px}
+.fc{display:inline-grid;place-items:center;width:24px;height:24px;margin:0 2px;border-radius:6px;font-size:12px;font-weight:800;color:#fff}
+.fc.W{background:#1fa971}.fc.D{background:#8a98b5}.fc.L{background:#e5484d}
 </style>
 </head>
 <body>
@@ -215,12 +221,12 @@ uz:{home:"Asosiy",games:"O'yinlar",tab:"Jadval",tableT:"Turnir jadvali",search:"
  yest:"Kecha",today:"Bugun",tom:"Ertaga",all:"Hammasi",live1:"jonli",live2:"Jonli",pause:"Tanaffus",ft:"Tugadi",postp:"Kechiktirildi",canc:"Bekor",
  nogames:"Bu kunda o'yin yo'q",soon:"Yaqinda",team:"Jamoa",pl:"O",pts:"Ochko",notable:"Bu liga uchun jadval topilmadi",more:"Davomi",news:"Yangiliklar",
  searchT:"Qidiruv",nothing:"Hech narsa topilmadi",tgnews:"Yangiliklar Telegramda",tgnewsd:"Hozir bu yerda ko'rsatib bo'lmadi. Kanalni ochish uchun bosing.",
- loadfail1:"O'yinlar yuklanmadi.",loadfail2:"Reklama bloklovchini (AdBlock) o'chirib, sahifani yangilang.",agoM:"daq oldin",agoH:"soat oldin",agoD:"kun oldin",pens:"Penaltilar",pen:"pen.",penw:"Penaltilarda g'olib",aet:"Q.V.",evs:"O'yin voqealari",stt:"Statistika",shoot:"Penalti seriyasi",noev:"Hozircha voqealar yo'q",pgt:"penalti",ogt:"o'z darvozasiga",goal:"Gol"},
+ loadfail1:"O'yinlar yuklanmadi.",loadfail2:"Reklama bloklovchini (AdBlock) o'chirib, sahifani yangilang.",agoM:"daq oldin",agoH:"soat oldin",agoD:"kun oldin",pens:"Penaltilar",pen:"pen.",penw:"Penaltilarda g'olib",aet:"Q.V.",evs:"O'yin voqealari",stt:"Statistika",shoot:"Penalti seriyasi",noev:"Hozircha voqealar yo'q",pgt:"penalti",ogt:"o'z darvozasiga",goal:"Gol",h2h:"O'zaro uchrashuvlar",form:"Oxirgi o'yinlar",win:"g'alaba",draw:"Durang",noh:"Bu o'yin uchun ma'lumot topilmadi",fW:"G",fD:"D",fL:"M"},
 ru:{home:"Главная",games:"Матчи",tab:"Таблица",tableT:"Турнирная таблица",search:"Поиск…",loading:"Загрузка…",tgcta:"Результаты и новости в нашем Telegram-канале",
  yest:"Вчера",today:"Сегодня",tom:"Завтра",all:"Все",live1:"live",live2:"Идёт",pause:"Перерыв",ft:"Завершён",postp:"Перенесён",canc:"Отменён",
  nogames:"В этот день матчей нет",soon:"Скоро",team:"Команда",pl:"И",pts:"Очки",notable:"Таблица для этой лиги не найдена",more:"Ещё",news:"Новости",
  searchT:"Поиск",nothing:"Ничего не найдено",tgnews:"Новости в Telegram",tgnewsd:"Сейчас показать здесь не получилось. Нажмите, чтобы открыть канал.",
- loadfail1:"Матчи не загрузились.",loadfail2:"Отключите блокировщик рекламы (AdBlock) и обновите страницу.",agoM:"мин назад",agoH:"ч назад",agoD:"дн назад",pens:"Пенальти",pen:"пен.",penw:"Победа по пенальти",aet:"доп. время",evs:"События матча",stt:"Статистика",shoot:"Серия пенальти",noev:"Событий пока нет",pgt:"пенальти",ogt:"автогол",goal:"Гол"}};
+ loadfail1:"Матчи не загрузились.",loadfail2:"Отключите блокировщик рекламы (AdBlock) и обновите страницу.",agoM:"мин назад",agoH:"ч назад",agoD:"дн назад",pens:"Пенальти",pen:"пен.",penw:"Победа по пенальти",aet:"доп. время",evs:"События матча",stt:"Статистика",shoot:"Серия пенальти",noev:"Событий пока нет",pgt:"пенальти",ogt:"автогол",goal:"Гол",h2h:"Личные встречи",form:"Последние матчи",win:"победа",draw:"Ничьи",noh:"Данных по этому матчу нет",fW:"В",fD:"Н",fL:"П"}};
 const T=k=>(I[lang]&&I[lang][k])||I.uz[k];
 const NAMER={"uzb.1":"Суперлига Узбекистана","uefa.champions":"Лига чемпионов","eng.1":"Английская Премьер-лига","esp.1":"Ла Лига","ita.1":"Серия A","ger.1":"Бундеслига","fra.1":"Лига 1","uefa.europa":"Лига Европы","uefa.europa.conf":"Лига конференций","uefa.nations":"Лига наций УЕФА","afc.champions":"Лига чемпионов АФК","afc.cup":"Лига чемпионов АФК 2","fifa.friendly":"Товарищеские матчи","tur.1":"Суперлига Турции","ned.1":"Эредивизи","por.1":"Лига Португалии","ksa.1":"Про-лига Саудовской Аравии","usa.1":"МЛС","eng.2":"Чемпионшип Англии"};
 const ESPN="https://site.api.espn.com/apis/site/v2/sports/soccer/";
@@ -311,7 +317,7 @@ function cards(ms,dt){
     const mid=live||done
       ?`<div class="c ${live?"live":""}">${m.hs??0} – ${m.as??0}<small>${subOf(m)}</small>${pnOf(m)}</div>`
       :`<div class="c">${off?"–":tm(m.utc)}<small>${off?(m.st==="POSTPONED"?T("postp"):T("canc")):dt?dshort(m.utc):""}</small></div>`;
-    const k=live||done;
+    const k=live||done||m.st==="TIMED";
     h+=`<div class="m ${live?"lv":""} ${k?"k":""}"${k?` data-m="${esc(m.id)}" tabindex="0" role="button"`:""}><div class="t r"><b>${esc(tn(m.h))}</b>${pw==="h"?bdg():""}${img(m.hc)}</div>${mid}<div class="t">${img(m.ac)}<b>${esc(tn(m.a))}</b>${pw==="a"?bdg():""}</div></div>`;
   }
   return h+(comp!==null?"</div>":"");
@@ -378,16 +384,50 @@ function statRows(m,d){
     return `<div class="sr"><div class="sv">${esc(a)}${sf}</div><div class="sl">${SL[lang][k]}<div class="sb"><i style="width:${pa}%"></i><i class="b" style="width:${100-pa}%"></i></div></div><div class="sv">${esc(b)}${sf}</div></div>`;
   }).join("");
 }
+const fdate=u=>{const p=dkey(u).split("-");return `${p[2]}.${p[1]}.${p[0]}`;};
+function h2hHtml(m,d){
+  const seen=new Map();
+  (((d||{}).headToHeadGames)||[]).forEach(t=>(t.events||[]).forEach(e=>{
+    const hi=String(e.homeTeamId||""),ai=String(e.awayTeamId||"");
+    const hs=num(e.homeTeamScore),as=num(e.awayTeamScore);
+    if(!e.gameDate||hs==null||as==null||!hi||!ai)return;
+    seen.set(e.gameDate+hi+ai,{u:e.gameDate,hi,ai,hs,as,lg:e.leagueName||e.leagueAbbreviation||""});
+  }));
+  const L=[...seen.values()].sort((x,y)=>x.u<y.u?1:-1).slice(0,6);
+  if(!L.length)return"";
+  let wh=0,wa=0,dr=0;
+  L.forEach(g=>{const hg=g.hi===m.hid?g.hs:g.as,ag=g.hi===m.hid?g.as:g.hs;if(hg>ag)wh++;else if(ag>hg)wa++;else dr++;});
+  const nm=id=>esc(tn(id===m.hid?m.h:id===m.aid?m.a:""));
+  return `<div class="sec2">${T("h2h")}</div><div class="h2s"><div><b>${wh}</b>${esc(tn(m.h))}<br><small>${T("win")}</small></div><div><b>${dr}</b>${T("draw")}</div><div><b>${wa}</b>${esc(tn(m.a))}<br><small>${T("win")}</small></div></div>`
+   +L.map(g=>`<div class="h2"><small>${fdate(g.u)}</small><div class="a">${nm(g.hi)}</div><div class="s">${g.hs} – ${g.as}</div><div>${nm(g.ai)}</div></div>`).join("");
+}
+function formHtml(m,d){
+  const fm=(((d||{}).boxscore||{}).form)||[],by={};
+  fm.forEach(t=>{by[String((t.team||{}).id)]=(t.events||[]).slice(0,5);});
+  const A=by[m.hid]||[],B=by[m.aid]||[];
+  if(!A.length&&!B.length)return"";
+  const chips=ev=>ev.map(e=>{const r=String(e.gameResult||"").toUpperCase().charAt(0);if(!"WDL".includes(r)||!r)return"";
+    return `<span class="fc ${r}" title="${esc((e.atVs||"")+" "+((e.opponent||{}).displayName||"")+" "+(e.score||""))}">${T("f"+r)}</span>`;}).join("");
+  return `<div class="sec2">${T("form")}</div><div class="fm"><div><b>${esc(tn(m.h))}</b>${chips(A)}</div><div><b>${esc(tn(m.a))}</b>${chips(B)}</div></div>`;
+}
 function paintModal(){
   const m=M.find(x=>x.id===curM);if(!m)return;
-  const d=SM[m.id]||null,pw=penWin(m),all=evList(m,d),main=all.filter(x=>!x.so),sh=all.filter(x=>x.so&&(x.k==="g"||x.k==="pg"||x.k==="pm"));
+  const d=SM[m.id]||null,up=m.st==="TIMED",pw=penWin(m);
+  const mid=up?`<div class="c">${tm(m.utc)}<small>${dshort(m.utc)}</small></div>`
+    :`<div class="c ${isLive(m)?"live":""}">${m.hs??0} – ${m.as??0}<small>${subOf(m)}</small>${pnOf(m)}</div>`;
   let h=`<div class="mcomp">${esc(m.comp)} · ${dshort(m.utc)}, ${tm(m.utc)}</div>`
-   +`<div class="mh"><div class="t">${img(m.hc)}<b>${esc(tn(m.h))}</b></div><div class="c ${isLive(m)?"live":""}">${m.hs??0} – ${m.as??0}<small>${subOf(m)}</small>${pnOf(m)}</div><div class="t">${img(m.ac)}<b>${esc(tn(m.a))}</b></div></div>`;
+   +`<div class="mh"><div class="t">${img(m.hc)}<b>${esc(tn(m.h))}</b></div>${mid}<div class="t">${img(m.ac)}<b>${esc(tn(m.a))}</b></div></div>`;
   if(pw)h+=`<div style="display:flex;justify-content:center;margin-top:10px"><span class="pwr">${bdg()}<b>${esc(tn(pw==="h"?m.h:m.a))}</b> <small style="color:var(--mu)">— ${esc(T("penw"))}</small></span></div>`;
-  h+=`<div class="sec2">${T("evs")}</div>`+(main.length?main.map(evRow).join(""):`<div class="empty" style="padding:14px">${T("noev")}</div>`);
-  if(sh.length)h+=`<div class="sec2">${T("shoot")}</div>`+sh.map(x=>`<div class="pk"><span>${esc(x.p[0]||"")}</span><span>${esc(tn(x.s==="h"?m.h:m.a))}</span><span class="${x.k==="pm"?"no":"ok"}">${x.k==="pm"?"✗":"✓"}</span></div>`).join("");
-  const sr=statRows(m,d);
-  if(sr)h+=`<div class="sec2">${T("stt")}</div>`+sr;
+  if(!up){
+    const all=evList(m,d),main=all.filter(x=>!x.so),sh=all.filter(x=>x.so&&(x.k==="g"||x.k==="pg"||x.k==="pm"));
+    h+=`<div class="sec2">${T("evs")}</div>`+(main.length?main.map(evRow).join(""):`<div class="empty" style="padding:14px">${T("noev")}</div>`);
+    if(sh.length)h+=`<div class="sec2">${T("shoot")}</div>`+sh.map(x=>`<div class="pk"><span>${esc(x.p[0]||"")}</span><span>${esc(tn(x.s==="h"?m.h:m.a))}</span><span class="${x.k==="pm"?"no":"ok"}">${x.k==="pm"?"✗":"✓"}</span></div>`).join("");
+    const sr=statRows(m,d);
+    if(sr)h+=`<div class="sec2">${T("stt")}</div>`+sr;
+  }
+  const hh=h2hHtml(m,d),fm=formHtml(m,d);
+  h+=hh+fm;
+  if(up&&!hh&&!fm)h+=`<div class="empty" style="padding:18px">${SM[m.id]===undefined?T("loading"):T("noh")}</div>`;
   $("#mc").innerHTML=h;
 }
 async function getSum(m){
@@ -396,7 +436,7 @@ async function getSum(m){
 }
 async function loadSum(){
   const id=curM,m=M.find(x=>x.id===id);if(!m)return;
-  const d=await getSum(m);if(d)SM[id]=d;
+  const d=await getSum(m);SM[id]=d||SM[id]||false;
   if(curM===id)paintModal();
 }
 function openMatch(id){
