@@ -284,7 +284,9 @@ const img=u=>u?`<img src="${esc(u)}" alt="" loading="lazy" onerror="this.remove(
 const tm=u=>new Date(u).toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit",timeZone:TZ});
 const dkey=u=>new Date(u).toLocaleDateString("sv",{timeZone:TZ});
 const dshort=u=>{const d=new Date(new Date(u).toLocaleString("en-US",{timeZone:TZ}));return `${WDS[lang][d.getDay()]}, ${d.getDate()}${lang==="ru"?" ":"-"}${MOS[lang][d.getMonth()]}`};
-const isLive=m=>m.st==="IN_PLAY"||m.st==="PAUSED";
+/* O'yin vaqti kelgan, lekin ESPN hali "boshlanmadi" desa ham (kechikish) — 2.5 soat ichida jonli deb hisoblanadi */
+const started=m=>{const t=Date.now()-new Date(m.utc).getTime();return t>=0&&t<9e6;};
+const isLive=m=>m.st==="IN_PLAY"||m.st==="PAUSED"||(m.st==="TIMED"&&started(m));
 const ymd=o=>{const d=new Date(Date.now()+o*864e5);return d.toISOString().slice(0,10).replace(/-/g,"")};
 function ago(d){if(!d)return"";const m=Math.max(1,Math.round((Date.now()-new Date(d))/6e4));
   return m<60?`${m} ${T("agoM")}`:m<1440?`${Math.round(m/60)} ${T("agoH")}`:`${Math.round(m/1440)} ${T("agoD")}`;}
@@ -659,6 +661,7 @@ try{news=JSON.parse(localStorage.getItem("news")||"null");if(news)renderNews();}
 renderMatches();loadAll();loadTable(lg);loadNews();
 setInterval(()=>{const hasLive=M.some(isLive);if(hasLive||!window.__t||Date.now()-window.__t>3e5){window.__t=Date.now();loadAll();}},30000);
 setInterval(loadNews,6e5);
+let lastLiveN=-1;setInterval(()=>{const n=M.filter(isLive).length;if(lastLiveN!==-1&&n!==lastLiveN&&!curM&&$("#oyinlar")&&!$("#oyinlar").hidden)renderMatches();lastLiveN=n;},30000);
 </script>
 </body>
 </html>
