@@ -488,7 +488,7 @@ function paintModal(){
   h+=`<div class="mt" role="tablist">${tabs.map(t=>`<button role="tab" data-mt="${t[0]}" class="${t[0]===cur?"on":""}">${esc(t[1])}</button>`).join("")}</div><div class="mp">`;
   if(cur==="ev"){
     const all=evList(m,d),main=all.filter(x=>!x.so),sh=all.filter(x=>x.so&&(x.k==="g"||x.k==="pg"||x.k==="pm"));
-    h+=(main.length?main.map(evRow).join(""):`<div class="empty" style="padding:14px">${T("noev")}</div>`);
+    h+=(main.length?main.map(evRow).join(""):`<div class="empty" style="padding:14px">${T("noev")}${SX[m.id]&&SX[m.id].dbg?`<div style="font-size:11px;opacity:.6;margin-top:8px;line-height:1.5">${SX[m.id].dbg.map(esc).join("<br>")}</div>`:""}</div>`);
     if(sh.length)h+=`<div class="sec2">${T("shoot")}</div>`+sh.map(x=>`<div class="pk"><span>${esc(x.p[0]||"")}</span><span>${esc(tn(x.s==="h"?m.h:m.a))}</span><span class="${x.k==="pm"?"no":"ok"}">${x.k==="pm"?"✗":"✓"}</span></div>`).join("");
   }else if(cur==="st"){h+=sr;}
   else if(cur==="h2h"){h+=hh||`<div class="empty" style="padding:18px">${sf&&sf.hd?T("noh2h"):T("loading")}</div>`;}
@@ -505,22 +505,24 @@ const tidOf=r=>{const x=String((r&&r.$ref)||"").match(/teams\/(\d+)/);return x?x
 const nz=x=>String(x||"").toLowerCase().replace(/[^a-z0-9]/g,"");
 const TSN={"Yellow Cards":"yellowCards","Red Cards":"redCards","Offsides":"offsides","Corner Kicks":"wonCorners","Fouls":"foulsCommitted","Shots on Goal":"shotsOnTarget","Total Shots":"totalShots","Shots Total":"totalShots","Ball Possession":"possessionPct","Saves":"saves","Goalkeeper Saves":"saves"};
 async function coreFetch(m){
-  const eid=m.id.slice(1),base=`${CORE}${m.slug}/events/${eid}/competitions/${eid}`,out={ev:[],st:{h:{},a:{}}};
+  const eid=m.id.slice(1),base=`${CORE}${m.slug}/events/${eid}/competitions/${eid}`,out={ev:[],st:{h:{},a:{}},dbg:[]};
   try{
     const dj=await jget(`${base}/details?limit=300&_=${Date.now()}`,8000);
     out.ev=(dj.items||[]).map(e=>normEv(Object.assign({},e,{team:{id:tidOf(e.team)}}),m)).filter(Boolean);
-  }catch(e){}
+    out.dbg.push("core voqea: "+(dj.items||[]).length+" xom / "+out.ev.length+" tushunildi");
+  }catch(e){out.dbg.push("core voqea xato: "+(e.message||e.name));}
   await Promise.all([[m.hid,"h"],[m.aid,"a"]].map(async([tid,sd])=>{
     if(!tid)return;
     try{
       const j=await jget(`${base}/competitors/${tid}/statistics?_=${Date.now()}`,8000);
       ((j.splits||{}).categories||[]).forEach(c=>(c.stats||[]).forEach(z=>{if(z.name&&z.displayValue!=null)out.st[sd][z.name]=String(z.displayValue).replace("%","");}));
-    }catch(e){}
+      out.dbg.push("core stat "+sd+": "+Object.keys(out.st[sd]).length);
+    }catch(e){out.dbg.push("core stat "+sd+" xato: "+(e.message||e.name));}
   }));
   return out;
 }
 async function tsdFetch(m){
-  const out={ev:[],st:{h:{},a:{}}},days=[...new Set([m.utc.slice(0,10),dkey(m.utc)])];
+  const out={ev:[],st:{h:{},a:{}},dbg:[]},days=[...new Set([m.utc.slice(0,10),dkey(m.utc)])];
   let ev=null,swap=false;
   for(const dy of days){
     try{
@@ -531,10 +533,11 @@ async function tsdFetch(m){
         if(ok(H,h)&&ok(A,a)){ev=e;swap=false;break;}
         if(ok(H,a)&&ok(A,h)){ev=e;swap=true;break;}
       }
-    }catch(e){}
+    }catch(e){out.dbg.push("tsd kun xato: "+(e.message||e.name));}
     if(ev)break;
   }
-  if(!ev)return out;
+  if(!ev){out.dbg.push("tsd: o'yin topilmadi");return out;}
+  out.dbg.push("tsd: o'yin topildi");
   try{
     const j=await jget(`${TSD}lookuptimeline.php?id=${ev.idEvent}`,8000);
     out.ev=(j.timeline||[]).map(t=>{
@@ -548,7 +551,8 @@ async function tsdFetch(m){
       const p=[t.strPlayer,k==="s"?t.strAssist:""].filter(Boolean);
       return {k,so:false,t:t.intTime?t.intTime+"'":"",s:sd,p};
     }).filter(Boolean);
-  }catch(e){}
+    out.dbg.push("tsd voqea: "+out.ev.length);
+  }catch(e){out.dbg.push("tsd voqea xato: "+(e.message||e.name));}
   try{
     const j=await jget(`${TSD}lookupeventstats.php?id=${ev.idEvent}`,8000);
     (j.eventstats||[]).forEach(z=>{
@@ -557,7 +561,8 @@ async function tsdFetch(m){
       if(swap)[a,b]=[b,a];
       out.st.h[k]=a;out.st.a[k]=b;
     });
-  }catch(e){}
+    out.dbg.push("tsd stat: "+Object.keys(out.st.h).length);
+  }catch(e){out.dbg.push("tsd stat xato: "+(e.message||e.name));}
   return out;
 }
 async function loadExtra(m){
@@ -566,10 +571,10 @@ async function loadExtra(m){
   if(lv){if(Date.now()-x.t<9000)return;}else if(x.ok||x.n>=3)return;
   x.busy=true;x.n++;x.t=Date.now();
   try{
-    let r=await coreFetch(m);
+    let r=await coreFetch(m);x.dbg=r.dbg.slice();
     const hasSt=o=>Object.keys(o.st.h).length+Object.keys(o.st.a).length>0;
     if(!r.ev.length||!hasSt(r)){
-      const t=await tsdFetch(m);
+      const t=await tsdFetch(m);x.dbg=x.dbg.concat(t.dbg);
       if(t.ev.length>r.ev.length)r.ev=t.ev;
       ["h","a"].forEach(sd=>Object.keys(t.st[sd]).forEach(k=>{if(r.st[sd][k]==null)r.st[sd][k]=t.st[sd][k];}));
     }
