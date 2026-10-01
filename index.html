@@ -408,7 +408,8 @@ function normEv(e,m){
 function evList(m,d){
   const hc=((((d||{}).header||{}).competitions||[])[0]||{}).details;
   const raw=(d&&d.keyEvents&&d.keyEvents.length)?d.keyEvents:(hc&&hc.length?hc:(m.det||[]));
-  return raw.map(e=>normEv(e,m)).filter(Boolean);
+  const prim=raw.map(e=>normEv(e,m)).filter(Boolean),x=SX[m.id];
+  return prim.length||!x?prim:x.ev;
 }
 function evRow(x){
   const nm=x.p.length?esc(x.k==="s"?x.p.join(" ⇄ "):x.p[0]):(x.k==="g"||x.k==="pg"||x.k==="og"?esc(T("goal")):"");
@@ -420,19 +421,16 @@ function evRow(x){
 function statRows(m,d){
   const ts=(((d||{}).boxscore||{}).teams)||[],by={};
   ts.forEach(t=>{const o={};(t.statistics||[]).forEach(z=>o[z.name]=z.displayValue);by[String((t.team||{}).id)]=o;});
-  const A=Object.assign({},by[m.hid]||{}),B=Object.assign({},by[m.aid]||{}),lv=isLive(m);
-  let keys=SK;
-  if(lv){
-    const ev=evList(m,d),cnt=(k,s)=>ev.filter(x=>x.k===k&&x.s===s&&!x.so).length;
-    A.goals=String(m.hs??0);B.goals=String(m.as??0);
-    if(A.yellowCards==null&&B.yellowCards==null){A.yellowCards=String(cnt("y","h"));B.yellowCards=String(cnt("y","a"));}
-    if(A.redCards==null&&B.redCards==null){A.redCards=String(cnt("r","h"));B.redCards=String(cnt("r","a"));}
-    if(A.offsides==null&&B.offsides==null){A.offsides="–";B.offsides="–";}
-    const top=["goals","yellowCards","redCards","offsides"];
-    keys=top.concat(SK.filter(k=>!top.includes(k)));
-  }
+  const A=Object.assign({},by[m.hid]||{}),B=Object.assign({},by[m.aid]||{}),x=SX[m.id];
+  if(x)SK.forEach(k=>{if(A[k]==null&&B[k]==null&&(x.st.h[k]!=null||x.st.a[k]!=null)){A[k]=x.st.h[k]??"0";B[k]=x.st.a[k]??"0";}});
+  const ev=evList(m,d),cnt=(k,s)=>String(ev.filter(z=>z.k===k&&z.s===s&&!z.so).length);
+  A.goals=String(m.hs??0);B.goals=String(m.as??0);
+  if(A.yellowCards==null&&B.yellowCards==null){if(ev.length){A.yellowCards=cnt("y","h");B.yellowCards=cnt("y","a");}else{A.yellowCards="–";B.yellowCards="–";}}
+  if(A.redCards==null&&B.redCards==null){if(ev.length){A.redCards=cnt("r","h");B.redCards=cnt("r","a");}else{A.redCards="–";B.redCards="–";}}
+  if(A.offsides==null&&B.offsides==null){A.offsides="–";B.offsides="–";}
+  const top=["goals","yellowCards","redCards","offsides"],keys=top.concat(SK.filter(k=>!top.includes(k)));
   return keys.filter(k=>A[k]!=null||B[k]!=null).map(k=>{
-    const a=A[k]??"0",b=B[k]??"0",x=parseFloat(a)||0,y=parseFloat(b)||0,tot=x+y,pa=tot?Math.round(x/tot*100):50;
+    const a=A[k]??"0",b=B[k]??"0",xx=parseFloat(a)||0,y=parseFloat(b)||0,tot=xx+y,pa=tot?Math.round(xx/tot*100):50;
     const sf=k==="possessionPct"?"%":"";
     return `<div class="sr"><div class="sv">${esc(a)}${sf}</div><div class="sl">${SL[lang][k]}<div class="sb"><i style="width:${pa}%"></i><i class="b" style="width:${100-pa}%"></i></div></div><div class="sv">${esc(b)}${sf}</div></div>`;
   }).join("");
@@ -481,10 +479,9 @@ function paintModal(){
   let h=`<div class="mcomp">${esc(m.comp)} · ${dshort(m.utc)}, ${tm(m.utc)}</div>`
    +`<div class="mh"><div class="t">${img(m.hc)}<b>${esc(tn(m.h))}</b></div>${mid}<div class="t">${img(m.ac)}<b>${esc(tn(m.a))}</b></div></div>`;
   if(pw)h+=`<div style="display:flex;justify-content:center;margin-top:10px"><span class="pwr">${bdg()}<b>${esc(tn(pw==="h"?m.h:m.a))}</b> <small style="color:var(--mu)">— ${esc(T("penw"))}</small></span></div>`;
-  const sr=up?"":statRows(m,d),hh=lv?"":h2hHtml(m,d),fm=lv?"":formHtml(m,d),sf=SF[m.id];
+  const sr=up?"":statRows(m,d),hh=up?h2hHtml(m,d):"",fm=up?formHtml(m,d):"",sf=SF[m.id];
   const tabs=[];
-  if(lv){tabs.push(["st",T("stt")],["ev",T("tabEv")]);}
-  else if(!up){tabs.push(["ev",T("tabEv")]);if(sr)tabs.push(["st",T("stt")]);if(hh)tabs.push(["h2h",T("tabH2")]);if(fm)tabs.push(["fm",T("tabFm")]);}
+  if(!up){tabs.push(["st",T("stt")],["ev",T("tabEv")]);}
   else tabs.push(["h2h",T("tabH2")],["fm",T("tabFm")]);
   const cur=tabs.some(t=>t[0]===mTab)?mTab:tabs[0][0];
   if(isLive(m))h+=`<a class="efbtn" href="${esc(efUrl(m))}" target="_blank" rel="noopener noreferrer"><span class="ld"></span>${T("efwatch")}</a>`;
@@ -498,6 +495,90 @@ function paintModal(){
   else{h+=fm||`<div class="empty" style="padding:18px">${sf?T("noh"):T("loading")}</div>`;}
   h+=`</div>`;
   $("#mc").innerHTML=h;
+}
+
+/* ===== Qo'shimcha manbalar: ESPN core API + TheSportsDB (ESPN summary bo'sh bo'lsa) ===== */
+const SX={};
+const CORE="https://sports.core.api.espn.com/v2/sports/soccer/leagues/";
+const TSD="https://www.thesportsdb.com/api/v1/json/3/";
+const tidOf=r=>{const x=String((r&&r.$ref)||"").match(/teams\/(\d+)/);return x?x[1]:"";};
+const nz=x=>String(x||"").toLowerCase().replace(/[^a-z0-9]/g,"");
+const TSN={"Yellow Cards":"yellowCards","Red Cards":"redCards","Offsides":"offsides","Corner Kicks":"wonCorners","Fouls":"foulsCommitted","Shots on Goal":"shotsOnTarget","Total Shots":"totalShots","Shots Total":"totalShots","Ball Possession":"possessionPct","Saves":"saves","Goalkeeper Saves":"saves"};
+async function coreFetch(m){
+  const eid=m.id.slice(1),base=`${CORE}${m.slug}/events/${eid}/competitions/${eid}`,out={ev:[],st:{h:{},a:{}}};
+  try{
+    const dj=await jget(`${base}/details?limit=300&_=${Date.now()}`,8000);
+    out.ev=(dj.items||[]).map(e=>normEv(Object.assign({},e,{team:{id:tidOf(e.team)}}),m)).filter(Boolean);
+  }catch(e){}
+  await Promise.all([[m.hid,"h"],[m.aid,"a"]].map(async([tid,sd])=>{
+    if(!tid)return;
+    try{
+      const j=await jget(`${base}/competitors/${tid}/statistics?_=${Date.now()}`,8000);
+      ((j.splits||{}).categories||[]).forEach(c=>(c.stats||[]).forEach(z=>{if(z.name&&z.displayValue!=null)out.st[sd][z.name]=String(z.displayValue).replace("%","");}));
+    }catch(e){}
+  }));
+  return out;
+}
+async function tsdFetch(m){
+  const out={ev:[],st:{h:{},a:{}}},days=[...new Set([m.utc.slice(0,10),dkey(m.utc)])];
+  let ev=null,swap=false;
+  for(const dy of days){
+    try{
+      const j=await jget(`${TSD}eventsday.php?d=${dy}&s=Soccer`,8000);
+      for(const e of (j.events||[])){
+        const H=nz(e.strHomeTeam),A=nz(e.strAwayTeam),h=nz(m.h),a=nz(m.a);
+        const ok=(x,y)=>x&&y&&(x.includes(y)||y.includes(x));
+        if(ok(H,h)&&ok(A,a)){ev=e;swap=false;break;}
+        if(ok(H,a)&&ok(A,h)){ev=e;swap=true;break;}
+      }
+    }catch(e){}
+    if(ev)break;
+  }
+  if(!ev)return out;
+  try{
+    const j=await jget(`${TSD}lookuptimeline.php?id=${ev.idEvent}`,8000);
+    out.ev=(j.timeline||[]).map(t=>{
+      const tl=String(t.strTimeline||"").toLowerCase(),dt=String(t.strTimelineDetail||"").toLowerCase();
+      let k="";
+      if(tl==="goal")k=dt.includes("own")?"og":dt.includes("pen")?"pg":"g";
+      else if(tl==="card")k=dt.includes("red")?"r":"y";
+      else if(tl.startsWith("subst"))k="s";
+      if(!k)return null;
+      let sd=String(t.strHome).toLowerCase()==="yes"?"h":"a";if(swap)sd=sd==="h"?"a":"h";
+      const p=[t.strPlayer,k==="s"?t.strAssist:""].filter(Boolean);
+      return {k,so:false,t:t.intTime?t.intTime+"'":"",s:sd,p};
+    }).filter(Boolean);
+  }catch(e){}
+  try{
+    const j=await jget(`${TSD}lookupeventstats.php?id=${ev.idEvent}`,8000);
+    (j.eventstats||[]).forEach(z=>{
+      const k=TSN[z.strStat];if(!k)return;
+      let a=String(z.intHome??"").replace("%",""),b=String(z.intAway??"").replace("%","");
+      if(swap)[a,b]=[b,a];
+      out.st.h[k]=a;out.st.a[k]=b;
+    });
+  }catch(e){}
+  return out;
+}
+async function loadExtra(m){
+  const id=m.id,lv=isLive(m),x=SX[id]||(SX[id]={ev:[],st:{h:{},a:{}},n:0,t:0,ok:false,busy:false});
+  if(x.busy)return;
+  if(lv){if(Date.now()-x.t<9000)return;}else if(x.ok||x.n>=3)return;
+  x.busy=true;x.n++;x.t=Date.now();
+  try{
+    let r=await coreFetch(m);
+    const hasSt=o=>Object.keys(o.st.h).length+Object.keys(o.st.a).length>0;
+    if(!r.ev.length||!hasSt(r)){
+      const t=await tsdFetch(m);
+      if(t.ev.length>r.ev.length)r.ev=t.ev;
+      ["h","a"].forEach(sd=>Object.keys(t.st[sd]).forEach(k=>{if(r.st[sd][k]==null)r.st[sd][k]=t.st[sd][k];}));
+    }
+    if(r.ev.length>=x.ev.length)x.ev=r.ev;
+    ["h","a"].forEach(sd=>Object.assign(x.st[sd],r.st[sd]));
+    x.ok=!lv&&(x.ev.length>0||hasSt(x));
+  }catch(e){}
+  x.busy=false;
+  if(curM===id)paintModal();
 }
 const SU={};
 function applySum(m,d){
@@ -574,6 +655,7 @@ async function loadSum(){
   const d=await getSum(m);SM[id]=d||SM[id]||false;
   if(d&&applySum(m,d))renderMatches();
   if(curM===id)paintModal();
+  if(m.st!=="TIMED"||isLive(m))loadExtra(m);
   if(m.st!=="TIMED"||isLive(m))return;
   const sumH=!!h2hHtml(m,SM[id]);
   if(SF[id]===undefined){
