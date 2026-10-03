@@ -823,7 +823,7 @@ async function openEfir(id){
   closeEfir();
   const o=document.createElement("div");o.id="efp";
   o.style.cssText="position:fixed;inset:0;z-index:99999;background:#000;display:flex;flex-direction:column";
-  o.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;color:#fff;font:700 14px system-ui"><span>'+esc(e.h)+' \u2014 '+esc(e.a)+'</span><button id="efx" style="background:#e5484d;color:#fff;border:0;border-radius:8px;padding:6px 14px;font:700 16px system-ui;cursor:pointer">\u00d7</button></div><video id="efv" controls autoplay playsinline style="flex:1;width:100%;min-height:0;background:#000"></video><div id="efm" style="color:#fff;padding:8px 14px;font:13px system-ui;opacity:.85"></div>';
+  o.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;color:#fff;font:700 14px system-ui"><span>'+esc(e.h)+' \u2014 '+esc(e.a)+'</span><button id="efx" style="background:#e5484d;color:#fff;border:0;border-radius:8px;padding:6px 14px;font:700 16px system-ui;cursor:pointer">\u00d7</button></div><video id="efv" controls autoplay playsinline style="flex:1;width:100%;min-height:0;background:#000"></video><div id="efm" style="position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;padding:0 28px;color:#fff;font:600 16px/1.5 system-ui;pointer-events:none;text-shadow:0 2px 8px #000"></div>';
   document.body.appendChild(o);
   const v=o.querySelector("#efv"),msg=o.querySelector("#efm"),src=WORKER+"/p?id="+encodeURIComponent(id);
   const note=t=>{msg.textContent=t||""};
