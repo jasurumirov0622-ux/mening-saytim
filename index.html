@@ -818,6 +818,23 @@ loadEfir();setInterval(loadEfir,30000);
 const _ld={};
 function loadJs(u){return _ld[u]||(_ld[u]=new Promise((ok,no)=>{const s=document.createElement("script");s.src=u;s.onload=ok;s.onerror=()=>{delete _ld[u];no();};document.head.appendChild(s);}));}
 function closeEfir(){if(_pl){try{_pl.destroy();}catch(e){}_pl=null;}const o=document.getElementById("efp");if(o)o.remove();}
+function tsInfo(b){
+  let o=-1;for(let i=0;i<Math.min(b.length-376,1500);i++){if(b[i]===0x47&&b[i+188]===0x47&&b[i+376]===0x47){o=i;break;}}
+  if(o<0)return null;
+  let pmt=-1;
+  for(let i=o;i+188<=b.length;i+=188){
+    if(b[i]!==0x47||!(b[i+1]&0x40))continue;
+    const pid=((b[i+1]&0x1f)<<8)|b[i+2],afc=(b[i+3]>>4)&3;if(!(afc&1))continue;
+    let p=i+4;if(afc&2)p+=1+b[i+4];p+=b[p]+1;const tid=b[p];
+    if(pid===0&&tid===0){const sl=((b[p+1]&15)<<8)|b[p+2];for(let q=p+8;q+4<=p+3+sl-4;q+=4){if(((b[q]<<8)|b[q+1])!==0){pmt=((b[q+2]&31)<<8)|b[q+3];break;}}}
+    else if(pid===pmt&&tid===2){
+      const sl=((b[p+1]&15)<<8)|b[p+2],pil=((b[p+10]&15)<<8)|b[p+11],t=[];
+      for(let q=p+12+pil;q+5<=p+3+sl-4;){t.push(b[q]);q+=5+(((b[q+3]&15)<<8)|b[q+4]);}
+      return t;
+    }
+  }
+  return [];
+}
 async function openEfir(id){
   const e=EFIR[id];if(!e)return;
   closeEfir();
@@ -830,16 +847,33 @@ async function openEfir(id){
   o.querySelector("#efx").onclick=closeEfir;
   v.addEventListener("playing",()=>note(""));
   note("Efirga ulanmoqda…");
-  let k=e.k;
+  let k=e.k,info="";
   try{
     if(k!=="hls"){
       const r=await fetch(src);
       if(!r.ok){let t="";try{t=(await r.text()).slice(0,60)}catch(_){}note("Efir manbasi javob bermadi ("+r.status+"). "+t);return;}
-      const rd=r.body.getReader(),{value}=await rd.read();try{rd.cancel()}catch(_){}
-      if(!value||!value.length){note("Efir manbasi bo'sh javob berdi.");return;}
-      if(new TextDecoder().decode(value.slice(0,7))==="#EXTM3U")k="hls";
-      else if(value[0]===0x3c||value[0]===0x7b){note("Manba video emas (kutilmagan javob). M3U havolasi eskirgan yoki bloklangan bo'lishi mumkin.");return;}
-      else k="ts";
+      const rd=r.body.getReader(),ch=[];let n=0;const t0=Date.now();
+      while(n<150000&&Date.now()-t0<4000){
+        const x=await Promise.race([rd.read(),new Promise(rs=>setTimeout(()=>rs({timeout:1}),4000))]);
+        if(x.timeout||x.done||!x.value)break;ch.push(x.value);n+=x.value.length;
+      }
+      try{rd.cancel()}catch(_){}
+      if(!n){note("Efir manbasi bo'sh javob berdi (4 soniyada hech narsa kelmadi).");return;}
+      const bb=new Uint8Array(n);let q=0;for(const c of ch){bb.set(c,q);q+=c.length;}
+      if(new TextDecoder().decode(bb.slice(0,7))==="#EXTM3U")k="hls";
+      else{
+        const ti=tsInfo(bb);
+        if(!ti){
+          const h=bb.slice(0,80),pr=[...h].filter(c=>c>=32&&c<127).length/h.length;
+          note(pr>.85?"Manba video o'rniga matn qaytardi: «"+new TextDecoder().decode(h).replace(/[^\x20-\x7e]/g," ").trim()+"»":"Noma'lum video formati (boshi: "+[...h.slice(0,6)].map(c=>c.toString(16).padStart(2,"0")).join(" ")+").");
+          return;
+        }
+        k="ts";
+        const nm={27:"H.264",36:"H.265 (HEVC)",2:"MPEG-2 video",16:"MPEG-4 video",15:"AAC",17:"AAC",3:"MP2/MP3",4:"MP2/MP3",129:"AC-3",135:"E-AC-3",6:"AC-3/boshqa"};
+        info=ti.map(x=>nm[x]||("0x"+x.toString(16))).join(" + ");
+        if(!ti.includes(27)&&(ti.includes(36)||ti.includes(2))){note("Bu kanalning video kodeki ("+info+") brauzerda ishlamaydi. H.264 formatidagi kanal kerak.");return;}
+        note("Efirga ulanmoqda… ("+info+")");
+      }
     }
     if(!o.isConnected)return;
     if(k==="hls"){
@@ -857,7 +891,7 @@ async function openEfir(id){
       p.attachMediaElement(v);p.load();
     }
     const pr=v.play();if(pr&&pr.catch)pr.catch(()=>{});
-    setTimeout(()=>{if(o.isConnected&&v.readyState<2)note("Efir hali boshlanmadi. Bu kanalda hozir o'yin ketmayotgan bo'lishi yoki video/audio kodeki brauzerda qo'llanmasligi mumkin.");},15000);
+    setTimeout(()=>{if(o.isConnected&&v.readyState<2)note("Efir hali boshlanmadi"+(info?" (kodek: "+info+")":"")+". Bu kanalda hozir o'yin ketmayotgan bo'lishi yoki video/audio kodeki brauzerda qo'llanmasligi mumkin.");},15000);
   }catch(er){note("Player yuklanmadi. Sahifani yangilab qayta urinib ko'ring.");}
 }
 function closeMatch(){$("#mc").innerHTML="";curM=null;curN=null;clearInterval(mt);$("#mo").hidden=true;document.body.style.overflow="";}
