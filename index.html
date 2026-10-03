@@ -1044,7 +1044,8 @@ let lastLiveN=-1;setInterval(()=>{const n=M.filter(isLive).length;if(lastLiveN!=
   let armed=false,asking=false;
   const push=()=>{try{history.pushState({g:1},"")}catch(e){}};
   const arm=()=>{if(armed)return;armed=true;push();};
-  ["pointerdown","touchstart","keydown","click"].forEach(ev=>addEventListener(ev,arm,{once:true,passive:true,capture:true}));
+  /* Eslatma: brauzer faqat haqiqiy "bosish tugadi" hodisasidan keyin qo'shilgan history yozuvini hisobga oladi (pointerdown/touchstart emas) */
+  ["pointerup","touchend","click","keydown"].forEach(ev=>addEventListener(ev,arm,{passive:true,capture:true}));
   function closeAsk(){const o=document.getElementById("qx");if(o)o.remove();asking=false;}
   function ask(){
     if(asking)return;
