@@ -856,13 +856,85 @@ function renderTable(){
     :`<div class="empty">${T("notable")}</div>`;
 }
 
+/* ===== Yevropa saytlaridan yangiliklar: o'qib, avtomatik tarjima qilib (uz/ru) ko'rsatadi ===== */
+/* Yangi manba qo'shish: [nom, RSS manzil, asl til]. Ishlamagan manba jimgina o'tkazib yuboriladi. */
+const EXT_FEEDS=[
+  ["BBC Sport","https://feeds.bbci.co.uk/sport/football/rss.xml","en"],
+  ["The Guardian","https://www.theguardian.com/football/rss","en"],
+  ["Sky Sports","https://www.skysports.com/rss/12040","en"],
+  ["Marca","https://e00-marca.uecdn.es/rss/futbol/primera-division.xml","es"],
+  ["Gazzetta","https://www.gazzetta.it/rss/calcio.xml","it"],
+  ["Kicker","https://newsfeed.kicker.de/news/aktuell","de"]
+];
+const EXT_PER=6,EXT_MAXAGE=3*864e5;
+let EXT=[],_extBusy=false,_extT=0;
+const _tc=(()=>{try{return JSON.parse(localStorage.getItem("trc1")||"{}")}catch(e){return{}}})();
+const _tcSave=()=>{try{const k=Object.keys(_tc);if(k.length>400)k.slice(0,k.length-400).forEach(x=>delete _tc[x]);localStorage.setItem("trc1",JSON.stringify(_tc));}catch(e){}};
+const _hash=str=>{let h=5381;for(let i=0;i<str.length;i++)h=((h<<5)+h+str.charCodeAt(i))|0;return(h>>>0).toString(36);};
+async function _txt(u,ms=8000){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);try{const r=await fetch(u,{signal:c.signal});if(!r.ok)throw new Error(r.status);return await r.text();}finally{clearTimeout(t);}}
+function _parseRss(xml,src,sl){
+  const d=new DOMParser().parseFromString(xml,"text/xml");
+  if(d.querySelector("parsererror"))throw new Error("xml");
+  const g=(n,t)=>{const e=n.getElementsByTagName(t)[0];return e?e.textContent:"";};
+  return[...d.getElementsByTagName("item")].map(n=>{
+    let img="";
+    const mt=[...n.getElementsByTagName("media:thumbnail"),...n.getElementsByTagName("media:content"),...n.getElementsByTagName("enclosure")]
+      .map(e=>({u:e.getAttribute("url")||"",w:+(e.getAttribute("width")||0),t:e.getAttribute("type")||e.getAttribute("medium")||""}))
+      .filter(e=>e.u&&(!e.t||/image/i.test(e.t)||/\.(jpe?g|png|webp)/i.test(e.u)));
+    mt.sort((a,b)=>b.w-a.w);if(mt[0])img=mt[0].u;
+    const raw=g(n,"description")||g(n,"summary");
+    const text=new DOMParser().parseFromString("<body>"+raw+"</body>","text/html").body.textContent.replace(/\s+/g," ").trim().slice(0,260);
+    return{title:g(n,"title").replace(/\s+/g," ").trim(),text,link:g(n,"link").trim(),img,date:new Date(g(n,"pubDate")||g(n,"dc:date")||Date.now()).toISOString(),src,sl};
+  }).filter(x=>x.title&&x.link&&Date.now()-new Date(x.date)<EXT_MAXAGE).slice(0,EXT_PER);
+}
+async function _feed(f){
+  const [src,url,sl]=f;
+  const ways=[u=>"https://corsproxy.io/?url="+encodeURIComponent(u),u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u),u=>u];
+  try{return await Promise.any(ways.map(async w=>_parseRss(await _txt(w(url)),src,sl)));}catch(e){return[];}
+}
+async function _tr(text,sl,tl){
+  if(!text)return"";
+  const k=sl+tl+_hash(text);if(_tc[k])return _tc[k];
+  const r=await fetch("https://translate.googleapis.com/translate_a/single?client=gtx&sl="+sl+"&tl="+tl+"&dt=t&q="+encodeURIComponent(text));
+  if(!r.ok)throw new Error(r.status);
+  const j=await r.json();const out=(j[0]||[]).map(x=>x[0]||"").join("").trim();
+  if(!out)throw new Error("bo'sh");_tc[k]=out;return out;
+}
+function _extPaint(){
+  const base=(news||[]).filter(x=>!x.ext);
+  news=[...base,...EXT].sort((p,r)=>new Date(r.date)-new Date(p.date));
+  if(news.length)renderNews();
+}
+async function loadExt(){
+  if(_extBusy)return;_extBusy=true;
+  const tl=lang==="ru"?"ru":"uz";
+  try{
+    const lists=await Promise.all(EXT_FEEDS.map(_feed));
+    const items=[];const seen=new Set();
+    lists.forEach(l=>l.forEach(x=>{if(!seen.has(x.link)){seen.add(x.link);items.push(x);}}));
+    EXT=EXT.filter(x=>x.tl===tl);
+    let i=0,done=0;
+    const work=async()=>{
+      while(i<items.length){
+        const x=items[i++];
+        try{
+          const [t,b]=[await _tr(x.title,x.sl,tl),await _tr(x.text,x.sl,tl)];
+          EXT.push({id:"x"+_hash(x.link),kind:"news",ext:1,tl,ord:1000+EXT.length,title:t,text:b,src:x.src+" · "+(tl==="ru"?"перевод":"tarjima"),date:x.date,link:x.link,img:x.img});
+        }catch(e){}
+        if(++done%4===0)_extPaint();
+      }
+    };
+    await Promise.all([work(),work(),work(),work()]);
+    _tcSave();_extPaint();
+  }catch(e){}finally{_extBusy=false;}
+}
 async function loadNews(){
   const c=new AbortController(),t=setTimeout(()=>c.abort(),45000);
   try{
     const r=await fetch(WORKER+"/news",{signal:c.signal});if(!r.ok)throw new Error(r.status);
     const d=await r.json();
     const mk=a=>({id:a.id,kind:a.k,title:a.t,body:a.b,text:String(a.b||"").split(/\n{2,}/)[0].slice(0,180),src:"ONSPORTS.UZ",date:a.date,card:a.card});
-    const merged=[...(d.items||[]).map((x,i)=>({...x,kind:"news",ord:i})),...(d.arts||[]).map(mk)].sort((p,r)=>new Date(r.date)-new Date(p.date));
+    const merged=[...(d.items||[]).map((x,i)=>({...x,kind:"news",ord:i})),...(d.arts||[]).map(mk),...EXT].sort((p,r)=>new Date(r.date)-new Date(p.date));
     if(merged.length){news=merged;try{localStorage.setItem("news3",JSON.stringify(news))}catch(e){}renderNews();return;}
   }catch(e){}finally{clearTimeout(t);}
   if(!news)$("#news").innerHTML=`<div class="empty">Yangiliklar hozir yuklanmadi. Birozdan keyin qayta urinib ko'ring.</div>`;
@@ -915,7 +987,7 @@ function applyStatic(){document.querySelectorAll("[data-i]").forEach(e=>e.textCo
   $("#sq").placeholder=T("search");document.documentElement.lang=lang;
   $("#lb").innerHTML=IC.g+`<span>${lang==="ru"?"РУ":"O'Z"}</span>`;}
 $("#lb").onclick=()=>{lang=lang==="uz"?"ru":"uz";try{localStorage.setItem("lang",lang)}catch(e){}
-  M.forEach(m=>m.comp=LN(m.slug));cf="*";applyStatic();renderMatches();renderTable();renderNews();if(curM)paintModal();};
+  M.forEach(m=>m.comp=LN(m.slug));cf="*";applyStatic();renderMatches();renderTable();renderNews();if(curM)paintModal();loadExt();};
 applyStatic();
 document.addEventListener("click",e=>{
   const efb=e.target.closest("[data-ef]");if(efb){e.preventDefault();openEfir(efb.dataset.ef);return;}
@@ -943,7 +1015,7 @@ function showTab(t){if(!document.querySelector(".tab#"+t))t="yangilik";document.
   document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("on",x.dataset.tab===t));window.scrollTo(0,0);}
 showTab((location.hash||"").slice(1).replace(/^$/,"yangilik"));
 try{news=JSON.parse(localStorage.getItem("news3")||"null");if(news)renderNews();}catch(e){}
-renderMatches();loadAll();loadTable(lg);loadNews();
+renderMatches();loadAll();loadTable(lg);loadNews();loadExt();
 setInterval(()=>{
   if(document.hidden)return;
   const lv=M.filter(isLive);
@@ -951,7 +1023,7 @@ setInterval(()=>{
   if(lv.length){[...new Set(lv.map(m=>m.slug))].forEach(sl=>{if(window.__lb[sl])return;window.__lb[sl]=1;loadLeague(sl).finally(()=>{window.__lb[sl]=0;});});}
   if(!window.__t||Date.now()-window.__t>12e4){window.__t=Date.now();loadAll();}
 },3000);
-setInterval(loadNews,6e5);
+setInterval(loadNews,6e5);setInterval(loadExt,9e5);
 let lastLiveN=-1;setInterval(()=>{const n=M.filter(isLive).length;if(lastLiveN!==-1&&n!==lastLiveN&&!curM&&$("#oyinlar")&&!$("#oyinlar").hidden)renderMatches();lastLiveN=n;},30000);
 
 /* ===== Orqaga (back) tugmasi: avval oyna yopiladi, keyin "sahifani yopasizmi?" deb so'raydi ===== */
