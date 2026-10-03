@@ -234,6 +234,16 @@ body{background:radial-gradient(900px 420px at 10% -8%,rgba(47,208,138,.13),tran
 .pt{background:linear-gradient(90deg,var(--tx),var(--mu));-webkit-background-clip:text;background-clip:text;color:transparent}
 .mcard{background:linear-gradient(135deg,rgba(47,208,138,.1),transparent),var(--card)}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.xo{position:fixed;inset:0;z-index:99;background:rgba(5,10,22,.72);backdrop-filter:blur(6px);display:grid;place-items:center;padding:20px}
+.xo[hidden]{display:none}
+.xb{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px 22px 22px;max-width:340px;width:100%;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.xb h3{margin:0 0 6px;font-size:21px}
+.xb p{margin:0 0 20px;color:var(--mu)}
+.xb .r{display:grid;gap:10px}
+.xb button{padding:12px 16px;border-radius:99px;border:1px solid var(--line);background:none;color:var(--tx);font-weight:700;transition:transform .2s,box-shadow .2s}
+.xb button:hover{transform:translateY(-1px)}
+.xb .y{background:var(--ac);border-color:var(--ac);color:#052015}
+.xb .y:hover{box-shadow:0 6px 20px rgba(47,208,138,.38)}
 </style>
 </head>
 <body>
@@ -332,21 +342,8 @@ const isLive=m=>m.st==="IN_PLAY"||m.st==="PAUSED"||(m.st==="TIMED"&&started(m));
 const ymd=o=>{const d=new Date(Date.now()+o*864e5);return d.toISOString().slice(0,10).replace(/-/g,"")};
 function ago(d){if(!d)return"";const m=Math.max(1,Math.round((Date.now()-new Date(d))/6e4));
   return m<60?`${m} ${T("agoM")}`:m<1440?`${Math.round(m/60)} ${T("agoH")}`:`${Math.round(m/1440)} ${T("agoD")}`;}
-async function jget1(url,ms){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
+async function jget(url,ms=12000){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
   try{const r=await fetch(url,{signal:c.signal});if(!r.ok)throw new Error(r.status);return await r.json();}finally{clearTimeout(t);}}
-/* ESPN to'g'ridan-to'g'ri ochilmasa (provayder/tarmoq to'sgan bo'lsa), avtomatik Worker va ochiq proxy orqali olinadi */
-const ESPN_WAYS=[u=>u,u=>"https://bold-band-499d.jasurumirov0622.workers.dev/?url="+encodeURIComponent(u),u=>"https://corsproxy.io/?url="+encodeURIComponent(u),u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u)];
-let ESPN_OK=0;
-async function jget(url,ms=12000){
-  if(!/espn\.com/.test(url))return jget1(url,ms);
-  const order=[ESPN_OK,...ESPN_WAYS.map((_,i)=>i).filter(i=>i!==ESPN_OK)];
-  let err;
-  for(const i of order){
-    try{const j=await jget1(ESPN_WAYS[i](url),i===order[0]?Math.min(ms,7000):ms);if(j&&typeof j==="object"){ESPN_OK=i;return j;}throw new Error("bo'sh");}
-    catch(e){err=e;}
-  }
-  throw err;
-}
 const num=v=>{const n=parseInt(v);return isNaN(n)?null:n};
 
 function parseEvents(d,slug){
@@ -829,21 +826,39 @@ async function openEfir(id){
   o.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;color:#fff;font:700 14px system-ui"><span>'+esc(e.h)+' \u2014 '+esc(e.a)+'</span><button id="efx" style="background:#e5484d;color:#fff;border:0;border-radius:8px;padding:6px 14px;font:700 16px system-ui;cursor:pointer">\u00d7</button></div><video id="efv" controls autoplay playsinline style="flex:1;width:100%;min-height:0;background:#000"></video><div id="efm" style="color:#fff;padding:8px 14px;font:13px system-ui;opacity:.85"></div>';
   document.body.appendChild(o);
   const v=o.querySelector("#efv"),msg=o.querySelector("#efm"),src=WORKER+"/p?id="+encodeURIComponent(id);
+  const note=t=>{msg.textContent=t||""};
   o.querySelector("#efx").onclick=closeEfir;
+  v.addEventListener("playing",()=>note(""));
+  note("Efirga ulanmoqda…");
+  let k=e.k;
   try{
-    if(e.k==="hls"){
+    if(k!=="hls"){
+      const r=await fetch(src);
+      if(!r.ok){let t="";try{t=(await r.text()).slice(0,60)}catch(_){}note("Efir manbasi javob bermadi ("+r.status+"). "+t);return;}
+      const rd=r.body.getReader(),{value}=await rd.read();try{rd.cancel()}catch(_){}
+      if(!value||!value.length){note("Efir manbasi bo'sh javob berdi.");return;}
+      if(new TextDecoder().decode(value.slice(0,7))==="#EXTM3U")k="hls";
+      else if(value[0]===0x3c||value[0]===0x7b){note("Manba video emas (kutilmagan javob). M3U havolasi eskirgan yoki bloklangan bo'lishi mumkin.");return;}
+      else k="ts";
+    }
+    if(!o.isConnected)return;
+    if(k==="hls"){
       if(v.canPlayType("application/vnd.apple.mpegurl")){v.src=src;}
       else{
         await loadJs("https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.17/hls.min.js");
         const h=new Hls();_pl=h;h.loadSource(src);h.attachMedia(v);
-        h.on(Hls.Events.ERROR,(_,d)=>{if(d.fatal)msg.textContent="Efir ochilmadi. Birozdan keyin qayta urinib ko'ring.";});
+        h.on(Hls.Events.ERROR,(_,d)=>{if(d.fatal)note("Efir ochilmadi ("+d.details+"). Birozdan keyin qayta urinib ko'ring.");});
       }
     }else{
       await loadJs("https://cdn.jsdelivr.net/npm/mpegts.js@1.7.3/dist/mpegts.js");
-      const p=mpegts.createPlayer({type:"mpegts",isLive:true,url:src});_pl=p;p.attachMediaElement(v);p.load();
+      if(!mpegts.isSupported()){note("Brauzer bu efir turini qo'llamaydi.");return;}
+      const p=mpegts.createPlayer({type:"mpegts",isLive:true,url:src});_pl=p;
+      p.on(mpegts.Events.ERROR,(t,d)=>note("Efir uzildi ("+d+")."));
+      p.attachMediaElement(v);p.load();
     }
     const pr=v.play();if(pr&&pr.catch)pr.catch(()=>{});
-  }catch(er){msg.textContent="Player yuklanmadi. Sahifani yangilab qayta urinib ko'ring.";}
+    setTimeout(()=>{if(o.isConnected&&v.readyState<2)note("Efir hali boshlanmadi. Bu kanalda hozir o'yin ketmayotgan bo'lishi yoki video/audio kodeki brauzerda qo'llanmasligi mumkin.");},15000);
+  }catch(er){note("Player yuklanmadi. Sahifani yangilab qayta urinib ko'ring.");}
 }
 function closeMatch(){$("#mc").innerHTML="";curM=null;curN=null;clearInterval(mt);$("#mo").hidden=true;document.body.style.overflow="";}
 
@@ -869,85 +884,13 @@ function renderTable(){
     :`<div class="empty">${T("notable")}</div>`;
 }
 
-/* ===== Yevropa saytlaridan yangiliklar: o'qib, avtomatik tarjima qilib (uz/ru) ko'rsatadi ===== */
-/* Yangi manba qo'shish: [nom, RSS manzil, asl til]. Ishlamagan manba jimgina o'tkazib yuboriladi. */
-const EXT_FEEDS=[
-  ["BBC Sport","https://feeds.bbci.co.uk/sport/football/rss.xml","en"],
-  ["The Guardian","https://www.theguardian.com/football/rss","en"],
-  ["Sky Sports","https://www.skysports.com/rss/12040","en"],
-  ["Marca","https://e00-marca.uecdn.es/rss/futbol/primera-division.xml","es"],
-  ["Gazzetta","https://www.gazzetta.it/rss/calcio.xml","it"],
-  ["Kicker","https://newsfeed.kicker.de/news/aktuell","de"]
-];
-const EXT_PER=6,EXT_MAXAGE=3*864e5;
-let EXT=[],_extBusy=false,_extT=0;
-const _tc=(()=>{try{return JSON.parse(localStorage.getItem("trc1")||"{}")}catch(e){return{}}})();
-const _tcSave=()=>{try{const k=Object.keys(_tc);if(k.length>400)k.slice(0,k.length-400).forEach(x=>delete _tc[x]);localStorage.setItem("trc1",JSON.stringify(_tc));}catch(e){}};
-const _hash=str=>{let h=5381;for(let i=0;i<str.length;i++)h=((h<<5)+h+str.charCodeAt(i))|0;return(h>>>0).toString(36);};
-async function _txt(u,ms=8000){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);try{const r=await fetch(u,{signal:c.signal});if(!r.ok)throw new Error(r.status);return await r.text();}finally{clearTimeout(t);}}
-function _parseRss(xml,src,sl){
-  const d=new DOMParser().parseFromString(xml,"text/xml");
-  if(d.querySelector("parsererror"))throw new Error("xml");
-  const g=(n,t)=>{const e=n.getElementsByTagName(t)[0];return e?e.textContent:"";};
-  return[...d.getElementsByTagName("item")].map(n=>{
-    let img="";
-    const mt=[...n.getElementsByTagName("media:thumbnail"),...n.getElementsByTagName("media:content"),...n.getElementsByTagName("enclosure")]
-      .map(e=>({u:e.getAttribute("url")||"",w:+(e.getAttribute("width")||0),t:e.getAttribute("type")||e.getAttribute("medium")||""}))
-      .filter(e=>e.u&&(!e.t||/image/i.test(e.t)||/\.(jpe?g|png|webp)/i.test(e.u)));
-    mt.sort((a,b)=>b.w-a.w);if(mt[0])img=mt[0].u;
-    const raw=g(n,"description")||g(n,"summary");
-    const text=new DOMParser().parseFromString("<body>"+raw+"</body>","text/html").body.textContent.replace(/\s+/g," ").trim().slice(0,260);
-    return{title:g(n,"title").replace(/\s+/g," ").trim(),text,link:g(n,"link").trim(),img,date:new Date(g(n,"pubDate")||g(n,"dc:date")||Date.now()).toISOString(),src,sl};
-  }).filter(x=>x.title&&x.link&&Date.now()-new Date(x.date)<EXT_MAXAGE).slice(0,EXT_PER);
-}
-async function _feed(f){
-  const [src,url,sl]=f;
-  const ways=[u=>"https://corsproxy.io/?url="+encodeURIComponent(u),u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u),u=>u];
-  try{return await Promise.any(ways.map(async w=>_parseRss(await _txt(w(url)),src,sl)));}catch(e){return[];}
-}
-async function _tr(text,sl,tl){
-  if(!text)return"";
-  const k=sl+tl+_hash(text);if(_tc[k])return _tc[k];
-  const r=await fetch("https://translate.googleapis.com/translate_a/single?client=gtx&sl="+sl+"&tl="+tl+"&dt=t&q="+encodeURIComponent(text));
-  if(!r.ok)throw new Error(r.status);
-  const j=await r.json();const out=(j[0]||[]).map(x=>x[0]||"").join("").trim();
-  if(!out)throw new Error("bo'sh");_tc[k]=out;return out;
-}
-function _extPaint(){
-  const base=(news||[]).filter(x=>!x.ext);
-  news=[...base,...EXT].sort((p,r)=>new Date(r.date)-new Date(p.date));
-  if(news.length)renderNews();
-}
-async function loadExt(){
-  if(_extBusy)return;_extBusy=true;
-  const tl=lang==="ru"?"ru":"uz";
-  try{
-    const lists=await Promise.all(EXT_FEEDS.map(_feed));
-    const items=[];const seen=new Set();
-    lists.forEach(l=>l.forEach(x=>{if(!seen.has(x.link)){seen.add(x.link);items.push(x);}}));
-    EXT=EXT.filter(x=>x.tl===tl);
-    let i=0,done=0;
-    const work=async()=>{
-      while(i<items.length){
-        const x=items[i++];
-        try{
-          const [t,b]=[await _tr(x.title,x.sl,tl),await _tr(x.text,x.sl,tl)];
-          EXT.push({id:"x"+_hash(x.link),kind:"news",ext:1,tl,ord:1000+EXT.length,title:t,text:b,src:x.src+" · "+(tl==="ru"?"перевод":"tarjima"),date:x.date,link:x.link,img:x.img});
-        }catch(e){}
-        if(++done%4===0)_extPaint();
-      }
-    };
-    await Promise.all([work(),work(),work(),work()]);
-    _tcSave();_extPaint();
-  }catch(e){}finally{_extBusy=false;}
-}
 async function loadNews(){
   const c=new AbortController(),t=setTimeout(()=>c.abort(),45000);
   try{
     const r=await fetch(WORKER+"/news",{signal:c.signal});if(!r.ok)throw new Error(r.status);
     const d=await r.json();
     const mk=a=>({id:a.id,kind:a.k,title:a.t,body:a.b,text:String(a.b||"").split(/\n{2,}/)[0].slice(0,180),src:"ONSPORTS.UZ",date:a.date,card:a.card});
-    const merged=[...(d.items||[]).map((x,i)=>({...x,kind:"news",ord:i})),...(d.arts||[]).map(mk),...EXT].sort((p,r)=>new Date(r.date)-new Date(p.date));
+    const merged=[...(d.items||[]).map((x,i)=>({...x,kind:"news",ord:i})),...(d.arts||[]).map(mk)].sort((p,r)=>new Date(r.date)-new Date(p.date));
     if(merged.length){news=merged;try{localStorage.setItem("news3",JSON.stringify(news))}catch(e){}renderNews();return;}
   }catch(e){}finally{clearTimeout(t);}
   if(!news)$("#news").innerHTML=`<div class="empty">Yangiliklar hozir yuklanmadi. Birozdan keyin qayta urinib ko'ring.</div>`;
@@ -1000,7 +943,7 @@ function applyStatic(){document.querySelectorAll("[data-i]").forEach(e=>e.textCo
   $("#sq").placeholder=T("search");document.documentElement.lang=lang;
   $("#lb").innerHTML=IC.g+`<span>${lang==="ru"?"РУ":"O'Z"}</span>`;}
 $("#lb").onclick=()=>{lang=lang==="uz"?"ru":"uz";try{localStorage.setItem("lang",lang)}catch(e){}
-  M.forEach(m=>m.comp=LN(m.slug));cf="*";applyStatic();renderMatches();renderTable();renderNews();if(curM)paintModal();loadExt();};
+  M.forEach(m=>m.comp=LN(m.slug));cf="*";applyStatic();renderMatches();renderTable();renderNews();if(curM)paintModal();};
 applyStatic();
 document.addEventListener("click",e=>{
   const efb=e.target.closest("[data-ef]");if(efb){e.preventDefault();openEfir(efb.dataset.ef);return;}
@@ -1028,7 +971,7 @@ function showTab(t){if(!document.querySelector(".tab#"+t))t="yangilik";document.
   document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("on",x.dataset.tab===t));window.scrollTo(0,0);}
 showTab((location.hash||"").slice(1).replace(/^$/,"yangilik"));
 try{news=JSON.parse(localStorage.getItem("news3")||"null");if(news)renderNews();}catch(e){}
-renderMatches();loadAll();loadTable(lg);loadNews();loadExt();
+renderMatches();loadAll();loadTable(lg);loadNews();
 setInterval(()=>{
   if(document.hidden)return;
   const lv=M.filter(isLive);
@@ -1036,40 +979,40 @@ setInterval(()=>{
   if(lv.length){[...new Set(lv.map(m=>m.slug))].forEach(sl=>{if(window.__lb[sl])return;window.__lb[sl]=1;loadLeague(sl).finally(()=>{window.__lb[sl]=0;});});}
   if(!window.__t||Date.now()-window.__t>12e4){window.__t=Date.now();loadAll();}
 },3000);
-setInterval(loadNews,6e5);setInterval(loadExt,9e5);
+setInterval(loadNews,6e5);
 let lastLiveN=-1;setInterval(()=>{const n=M.filter(isLive).length;if(lastLiveN!==-1&&n!==lastLiveN&&!curM&&$("#oyinlar")&&!$("#oyinlar").hidden)renderMatches();lastLiveN=n;},30000);
-
-/* ===== Orqaga (back) tugmasi: avval oyna yopiladi, keyin "sahifani yopasizmi?" deb so'raydi ===== */
+</script>
+<script>
+/* Orqaga tugmasi: saytdan to'g'ridan-to'g'ri chiqib ketmasdan, tasdiq so'raydi */
 (function(){
-  let armed=false,asking=false;
-  const push=()=>{try{history.pushState({g:1},"")}catch(e){}};
-  const arm=()=>{if(armed)return;armed=true;push();};
-  /* Eslatma: brauzer faqat haqiqiy "bosish tugadi" hodisasidan keyin qo'shilgan history yozuvini hisobga oladi (pointerdown/touchstart emas) */
-  ["pointerup","touchend","click","keydown"].forEach(ev=>addEventListener(ev,arm,{passive:true,capture:true}));
-  function closeAsk(){const o=document.getElementById("qx");if(o)o.remove();asking=false;}
-  function ask(){
-    if(asking)return;
-    asking=true;push();
-    const ru=lang==="ru";
-    const o=document.createElement("div");o.id="qx";
-    o.style.cssText="position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:20px";
-    const b="flex:1;border-radius:10px;padding:10px 0;font:700 15px system-ui;cursor:pointer;border:1px solid var(--line)";
-    o.innerHTML=`<div role="alertdialog" aria-modal="true" style="background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:14px;padding:20px;max-width:320px;width:100%;text-align:center"><div style="font-weight:700;font-size:16px;margin-bottom:6px">${ru?"Закрыть страницу?":"Sahifani yopasizmi?"}</div><div style="color:var(--mu);font-size:14px;margin-bottom:16px">${ru?"Вы действительно хотите выйти с сайта?":"Haqiqatan ham saytdan chiqmoqchimisiz?"}</div><div style="display:flex;gap:10px"><button data-q="n" style="${b};background:var(--bg);color:var(--tx)">${ru?"Нет":"Yo'q"}</button><button data-q="y" style="${b};background:var(--live);border-color:var(--live);color:#fff">${ru?"Да":"Ha"}</button></div></div>`;
-    o.addEventListener("click",e=>{
-      const q=e.target.closest("[data-q]");
-      if(q&&q.dataset.q==="y"){closeAsk();history.go(-2);setTimeout(()=>{try{window.close()}catch(er){}},400);}
-      else if(q||e.target===o)closeAsk();
-    });
-    document.body.appendChild(o);
-    const nb=o.querySelector('[data-q="n"]');if(nb)nb.focus();
-  }
-  addEventListener("popstate",()=>{
-    if(!armed)return;
-    if(asking){closeAsk();push();return;}
-    if(curM||curN||document.getElementById("efp")){closeMatch();closeEfir();push();return;}
-    ask();
+  try{if(!history.state)history.replaceState({root:1},"")}catch(e){}
+  const X=document.createElement("div");X.className="xo";X.hidden=true;
+  X.innerHTML='<div class="xb" role="dialog" aria-modal="true"><h3></h3><p></p><div class="r"><button class="y" data-x="stay"></button><button data-x="leave"></button></div></div>';
+  document.body.appendChild(X);
+  const q=x=>X.querySelector(x),ru=()=>typeof lang!=="undefined"&&lang==="ru";
+  function txt(){const r=ru();q("h3").textContent=r?"Закрыть страницу?":"Sahifani yopasizmi?";
+    q("p").textContent=r?"Вы действительно хотите покинуть сайт?":"Rostan ham saytdan chiqmoqchimisiz?";
+    q(".y").textContent=r?"Нет, остаться":"Yo'q, qolaman";q("[data-x=leave]").textContent=r?"Да, выйти":"Ha, chiqaman";}
+  const guard=()=>{try{history.pushState({g:1},"",location.href)}catch(e){}};
+  let armed=false;
+  const arm=()=>{if(armed)return;armed=true;guard();};
+  ["pointerdown","keydown","touchstart"].forEach(t=>addEventListener(t,arm,{once:true,passive:true}));
+  addEventListener("popstate",e=>{
+    if(!armed||!(e.state&&e.state.root))return;
+    const mo=document.getElementById("mo");
+    guard();
+    if(mo&&!mo.hidden&&typeof closeMatch==="function"){closeMatch();return;}
+    txt();X.hidden=false;q(".y").focus();
   });
-  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&asking){closeAsk();}});
+  X.addEventListener("click",e=>{
+    const b=e.target.closest("[data-x]");
+    if(b&&b.dataset.x==="leave"){
+      X.hidden=true;
+      try{if(window.Telegram&&Telegram.WebApp&&Telegram.WebApp.initData){Telegram.WebApp.close();return;}}catch(_){}
+      history.go(-2);setTimeout(()=>{try{window.close()}catch(_){}},500);
+    }else if(b||e.target===X)X.hidden=true;
+  });
+  addEventListener("keydown",e=>{if(e.key==="Escape"&&!X.hidden)X.hidden=true;});
 })();
 </script>
 </body>
