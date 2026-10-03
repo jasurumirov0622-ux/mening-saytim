@@ -846,7 +846,7 @@ async function openNews(id){
   try{
     const r=await fetch(WORKER+"/article?id="+encodeURIComponent(id),{signal:c.signal});
     const d=await r.json();
-    if(d.paras&&d.paras.length){ART[id]=d.paras.map(p=>`<p>${esc(p)}</p>`).join("");paint(ART[id]);return;}
+    if(d.paras&&d.paras.length){ART[id]=d.paras.map(p=>`<p>${esc(p)}</p>`).join("")+(d.more?`<p class="aload">Maqolaning davomini manba saytda o'qing.</p>`:"");paint(ART[id]);return;}
   }catch(e){}finally{clearTimeout(t);}
   paint(lead+`<p class="aload">To'liq matnni hozir yuklab bo'lmadi. Manba havolasi orqali o'qishingiz mumkin.</p>`);
 }
