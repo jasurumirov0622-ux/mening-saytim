@@ -192,6 +192,12 @@ header{background:none;backdrop-filter:none;border:0;padding:0}
 .efm{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:13px;text-align:center;padding:12px;pointer-events:none}
 .efbtn{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:14px;padding:12px;border-radius:12px;background:#e5484d;color:#fff;font-weight:800;text-decoration:none}
 .efbtn .ld{background:#fff}
+.art{padding-top:26px}
+.art .aimg{display:block;width:100%;max-height:320px;object-fit:cover;border-radius:14px;margin:0 0 14px}
+.art h2{margin:0 0 8px;font-size:22px;line-height:1.25}
+.art .ameta{display:block;color:var(--mu);font-size:12px;margin-bottom:14px}
+.art p{margin:0 0 18px;font-size:16px;line-height:1.6}
+.art .asrc{color:var(--mu);font-size:12px;text-decoration:underline}
 </style>
 </head>
 <body>
@@ -277,7 +283,7 @@ const TABS=["eng.1","esp.1","ita.1","ger.1","fra.1","uzb.1","uefa.champions","ue
 const NAME=Object.fromEntries(LEAGUES);
 const LN=s=>lang==="ru"?(NAMER[s]||NAME[s]||s):(NAME[s]||s);
 const WDS={uz:["Yak","Dush","Sesh","Chor","Pay","Juma","Shan"],ru:["Вс","Пн","Вт","Ср","Чт","Пт","Сб"]},MOS={uz:["yan","fev","mar","apr","may","iyn","iyl","avg","sen","okt","noy","dek"],ru:["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"]};
-let M=[],TB={},news=null,day=0,cf="*",lg="eng.1",failed=0;
+let M=[],TB={},news=null,curN=null,day=0,cf="*",lg="eng.1",failed=0;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const img=u=>u?`<img src="${esc(u)}" alt="" loading="lazy" onerror="this.remove()">`:"";
@@ -790,7 +796,7 @@ async function openEfir(id){
     const pr=v.play();if(pr&&pr.catch)pr.catch(()=>{});
   }catch(er){msg.textContent="Player yuklanmadi. Sahifani yangilab qayta urinib ko'ring.";}
 }
-function closeMatch(){$("#mc").innerHTML="";curM=null;clearInterval(mt);$("#mo").hidden=true;document.body.style.overflow="";}
+function closeMatch(){$("#mc").innerHTML="";curM=null;curN=null;clearInterval(mt);$("#mo").hidden=true;document.body.style.overflow="";}
 
 async function loadTable(slug){
   const c=TB[slug];if(c&&Date.now()-c.t<6e5)return renderTable();
@@ -815,31 +821,23 @@ function renderTable(){
 }
 
 async function loadNews(){
-  const src="https://t.me/s/onsportsuz";
-  const px=[u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u),u=>"https://corsproxy.io/?url="+encodeURIComponent(u),u=>"https://api.codetabs.com/v1/proxy?quest="+encodeURIComponent(u)];
-  for(const p of px){
-    try{
-      const r=await fetch(p(src));if(!r.ok)continue;
-      const doc=new DOMParser().parseFromString(await r.text(),"text/html");
-      const items=[...doc.querySelectorAll(".tgme_widget_message")].map(el=>{
-        const post=el.getAttribute("data-post");if(!post)return null;
-        const tx=el.querySelector(".tgme_widget_message_text");
-        const lines=tx?(tx.innerHTML.replace(/<br\s*\/?>/gi,"\n").replace(/<[^>]+>/g,"")).split("\n").map(s=>s.trim()).filter(Boolean):[];
-        const ph=el.querySelector(".tgme_widget_message_photo_wrap");
-        const mm=ph&&(ph.getAttribute("style")||"").match(/url\('([^']+)'\)/);
-        const t=el.querySelector("time");
-        const dec=s=>{const x=document.createElement("textarea");x.innerHTML=s;return x.value};
-        if(!lines.length&&!mm)return null;
-        return {title:dec(lines[0]||"").slice(0,140),text:dec(lines.slice(1).join(" ")).slice(0,220),img:mm?mm[1]:"",date:t?t.getAttribute("datetime"):"",link:"https://t.me/"+post};
-      }).filter(Boolean).reverse().slice(0,25);
-      if(items.length){news=items;try{localStorage.setItem("news",JSON.stringify(items))}catch(e){}renderNews();return;}
-    }catch(e){}
-  }
-  if(!news)$("#news").innerHTML=`<a class="tgcta" href="https://t.me/onsportsuz" target="_blank" rel="noopener"><b>${T("tgnews")}</b><span>${T("tgnewsd")}</span></a>`;
+  const c=new AbortController(),t=setTimeout(()=>c.abort(),45000);
+  try{
+    const r=await fetch(WORKER+"/news",{signal:c.signal});if(!r.ok)throw new Error(r.status);
+    const d=await r.json();
+    if(d.items&&d.items.length){news=d.items;try{localStorage.setItem("news2",JSON.stringify(news))}catch(e){}renderNews();return;}
+  }catch(e){}finally{clearTimeout(t);}
+  if(!news)$("#news").innerHTML=`<div class="empty">Yangiliklar hozir yuklanmadi. Birozdan keyin qayta urinib ko'ring.</div>`;
+}
+function openNews(id){
+  const x=(news||[]).find(n=>n.id===id);if(!x)return;
+  curN=id;
+  $("#mc").innerHTML=`<article class="art">${x.img?`<img class="aimg" src="${esc(x.img)}" alt="" onerror="this.remove()">`:""}<h2>${esc(x.title)}</h2><small class="ameta">${esc(x.src||"")} · ${when(x.date)}</small>${x.text?`<p>${esc(x.text)}</p>`:""}<a class="asrc" href="${esc(x.link)}" target="_blank" rel="noopener noreferrer">Manba: ${esc(x.src||"")} ↗</a></article>`;
+  $("#mo").hidden=false;document.body.style.overflow="hidden";
 }
 function when(d){if(!d)return"";const k=x=>new Date(x).toLocaleDateString("sv",{timeZone:TZ});
   const day=k(d)===k(Date.now())?T("today"):k(d)===k(Date.now()-864e5)?T("yest"):dshort(d);return `${ago(d)} · ${day}, ${tm(d)}`;}
-const ncard=x=>`<a class="ncard" href="${esc(x.link)}" target="_blank" rel="noopener"><div class="nimg">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy" onerror="this.remove()">`:"<span>ONSPORTS.UZ</span>"}</div><div class="nbody"><h3>${esc(x.title)}</h3><small>${when(x.date)}</small></div></a>`;
+const ncard=x=>`<a class="ncard" href="#" data-n="${esc(x.id)}"><div class="nimg">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy" onerror="this.remove()">`:"<span>ONSPORTS.UZ</span>"}</div><div class="nbody"><h3>${esc(x.title)}</h3><small>${esc(x.src||"")} · ${when(x.date)}</small></div></a>`;
 const IC={s:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
  m:'<svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>',
  u:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>'};
@@ -849,7 +847,7 @@ function renderNews(){
   if(q){const r=a.filter(x=>((x.title||"")+" "+(x.text||"")).toLowerCase().includes(q));
     $("#news").innerHTML=`<div class="crumb">${T("home")} › <b>${T("searchT")}</b> <i>•</i> ${r.length}</div>`+(r.length?`<div class="ngrid">${r.map(ncard).join("")}</div>`:`<div class="empty">${T("nothing")}</div>`);return;}
   const f=a[0];
-  let h=`<div class="crumb">${T("home")} › <b>${T("news")}</b> <i>•</i> ${a.length}</div><div class="nwrap"><a class="nhero" href="${esc(f.link)}" target="_blank" rel="noopener">${f.img?`<img src="${esc(f.img)}" alt="">`:""}<div class="ov"><h2>${esc(f.title)}</h2>${f.text?`<p>${esc(f.text)}</p>`:""}<small>${when(f.date)}</small></div></a>`
+  let h=`<div class="crumb">${T("home")} › <b>${T("news")}</b> <i>•</i> ${a.length}</div><div class="nwrap"><a class="nhero" href="#" data-n="${esc(f.id)}">${f.img?`<img src="${esc(f.img)}" alt="">`:""}<div class="ov"><h2>${esc(f.title)}</h2>${f.text?`<p>${esc(f.text)}</p>`:""}<small>${esc(f.src||"")} · ${when(f.date)}</small></div></a>`
     +`<div class="nside">${a.slice(1,5).map(ncard).join("")}</div></div>`;
   if(a.length>5)h+=`<div class="more">${T("more")}</div><div class="ngrid">${a.slice(5).map(ncard).join("")}</div>`;
   $("#news").innerHTML=h;
@@ -868,6 +866,7 @@ $("#lb").onclick=()=>{lang=lang==="uz"?"ru":"uz";try{localStorage.setItem("lang"
 applyStatic();
 document.addEventListener("click",e=>{
   const efb=e.target.closest("[data-ef]");if(efb){e.preventDefault();openEfir(efb.dataset.ef);return;}
+  const nw=e.target.closest("[data-n]");if(nw){e.preventDefault();openNews(nw.dataset.n);return;}
   const d=e.target.closest("[data-d]"),c=e.target.closest("[data-c]"),l=e.target.closest("[data-l]");
   const tb=e.target.closest("[data-tab]"),mm=e.target.closest("[data-m]");
   if(e.target.id==="mo"||e.target.closest(".mx")){closeMatch();return;}
@@ -883,13 +882,13 @@ document.addEventListener("click",e=>{
   else if(l){lg=l.dataset.l;loadTable(lg);}
 });
 document.addEventListener("keydown",e=>{
-  if(e.key==="Escape"&&curM)closeMatch();
+  if(e.key==="Escape"&&(curM||curN))closeMatch();
   else if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches(".m[data-m]")){e.preventDefault();openMatch(e.target.dataset.m);}
 });
 function showTab(t){if(!document.querySelector(".tab#"+t))t="yangilik";document.querySelectorAll(".tab").forEach(x=>x.hidden=x.id!==t);
   document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("on",x.dataset.tab===t));window.scrollTo(0,0);}
 showTab((location.hash||"").slice(1).replace(/^$/,"yangilik"));
-try{news=JSON.parse(localStorage.getItem("news")||"null");if(news)renderNews();}catch(e){}
+try{news=JSON.parse(localStorage.getItem("news2")||"null");if(news)renderNews();}catch(e){}
 renderMatches();loadAll();loadTable(lg);loadNews();
 setInterval(()=>{
   if(document.hidden)return;
