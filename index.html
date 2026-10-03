@@ -953,6 +953,38 @@ setInterval(()=>{
 },3000);
 setInterval(loadNews,6e5);
 let lastLiveN=-1;setInterval(()=>{const n=M.filter(isLive).length;if(lastLiveN!==-1&&n!==lastLiveN&&!curM&&$("#oyinlar")&&!$("#oyinlar").hidden)renderMatches();lastLiveN=n;},30000);
+
+/* ===== Orqaga (back) tugmasi: avval oyna yopiladi, keyin "sahifani yopasizmi?" deb so'raydi ===== */
+(function(){
+  let armed=false,asking=false;
+  const push=()=>{try{history.pushState({g:1},"")}catch(e){}};
+  const arm=()=>{if(armed)return;armed=true;push();};
+  ["pointerdown","touchstart","keydown","click"].forEach(ev=>addEventListener(ev,arm,{once:true,passive:true,capture:true}));
+  function closeAsk(){const o=document.getElementById("qx");if(o)o.remove();asking=false;}
+  function ask(){
+    if(asking)return;
+    asking=true;push();
+    const ru=lang==="ru";
+    const o=document.createElement("div");o.id="qx";
+    o.style.cssText="position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:20px";
+    const b="flex:1;border-radius:10px;padding:10px 0;font:700 15px system-ui;cursor:pointer;border:1px solid var(--line)";
+    o.innerHTML=`<div role="alertdialog" aria-modal="true" style="background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:14px;padding:20px;max-width:320px;width:100%;text-align:center"><div style="font-weight:700;font-size:16px;margin-bottom:6px">${ru?"Закрыть страницу?":"Sahifani yopasizmi?"}</div><div style="color:var(--mu);font-size:14px;margin-bottom:16px">${ru?"Вы действительно хотите выйти с сайта?":"Haqiqatan ham saytdan chiqmoqchimisiz?"}</div><div style="display:flex;gap:10px"><button data-q="n" style="${b};background:var(--bg);color:var(--tx)">${ru?"Нет":"Yo'q"}</button><button data-q="y" style="${b};background:var(--live);border-color:var(--live);color:#fff">${ru?"Да":"Ha"}</button></div></div>`;
+    o.addEventListener("click",e=>{
+      const q=e.target.closest("[data-q]");
+      if(q&&q.dataset.q==="y"){closeAsk();history.go(-2);setTimeout(()=>{try{window.close()}catch(er){}},400);}
+      else if(q||e.target===o)closeAsk();
+    });
+    document.body.appendChild(o);
+    const nb=o.querySelector('[data-q="n"]');if(nb)nb.focus();
+  }
+  addEventListener("popstate",()=>{
+    if(!armed)return;
+    if(asking){closeAsk();push();return;}
+    if(curM||curN||document.getElementById("efp")){closeMatch();closeEfir();push();return;}
+    ask();
+  });
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&asking){closeAsk();}});
+})();
 </script>
 </body>
 </html>
