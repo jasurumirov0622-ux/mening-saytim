@@ -198,6 +198,8 @@ header{background:none;backdrop-filter:none;border:0;padding:0}
 .art .ameta{display:block;color:var(--mu);font-size:12px;margin-bottom:14px}
 .art p{margin:0 0 18px;font-size:16px;line-height:1.6}
 .art .asrc{color:var(--mu);font-size:12px;text-decoration:underline}
+.art .aload{color:var(--mu);font-size:14px}
+.art .asrc{display:inline-block;margin-top:6px}
 </style>
 </head>
 <body>
@@ -829,11 +831,24 @@ async function loadNews(){
   }catch(e){}finally{clearTimeout(t);}
   if(!news)$("#news").innerHTML=`<div class="empty">Yangiliklar hozir yuklanmadi. Birozdan keyin qayta urinib ko'ring.</div>`;
 }
-function openNews(id){
+const ART={};
+async function openNews(id){
   const x=(news||[]).find(n=>n.id===id);if(!x)return;
   curN=id;
-  $("#mc").innerHTML=`<article class="art">${x.img?`<img class="aimg" src="${esc(x.img)}" alt="" onerror="this.remove()">`:""}<h2>${esc(x.title)}</h2><small class="ameta">${esc(x.src||"")} · ${when(x.date)}</small>${x.text?`<p>${esc(x.text)}</p>`:""}<a class="asrc" href="${esc(x.link)}" target="_blank" rel="noopener noreferrer">Manba: ${esc(x.src||"")} ↗</a></article>`;
+  const head=`${x.img?`<img class="aimg" src="${esc(x.img)}" alt="" onerror="this.remove()">`:""}<h2>${esc(x.title)}</h2><small class="ameta">${esc(x.src||"")} · ${when(x.date)}</small>`;
+  const foot=`<a class="asrc" href="${esc(x.link)}" target="_blank" rel="noopener noreferrer">Manba: ${esc(x.src||"")} ↗</a>`;
+  const paint=b=>{if(curN!==id)return;$("#mc").innerHTML=`<article class="art">${head}${b}${foot}</article>`;};
+  const lead=x.text?`<p>${esc(x.text)}</p>`:"";
+  paint(ART[id]||lead+`<p class="aload">To'liq matn yuklanmoqda…</p>`);
   $("#mo").hidden=false;document.body.style.overflow="hidden";
+  if(ART[id])return;
+  const c=new AbortController(),t=setTimeout(()=>c.abort(),60000);
+  try{
+    const r=await fetch(WORKER+"/article?id="+encodeURIComponent(id),{signal:c.signal});
+    const d=await r.json();
+    if(d.paras&&d.paras.length){ART[id]=d.paras.map(p=>`<p>${esc(p)}</p>`).join("");paint(ART[id]);return;}
+  }catch(e){}finally{clearTimeout(t);}
+  paint(lead+`<p class="aload">To'liq matnni hozir yuklab bo'lmadi. Manba havolasi orqali o'qishingiz mumkin.</p>`);
 }
 function when(d){if(!d)return"";const k=x=>new Date(x).toLocaleDateString("sv",{timeZone:TZ});
   const day=k(d)===k(Date.now())?T("today"):k(d)===k(Date.now()-864e5)?T("yest"):dshort(d);return `${ago(d)} · ${day}, ${tm(d)}`;}
