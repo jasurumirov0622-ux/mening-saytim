@@ -244,12 +244,16 @@ body{background:radial-gradient(900px 420px at 10% -8%,rgba(47,208,138,.13),tran
 .xb button:hover{transform:translateY(-1px)}
 .xb .y{background:var(--ac);border-color:var(--ac);color:#052015}
 .xb .y:hover{box-shadow:0 6px 20px rgba(47,208,138,.38)}
+.tvgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-top:14px}
+.tvc{display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--tx);font-weight:600;text-align:left;cursor:pointer;transition:transform .2s,border-color .2s}
+.tvc span{color:var(--ac)}
+.tvc:hover{transform:translateY(-2px);border-color:var(--ac)}
 </style>
 </head>
 <body>
 <header><div class="bar">
   <a class="logo" href="#"><span>ONSPORTS</span>.UZ</a>
-  <nav><a href="#yangilik" data-tab="yangilik" class="on" data-i="home">Asosiy</a><a href="#oyinlar" data-tab="oyinlar" data-i="games">O'yinlar</a><a href="#jadval" data-tab="jadval" data-i="tab">Jadval</a><a class="tgb" href="https://t.me/onsportsuz" target="_blank" rel="noopener">Telegram</a></nav>
+  <nav><a href="#yangilik" data-tab="yangilik" class="on" data-i="home">Asosiy</a><a href="#oyinlar" data-tab="oyinlar" data-i="games">O'yinlar</a><a href="#jadval" data-tab="jadval" data-i="tab">Jadval</a><a href="#tv" data-tab="tv">ONSPORTS TV</a><a class="tgb" href="https://t.me/onsportsuz" target="_blank" rel="noopener">Telegram</a></nav>
   <div class="tools"><input id="sq" type="search" placeholder="Qidirish…" aria-label="Qidirish" hidden><button id="sb" class="ib" aria-label="Qidirish"></button><button id="tb" class="ib" aria-label="Kun/tun rejimi"></button><button id="lb" class="ib lb" aria-label="Til"></button></div>
 </div></header>
 
@@ -269,6 +273,7 @@ body{background:radial-gradient(900px 420px at 10% -8%,rgba(47,208,138,.13),tran
       <div class="chips" id="lgs"></div>
       <div class="card" id="tbl"><div class="empty" data-i="loading">Yuklanmoqda…</div></div>
     </section>
+    <section id="tv" class="tab" hidden><div id="tvbox"><div class="empty">Yuklanmoqda…</div></div></section>
   </main>
   <a class="tgcta" href="https://t.me/onsportsuz" target="_blank" rel="noopener"><b>@onsportsuz</b><span data-i="tgcta">Natijalar va yangiliklar Telegram kanalimizda</span></a>
 </div>
@@ -329,7 +334,7 @@ const TABS=["eng.1","esp.1","ita.1","ger.1","fra.1","uzb.1","uefa.champions","ue
 const NAME=Object.fromEntries(LEAGUES);
 const LN=s=>lang==="ru"?(NAMER[s]||NAME[s]||s):(NAME[s]||s);
 const WDS={uz:["Yak","Dush","Sesh","Chor","Pay","Juma","Shan"],ru:["Вс","Пн","Вт","Ср","Чт","Пт","Сб"]},MOS={uz:["yan","fev","mar","apr","may","iyn","iyl","avg","sen","okt","noy","dek"],ru:["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"]};
-let M=[],TB={},news=null,curN=null,nf="*",day=0,cf="*",lg="eng.1",failed=0;
+let M=[],TB={},news=null,curN=null,nf="*",TVC={},TVL=null,tvg="*",day=0,cf="*",lg="eng.1",failed=0;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const img=u=>u?`<img src="${esc(u)}" alt="" loading="lazy" onerror="this.remove()">`:"";
@@ -850,11 +855,11 @@ function cdc(ti){
   return {info:ti.map(x=>nm[x]||("0x"+x.toString(16))).join(" + "),bad:!ti.includes(27)&&(ti.includes(36)||ti.includes(2))};
 }
 async function openEfir(id){
-  const e=EFIR[id];if(!e)return;
+  const e=EFIR[id]||TVC[id];if(!e)return;
   closeEfir();
   const o=document.createElement("div");o.id="efp";
   o.style.cssText="position:fixed;inset:0;z-index:99999;background:#000;display:flex;flex-direction:column";
-  o.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;color:#fff;font:700 14px system-ui"><span>'+esc(e.h)+' \u2014 '+esc(e.a)+'</span><button id="efx" style="background:#e5484d;color:#fff;border:0;border-radius:8px;padding:6px 14px;font:700 16px system-ui;cursor:pointer">\u00d7</button></div><video id="efv" controls autoplay playsinline style="flex:1;width:100%;min-height:0;background:#000"></video><div id="efm" style="position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;padding:0 28px;color:#fff;font:600 16px/1.5 system-ui;pointer-events:none;text-shadow:0 2px 8px #000"></div>';
+  o.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;color:#fff;font:700 14px system-ui"><span>'+esc(e.h)+(e.a?' \u2014 '+esc(e.a):'')+'</span><button id="efx" style="background:#e5484d;color:#fff;border:0;border-radius:8px;padding:6px 14px;font:700 16px system-ui;cursor:pointer">\u00d7</button></div><video id="efv" controls autoplay playsinline style="flex:1;width:100%;min-height:0;background:#000"></video><div id="efm" style="position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;padding:0 28px;color:#fff;font:600 16px/1.5 system-ui;pointer-events:none;text-shadow:0 2px 8px #000"></div>';
   document.body.appendChild(o);
   const v=o.querySelector("#efv"),msg=o.querySelector("#efm"),src=WORKER+"/p?id="+encodeURIComponent(id);
   const note=t=>{msg.textContent=t||""};
@@ -948,6 +953,24 @@ async function loadNews(){
   }catch(e){}finally{clearTimeout(t);}
   if(!news)$("#news").innerHTML=`<div class="empty">Yangiliklar hozir yuklanmadi. Birozdan keyin qayta urinib ko'ring.</div>`;
 }
+async function loadTV(){
+  if(TVL&&Date.now()-TVL.t<60000)return;
+  try{
+    const r=await fetch(WORKER+"/tv");if(!r.ok)throw 0;
+    const l=await r.json();TVL={t:Date.now(),l};
+    TVC={};l.forEach(c=>{TVC[c.id]={k:c.k,h:c.n,a:"",g:c.g}});
+    renderTV();
+  }catch(e){if(!TVL)$("#tvbox").innerHTML=`<div class="empty">Kanallar hozir yuklanmadi. Birozdan keyin qayta urinib ko'ring.</div>`}
+}
+function renderTV(){
+  const l=(TVL&&TVL.l)||[];
+  if(!l.length){$("#tvbox").innerHTML=`<div class="empty">Hozircha kanallar yo'q.</div>`;return;}
+  const gs={};l.forEach(c=>{const g=c.g||"Boshqa";gs[g]=(gs[g]||0)+1});
+  const top=Object.entries(gs).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const chips=`<div class="chips"><button class="chip${tvg==="*"?" on":""}" data-tvg="*">Hammasi<i>${l.length}</i></button>${top.map(([g,n])=>`<button class="chip${tvg===g?" on":""}" data-tvg="${esc(g)}">${esc(g)}<i>${n}</i></button>`).join("")}</div>`;
+  const a=l.filter(c=>tvg==="*"||(c.g||"Boshqa")===tvg);
+  $("#tvbox").innerHTML=`<h2 class="pt">ONSPORTS TV</h2>${chips}<div class="tvgrid">${a.map(c=>`<button class="tvc" data-ef="${esc(c.id)}"><span>▶</span>${esc(c.n)}</button>`).join("")}</div>`;
+}
 function openNews(id){
   const x=(news||[]).find(n=>n.id===id);if(!x)return;
   curN=id;let h;
@@ -1000,6 +1023,7 @@ $("#lb").onclick=()=>{lang=lang==="uz"?"ru":"uz";try{localStorage.setItem("lang"
 applyStatic();
 document.addEventListener("click",e=>{
   const efb=e.target.closest("[data-ef]");if(efb){e.preventDefault();openEfir(efb.dataset.ef);return;}
+  const tgb=e.target.closest("[data-tvg]");if(tgb){tvg=tgb.dataset.tvg;renderTV();return;}
   const nfb=e.target.closest("[data-nf]");if(nfb){nf=nfb.dataset.nf;renderNews();return;}
   const nw=e.target.closest("[data-n]");if(nw){e.preventDefault();openNews(nw.dataset.n);return;}
   const d=e.target.closest("[data-d]"),c=e.target.closest("[data-c]"),l=e.target.closest("[data-l]");
@@ -1021,7 +1045,7 @@ document.addEventListener("keydown",e=>{
   else if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches(".m[data-m]")){e.preventDefault();openMatch(e.target.dataset.m);}
 });
 function showTab(t){if(!document.querySelector(".tab#"+t))t="yangilik";document.querySelectorAll(".tab").forEach(x=>x.hidden=x.id!==t);
-  document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("on",x.dataset.tab===t));window.scrollTo(0,0);}
+  document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("on",x.dataset.tab===t));window.scrollTo(0,0);if(t==="tv")loadTV();}
 showTab((location.hash||"").slice(1).replace(/^$/,"yangilik"));
 try{news=JSON.parse(localStorage.getItem("news3")||"null");if(news)renderNews();}catch(e){}
 renderMatches();loadAll();loadTable(lg);loadNews();
