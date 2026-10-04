@@ -283,6 +283,7 @@ body{background:radial-gradient(900px 420px at 10% -8%,rgba(47,208,138,.13),tran
  .bar nav a svg{width:16px;height:16px}
  .tvb span{display:inline}.tvb{padding:8px 13px 8px 10px;margin-left:auto}
 }
+@keyframes efsp{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -947,8 +948,30 @@ async function openEfir(id){
       x.replaceWith(hb);hb.append(fs,x);
     }
     tvLogos(o,w,v,lg);
+    /* faqat jonli rejim: standart boshqaruv (vaqt, surish chizig'i, pauza) olib tashlanadi; faqat ovoz va to'liq ekran qoladi */
+    v.removeAttribute("controls");v.controls=false;
+    v.addEventListener("contextmenu",e=>e.preventDefault());
+    v.addEventListener("pause",()=>{if(o.isConnected&&!v.ended)setTimeout(()=>{if(o.isConnected&&v.paused)v.play().catch(()=>{});},50);});
+    const cb=document.createElement("div");cb.style.cssText="position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:linear-gradient(transparent,rgba(0,0,0,.55));z-index:3;pointer-events:none";
+    const bd=document.createElement("span");bd.innerHTML='<i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ff3b3b;margin-right:7px"></i>JONLI';bd.style.cssText="color:#fff;font:800 13px system-ui;letter-spacing:1px";
+    const rt=document.createElement("div"),mb=document.createElement("button"),vr=document.createElement("input");
+    rt.style.cssText="display:flex;align-items:center;gap:10px;pointer-events:auto";
+    mb.style.cssText="background:none;border:0;color:#fff;font-size:22px;line-height:1;cursor:pointer;padding:2px 4px";mb.setAttribute("aria-label","Ovoz");
+    vr.type="range";vr.min=0;vr.max=1;vr.step=.05;vr.style.cssText="width:90px;accent-color:#2fd08a;cursor:pointer";
+    const sync=()=>{mb.textContent=(v.muted||v.volume===0)?"\uD83D\uDD07":"\uD83D\uDD0A";vr.value=v.muted?0:v.volume;};
+    mb.onclick=()=>{v.muted=!v.muted;if(!v.muted&&v.volume===0)v.volume=.7;};
+    vr.oninput=()=>{v.volume=+vr.value;v.muted=+vr.value===0;};
+    v.addEventListener("volumechange",sync);sync();
+    rt.append(mb,vr);cb.append(bd,rt);w.appendChild(cb);
   }
-  const note=t=>{msg.textContent=t||""};
+  const DBG=/[?&]debug\b/.test(location.search);   /* adminga: saytni ?debug bilan ochsangiz texnik yozuvlar ko'rinadi */
+  const note=t=>{
+    if(DBG){msg.textContent=t||"";return;}
+    if(!t){msg.dataset.sp="";msg.textContent="";return;}
+    if(/^Efirga ulanmoqda/.test(t)){if(msg.dataset.sp!=="1"){msg.dataset.sp="1";msg.innerHTML='<div style="width:40px;height:40px;margin:0 auto;border:4px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:efsp 1s linear infinite"></div>';}return;}
+    try{console.log("[efir]",t)}catch(_){}
+    msg.dataset.sp="";msg.textContent="Efir hozir ochilmadi. Birozdan keyin qayta urinib ko'ring.";
+  };
   o.querySelector("#efx").onclick=closeEfir;
   v.addEventListener("playing",()=>{on=true;note("");tvHbStart(id)});
   v.addEventListener("error",()=>{const x=v.error;note("Video xatosi: "+(x?x.code+" "+(x.message||""):""))});
@@ -1007,7 +1030,7 @@ async function openEfir(id){
       p.on(mpegts.Events.ERROR,(t,d)=>note("Efir uzildi ("+d+")."));
       p.attachMediaElement(v);p.load();
     }
-    const pr=v.play();if(pr&&pr.catch)pr.catch(()=>{});
+    const pr=v.play();if(pr&&pr.catch)pr.catch(()=>{if(String(id).indexOf("t_")===0){v.muted=true;v.play().catch(()=>{});}});
     setTimeout(()=>{if(o.isConnected&&v.readyState<2)note("Efir hali boshlanmadi ["+k+(info?": "+info:"")+"]"+(pg?" "+pg:"")+(lastErr?" xato: "+lastErr:"")+". Bu kanalda hozir o'yin ketmayotgan bo'lishi yoki video/audio kodeki brauzerda qo'llanmasligi mumkin.");},45000);
   }catch(er){note("Player yuklanmadi. Sahifani yangilab qayta urinib ko'ring.");}
 }
