@@ -1148,7 +1148,7 @@ function when(d){if(!d)return"";const k=x=>new Date(x).toLocaleDateString("sv",{
   const day=k(d)===k(Date.now())?T("today"):k(d)===k(Date.now()-864e5)?T("yest"):dshort(d);return `${ago(d)} · ${day}, ${tm(d)}`;}
 const KL={report:"📝 O'YIN HISOBOTI",preview:"🔮 TAHLIL",recap:"🌙 KUN XULOSASI"};
 const nph=x=>x.card?`<span class="bsc"><b>${esc(x.card.hs)} : ${esc(x.card.as)}</b><em>${esc(un(x.card.h))} — ${esc(un(x.card.a))}</em></span>`:`<span>${KL[x.kind]||"ONSPORTS.UZ"}</span>`;
-const SRCC={"BBC Sport":"#bb1919","The Guardian":"#1c6fc4","Sky Sports":"#e0242f","The Independent":"#e6007e","The Telegraph":"#0b7c9c"};
+const SRCC={"Sports.ru":"#1faa59","BBC Sport":"#bb1919","The Guardian":"#1c6fc4","Sky Sports":"#e0242f","The Independent":"#e6007e","The Telegraph":"#0b7c9c"};
 const sp=x=>x.src?`<span class="nsrc" style="--sc:${SRCC[x.src]||"var(--ac)"}">${esc(x.src)}</span>`:"";
 const ncard=(x,i=0)=>`<a class="ncard" style="--i:${Math.min(i,12)}" href="#" data-n="${esc(x.id)}"><div class="nimg">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy" decoding="async" width="480" height="300" onerror="this.remove()">`:nph(x)}${sp(x)}</div><div class="nbody"><h3>${esc(x.title)}</h3><small>${when(x.date)}</small></div></a>`;
 const nhead=n=>`<div class="nhead"><h1 class="nt"><i class="dot"></i>${T("news")}</h1><span class="nup">${NUPD?"⟳ "+ago(NUPD):""}${n?` · ${n}`:""}</span></div>`;
