@@ -228,7 +228,7 @@ body{background:radial-gradient(900px 420px at 10% -8%,rgba(47,208,138,.13),tran
 .chip.on{box-shadow:0 4px 16px rgba(47,208,138,.3)}
 #lgs{gap:10px}
 .chip.lgl{display:inline-flex;align-items:center;justify-content:center;min-width:64px;height:48px;padding:6px 14px}
-.chip.lgl img{width:32px;height:32px;object-fit:contain;display:block}
+.chip.lgl img{height:32px;width:auto;max-width:84px;object-fit:contain;display:block}
 .chip.lgl.on{background:rgba(47,208,138,.14);border-color:var(--ac);box-shadow:0 4px 16px rgba(47,208,138,.25)}
 .lgcap{margin:10px 16px 2px;font-weight:700}
 .grp{margin:14px 16px 2px;color:var(--mu);font-size:13px;font-weight:700}
@@ -410,7 +410,10 @@ const LEAGUES=[["uzb.1","O'zbekiston Superligasi"],["uefa.champions","Chempionla
 const TABS=["uefa.champions","uefa.europa","uefa.nations","eng.1","esp.1","ger.1","ita.1","fra.1","por.1","ned.1","tur.1","ksa.1","uzb.1"];
 /* Liga logotiplari: ESPN javobidan olinadi va keshlanadi; topilmasa matnli tugma qoladi */
 const LLOGO=(()=>{try{return JSON.parse(localStorage.getItem("lgl")||"{}")}catch(e){return{}}})();
-function capLogo(d,slug){try{const L=((d.leagues||[])[0]||{}).logos||[];if(!L.length)return;
+/* Qo'lda belgilangan logolar (ESPN bermaydigan ligalar uchun): Wikimedia Commons */
+const FIXLOGO={"uzb.1":"https://commons.wikimedia.org/wiki/Special:FilePath/Uzbekistan_super_league_logo_2024.png?width=240"};
+Object.assign(LLOGO,FIXLOGO);
+function capLogo(d,slug){if(FIXLOGO[slug])return;try{const L=((d.leagues||[])[0]||{}).logos||[];if(!L.length)return;
   const p=L.find(x=>(x.rel||[]).includes("dark"))||L.find(x=>(x.rel||[]).includes("default"))||L[0];
   if(p&&p.href&&LLOGO[slug]!==p.href){LLOGO[slug]=p.href;try{localStorage.setItem("lgl",JSON.stringify(LLOGO))}catch(e){}paintTabs();}}catch(e){}}
 function paintTabs(){const el=$("#lgs");if(!el)return;
@@ -1105,7 +1108,7 @@ async function sofaStand(slug){
     if(!x)throw 0;id=x.id;
     try{const o=JSON.parse(localStorage.getItem("sofaid")||"{}");o[slug]=id;localStorage.setItem("sofaid",JSON.stringify(o));}catch(e){}
   }
-  if(!LLOGO[slug]){LLOGO[slug]="https://img.sofascore.com/api/v1/unique-tournament/"+id+"/image/dark";paintTabs();}
+  if(!LLOGO[slug]){LLOGO[slug]="https://img.sofascore.com/api/v1/unique-tournament/"+id+"/image";paintTabs();}
   const sn=await g(`unique-tournament/${id}/seasons`);const sid=((sn.seasons||[])[0]||{}).id;if(!sid)throw 0;
   const st=await g(`unique-tournament/${id}/season/${sid}/standings/total`);
   const rows=(((st.standings||[])[0]||{}).rows||[]).map(r=>({pos:r.position,n:(r.team||{}).shortName||(r.team||{}).name||"",
@@ -1321,15 +1324,21 @@ document.addEventListener("click",e=>{
   if(tb){e.preventDefault();showTab(tb.dataset.tab);return;}
   if(d){day=d.dataset.d==="live"?"live":+d.dataset.d;cf="*";renderMatches();}
   else if(c){cf=c.dataset.c;renderMatches();}
-  else if(l){lg=l.dataset.l;loadTable(lg);}
+  else if(l){lg=l.dataset.l;try{sessionStorage.setItem("lg",lg);}catch(e){}loadTable(lg);}
 });
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape"&&(curM||curN))closeMatch();
   else if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches(".m[data-m]")){e.preventDefault();openMatch(e.target.dataset.m);}
 });
 function showTab(t){if(!document.querySelector(".tab#"+t))t="yangilik";document.querySelectorAll(".tab").forEach(x=>x.hidden=x.id!==t);
-  document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("on",x.dataset.tab===t));window.scrollTo(0,0);if(t==="tv")loadTV();}
-showTab((location.hash||"").slice(1).replace(/^$/,"yangilik"));
+  document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("on",x.dataset.tab===t));window.scrollTo(0,0);if(t==="tv")loadTV();
+  /* yangilanganda shu menyuda qolish uchun: manzildagi # va sessiyada saqlanadi (tarix yozuvi qo'shilmaydi) */
+  try{sessionStorage.setItem("tab",t);}catch(e){}
+  try{if(location.hash!=="#"+t)history.replaceState(history.state,"","#"+t);}catch(e){}}
+(function(){let t=(location.hash||"").slice(1);
+  if(!t||!document.querySelector(".tab#"+t)){try{t=sessionStorage.getItem("tab")||"";}catch(e){t="";}}
+  try{const l=sessionStorage.getItem("lg");if(l&&TABS.indexOf(l)>=0)lg=l;}catch(e){}
+  showTab(t||"yangilik");})();
 try{news=JSON.parse(localStorage.getItem("news3")||"null");if(news){newsSig=news.map(x=>x.id).join();renderNews();enrichImgs();}}catch(e){}
 if(!news||!news.some(x=>x.kind==="news")){news=SEED.concat((news||[]).filter(x=>x.kind!=="news"));newsSig="";renderNews();enrichImgs();}
 loadNews();renderMatches();setTimeout(()=>{loadAll();loadTable(lg);},0);
