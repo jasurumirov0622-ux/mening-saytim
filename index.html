@@ -248,6 +248,10 @@ body{background:radial-gradient(900px 420px at 10% -8%,rgba(47,208,138,.13),tran
 .tvc{display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--tx);font-weight:600;text-align:left;cursor:pointer;transition:transform .2s,border-color .2s}
 .tvc span{color:var(--ac)}
 .tvc:hover{transform:translateY(-2px);border-color:var(--ac)}
+.tvhero{display:flex;align-items:center;gap:16px;padding:22px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(135deg,rgba(47,208,138,.12),transparent),var(--card);margin-top:14px}
+.tvplay{width:64px;height:64px;border-radius:50%;border:0;background:var(--ac);color:#052015;font-size:26px;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.tvplay:hover{transform:scale(1.06);box-shadow:0 8px 24px rgba(47,208,138,.4)}
+.tvhero small{display:block;color:var(--mu)}
 </style>
 </head>
 <body>
@@ -961,22 +965,15 @@ async function loadNews(){
   if(!news)$("#news").innerHTML=`<div class="empty">Yangiliklar hozir yuklanmadi. Birozdan keyin qayta urinib ko'ring.</div>`;
 }
 async function loadTV(){
-  if(TVL&&Date.now()-TVL.t<60000)return;
+  const box=$("#tvbox");
   try{
     const r=await fetch(WORKER+"/tv");if(!r.ok)throw 0;
-    const l=await r.json();TVL={t:Date.now(),l};
-    TVC={};l.forEach(c=>{TVC[c.id]={k:c.k,h:c.n,a:"",g:c.g}});
-    renderTV();
-  }catch(e){if(!TVL)$("#tvbox").innerHTML=`<div class="empty">Kanallar hozir yuklanmadi. Birozdan keyin qayta urinib ko'ring.</div>`}
-}
-function renderTV(){
-  const l=(TVL&&TVL.l)||[];
-  if(!l.length){$("#tvbox").innerHTML=`<div class="empty">Hozircha kanallar yo'q.</div>`;return;}
-  const gs={};l.forEach(c=>{const g=c.g||"Boshqa";gs[g]=(gs[g]||0)+1});
-  const top=Object.entries(gs).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  const chips=`<div class="chips"><button class="chip${tvg==="*"?" on":""}" data-tvg="*">Hammasi<i>${l.length}</i></button>${top.map(([g,n])=>`<button class="chip${tvg===g?" on":""}" data-tvg="${esc(g)}">${esc(g)}<i>${n}</i></button>`).join("")}</div>`;
-  const a=l.filter(c=>tvg==="*"||(c.g||"Boshqa")===tvg);
-  $("#tvbox").innerHTML=`<h2 class="pt">ONSPORTS TV</h2>${chips}<div class="tvgrid">${a.map(c=>`<button class="tvc" data-ef="${esc(c.id)}"><span>▶</span>${esc(c.n)}</button>`).join("")}</div>`;
+    const d=await r.json();
+    if(!d.id){box.innerHTML=`<h2 class="pt">ONSPORTS TV</h2><div class="empty">Hozircha jonli efir yo'q. Birozdan keyin qaytib ko'ring.</div>`;return;}
+    TVC={};TVC[d.id]={k:d.k,h:"ONSPORTS TV",a:""};
+    box.innerHTML=`<h2 class="pt">ONSPORTS TV</h2><div class="tvhero"><button class="tvplay" data-ef="${esc(d.id)}" aria-label="Ko'rish">▶</button><div><b>Jonli efir</b><small>Ko'rish uchun bosing</small></div></div>`;
+    openEfir(d.id);
+  }catch(e){box.innerHTML=`<div class="empty">Efir hozir yuklanmadi. Birozdan keyin qayta urinib ko'ring.</div>`}
 }
 function openNews(id){
   const x=(news||[]).find(n=>n.id===id);if(!x)return;
