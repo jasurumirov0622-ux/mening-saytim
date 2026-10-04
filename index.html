@@ -857,7 +857,14 @@ async function loadEfir(){try{const r=await fetch(WORKER+"/efir");if(r.ok){const
 loadEfir();setInterval(loadEfir,30000);
 const _ld={};
 function loadJs(u){return _ld[u]||(_ld[u]=new Promise((ok,no)=>{const s=document.createElement("script");s.src=u;s.onload=ok;s.onerror=()=>{delete _ld[u];no();};document.head.appendChild(s);}));}
-function closeEfir(){if(_pl){try{_pl.destroy();}catch(e){}_pl=null;}const o=document.getElementById("efp");if(o)o.remove();}
+/* TV tomoshabinlar soni: efir haqiqatan ijro etilayotganda har 100 soniyada "shu yerdaman" signali, yopilganda chiqish signali */
+const VID=Math.random().toString(36).slice(2,12)+Date.now().toString(36).slice(-4);
+let _hbT=null,_hbOn=false;
+function tvPing(x){try{const u=WORKER+"/tvhb?c="+VID+(x?"&x=1":"");if(x&&navigator.sendBeacon){navigator.sendBeacon(u);return;}fetch(u,{method:"POST",keepalive:true,mode:"no-cors"}).catch(()=>{});}catch(e){}}
+function tvHbStart(id){if(_hbOn||String(id).indexOf("t_")!==0)return;_hbOn=true;tvPing();_hbT=setInterval(()=>tvPing(),100000);}
+function tvHbStop(){if(!_hbOn)return;_hbOn=false;clearInterval(_hbT);tvPing(true);}
+addEventListener("pagehide",tvHbStop);
+function closeEfir(){tvHbStop();if(_pl){try{_pl.destroy();}catch(e){}_pl=null;}const o=document.getElementById("efp");if(o)o.remove();}
 function tsInfo(b){
   let o=-1;for(let i=0;i<Math.min(b.length-376,1500);i++){if(b[i]===0x47&&b[i+188]===0x47&&b[i+376]===0x47){o=i;break;}}
   if(o<0)return null;
@@ -899,7 +906,7 @@ async function openEfir(id){
   const v=o.querySelector("#efv"),msg=o.querySelector("#efm"),src=WORKER+"/p?id="+encodeURIComponent(id);
   const note=t=>{msg.textContent=t||""};
   o.querySelector("#efx").onclick=closeEfir;
-  v.addEventListener("playing",()=>{on=true;note("")});
+  v.addEventListener("playing",()=>{on=true;note("");tvHbStart(id)});
   v.addEventListener("error",()=>{const x=v.error;note("Video xatosi: "+(x?x.code+" "+(x.message||""):""))});
   note("Efirga ulanmoqda…");
   let k=e.k,info="",lastErr="",pg="",on=false;
