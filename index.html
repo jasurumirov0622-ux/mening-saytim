@@ -902,9 +902,9 @@ async function openEfir(id){
     note("Efirga ulanmoqda… ["+k+(info?": "+info:"")+"]");
     if(!o.isConnected)return;
     if(k==="hls"){
-      if(v.canPlayType("application/vnd.apple.mpegurl")){v.src=src;}
+      try{await loadJs("https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.17/hls.min.js")}catch(_){}
+      if(typeof Hls==="undefined"||!Hls.isSupported()){v.src=src;}
       else{
-        await loadJs("https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.17/hls.min.js");
         const h=new Hls({manifestLoadingTimeOut:20000,levelLoadingTimeOut:20000,fragLoadingTimeOut:60000,fragLoadingMaxRetry:4});_pl=h;
         const st={l:0,fl:0,fd:0,by:0};
         const prog=()=>{pg="ro'yxat: "+(st.l?"✓":"…")+" · bo'lak: "+st.fd+"/"+st.fl+" yuklandi"+(st.by?" ("+(st.by/1048576).toFixed(1)+" MB)":"");if(!on)note("Efirga ulanmoqda… ["+k+(info?": "+info:"")+"] "+pg);};
