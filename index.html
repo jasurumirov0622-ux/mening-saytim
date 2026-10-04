@@ -1308,7 +1308,10 @@ $("#lb").onclick=()=>{lang=lang==="uz"?"ru":"uz";try{localStorage.setItem("lang"
   M.forEach(m=>m.comp=LN(m.slug));cf="*";applyStatic();renderMatches();renderTable();renderNews();if(curM)paintModal();};
 applyStatic();
 document.addEventListener("click",e=>{
-  const efb=e.target.closest("[data-ef]");if(efb){e.preventDefault();openEfir(efb.dataset.ef);return;}
+  const efb=e.target.closest("[data-ef]");if(efb){e.preventDefault();const ei=efb.dataset.ef;
+    /* o'yin ONSPORTS TV ga ulangan bo'lsa — to'g'ridan-to'g'ri TV bo'limiga, jonli rejimga o'tamiz */
+    if(EFIR[ei]&&EFIR[ei].tv){if(curM||curN)closeMatch();showTab("tv");return;}
+    openEfir(ei);return;}
   const tgb=e.target.closest("[data-tvg]");if(tgb){tvg=tgb.dataset.tvg;renderTV();return;}
   const nfb=e.target.closest("[data-nf]");if(nfb){nf=nfb.dataset.nf;renderNews();return;}
   const nw=e.target.closest("[data-n]");if(nw){e.preventDefault();openNews(nw.dataset.n);return;}
