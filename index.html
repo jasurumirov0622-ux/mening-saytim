@@ -1099,7 +1099,57 @@ function renderTable(){
     :`<div class="empty">${T("notable")}</div>`;
 }
 
-const SEED=[{"id": "s1", "kind": "news", "seed": true, "src": "Sports.ru", "title": "Angliya Xorvatiyani 7:0 hisobida tor-mor qildi", "text": "Millatlar ligasida Angliya terma jamoasi Xorvatiyani o'z uyida 7:0 hisobida mag'lub etdi. Bu Xorvatiya tarixidagi eng katta mag'lubiyat bo'ldi. Keyn Bellingemning uzatmasidan gol urdi.", "date": "2026-10-01T21:00:00+05:00", "link": "https://www.sports.ru/football/", "ord": 0}, {"id": "s2", "kind": "news", "seed": true, "src": "Sports.ru", "title": "Skaloni Messining vidolashuv o'yini haqida: «Besh Monumental ham to'lib ketardi»", "text": "Argentina murabbiyi Lionel Skaloni Messining terma jamoadagi xayrlashuv o'yinini sharhladi: uning maydondagi borligi hissi betakror, bu unutilmas kun bo'ladi.", "date": "2026-10-04T10:00:00+05:00", "link": "https://sports.ru/football/1117389517-skaloni-o-proshhalnom-matche-messi-dazhe-pyat-stadionov-monumental-byl.html", "ord": 1}, {"id": "s3", "kind": "news", "seed": true, "src": "Sports.ru", "title": "«Roma» Dibala va Molinani Messining vidolashuv o'yiniga qo'yib yubormadi", "text": "Italiya klubi ikki argentinalik futbolchini terma jamoaga bermadi: «Lionelga nihoyatda hurmatimiz bor, qaror sport va logistika sabablariga ko'ra qabul qilindi». Lautaroning terma jamoadagi 42 goli faqat Messi (125) va Batistutadan kam.", "date": "2026-10-04T09:00:00+05:00", "link": "https://sports.ru/football/1117389517-skaloni-o-proshhalnom-matche-messi-dazhe-pyat-stadionov-monumental-byl.html", "ord": 2}, {"id": "s4", "kind": "news", "seed": true, "src": "Sports.ru", "title": "«Manchester Siti» Premer-liga hukmi ustidan apellyatsiya berdi", "text": "Klub komissiya xulosasida aniq huquqiy va faktik xatolar borligini, u asossiz ekanini bildirdi va qo'yilgan ayblovlarni tan olmasligini ta'kidladi.", "date": "2026-10-03T13:55:00+05:00", "link": "https://www.sports.ru/football/news/top/", "ord": 3}, {"id": "s5", "kind": "news", "seed": true, "src": "Sports.ru", "title": "Argentina Burkina-Fasoni 7:0 hisobida yengdi", "text": "Do'stlik o'yinlarida Argentina Burkina-Fasoni 7:0 hisobida mag'lub etdi, AQSh Meksikani yengdi, Braziliya esa Hindistonni yirik hisobda yutdi.", "date": "2026-10-04T07:12:00+05:00", "link": "https://www.sports.ru/football/", "ord": 4}, {"id": "s6", "kind": "news", "seed": true, "src": "Sports.ru", "title": "Rossiya Namibiyani 6:0 hisobida yengdi, ketma-ket 4-g'alaba", "text": "Rossiya terma jamoasi Yekaterinburgda Namibiyani 6:0 hisobida mag'lub etdi. Jamoa ketma-ket 4 ta o'yinda g'alaba qozondi, umumiy hisob — 14:0.", "date": "2026-10-01T20:40:00+05:00", "link": "https://www.sports.ru/football/", "ord": 5}, {"id": "s7", "kind": "news", "seed": true, "src": "Sports.ru", "title": "Ronaldu ketgach Portugaliya terma jamoasi 2 million obunachini yo'qotdi", "text": "Kristianu Ronaldu safdan chiqqach Portugaliya terma jamoasining Instagram sahifasi 2 million obunachisidan ayrildi.", "date": "2026-10-01T20:27:00+05:00", "link": "https://www.sports.ru/football/", "ord": 6}, {"id": "s8", "kind": "news", "seed": true, "src": "Sports.ru", "title": "De la Fuente Yamal haqida: «Lamin afsonaviy futbolchi bo'lish yo'lida»", "text": "Ispaniya murabbiyi Luis de la Fuente yosh yulduzni maqtadi: «Lamin hammani hayratda qoldirishda davom etmoqda, eng yaxshisi hali oldinda».", "date": "2026-10-04T01:29:00+05:00", "link": "https://www.sports.ru/football/", "ord": 7}, {"id": "s9", "kind": "news", "seed": true, "src": "Sports.ru", "title": "Janubiy Koreya Osiyo o'yinlari finalida Yaponiyani mag'lub etdi", "text": "Janubiy Koreya terma jamoasi Osiyo o'yinlari finalida Yaponiyani yutdi. G'alaba koreyalik futbolchilarni harbiy xizmatdan ozod qiladi.", "date": "2026-10-04T08:00:00+05:00", "link": "https://www.sports.ru/football/", "ord": 8}, {"id": "s10", "kind": "news", "seed": true, "src": "Sports.ru", "title":"«Siti» rahbari: «3 daqiqa ko'z qisilmagan murojaatni sun'iy intellekt yaratmagan»", "text": "«Manchester Siti» bosh direktori Sorianu o'zining 3 daqiqa davomida ko'z qimirlatmagan video murojaati sun'iy intellekt tomonidan yaratilmaganini aytdi: «Bularning hammasi — o'zim».", "date": "2026-10-04T10:30:00+05:00", "link": "https://www.sports.ru/football/", "ord": 9}];
+const SEED=[{"id": "s1", "kind": "news", "seed": true, "src": "Sports.ru", "title": "Xorvatiya tarixidagi eng og'ir mag'lubiyat: Angliyadan 0:7", "text": "Millatlar ligasi 3-turida Angliya Xorvatiyani Riekada 7:0 hisobida mag'lub etdi. Bu Xorvatiya terma jamoasi tarixidagi eng katta mag'lubiyat (oldingi antirekord — 2018-yilda Ispaniyadan 0:6). Keyn va Saka ikkitadan gol urdi, Bellingem 1 gol va 3 assist qildi.", "date": "2026-10-03T22:57:00+05:00", "link": "https://www.sports.ru/football/1117389119-sbornaya-xorvatii-poterpela-krupnejshee-porazhenie-v-istorii-07-ot-ang.html", "ord": 0}, {"id": "s2", "kind": "news", "seed": true, "src": "Sports.ru", "title": "Bilich 0:7 haqida: «Mashg'ulotlarda hammasi yaxshi ko'rinardi, bunday natijani kutish qiyin edi»", "text": "Xorvatiya bosh murabbiyi Slaven Bilich Angliyadan yengilish haqida gapirdi. Bu jamoa tarixidagi eng katta mag'lubiyat bo'ldi.", "date": "2026-10-04T00:30:00+05:00", "link": "https://www.sports.ru/football/1117389216-bilich-o-07-na-trenirovkax-vse-vyglyadelo-xorosho-trudno-bylo-ozhidat-.html", "ord": 1}, {"id": "s3", "kind": "news", "seed": true, "src": "Sports.ru", "title": "Rossiya Namibiyani 6:0 hisobida yengdi — ketma-ket 4-quruq g'alaba", "text": "Valeriy Karpin jamoasi Yekaterinburgda Namibiyani 6:0 hisobida mag'lub etdi. Avval Burkina-Faso (3:0), Trinidad va Tobago (3:0) va Eron (2:0) yutilgan edi — 4 o'yinda umumiy hisob 14:0.", "date": "2026-10-03T22:38:00+05:00", "link": "https://www.sports.ru/football/1117389113-sbornaya-rossii-vyigrala-4-matcha-podryad-s-obshhim-schetom-140.html", "ord": 2}, {"id": "s4", "kind": "news", "seed": true, "src": "Sports.ru", "title": "Skaloni Messining vidolashuv o'yini haqida: «Besh Monumental ham to'lib ketardi»", "text": "Argentina murabbiyi Lionel Skaloni Messining terma jamoadagi xayrlashuv o'yinini sharhladi: uning maydondagi borligi hissi betakror, bu unutilmas kun bo'ladi.", "date": "2026-10-04T10:00:00+05:00", "link": "https://www.sports.ru/football/1117389517-skaloni-o-proshhalnom-matche-messi-dazhe-pyat-stadionov-monumental-byl.html", "ord": 3}, {"id": "s5", "kind": "news", "seed": true, "src": "Sports.ru", "title": "«Roma» Dibala va Molinani Messining vidolashuv o'yiniga qo'yib yubormadi", "text": "Italiya klubi ikki argentinalik futbolchini terma jamoaga bermadi: «Lionelga nihoyatda hurmatimiz bor, qaror sport va logistika sabablariga ko'ra qabul qilindi». Lautaroning terma jamoadagi 42 goli faqat Messi (125) va Batistutadan kam.", "date": "2026-10-04T09:00:00+05:00", "link": "https://www.sports.ru/football/1117389517-skaloni-o-proshhalnom-matche-messi-dazhe-pyat-stadionov-monumental-byl.html", "ord": 4}, {"id": "s6", "kind": "news", "seed": true, "src": "Sports.ru", "title": "Karpin 6:0 haqida: «Ularning mudofaadan chiqishi quvontirdi»", "text": "Rossiya bosh murabbiyi ikkinchi bo'limda Namibiya charchaganini, o'zlari esa yangi kuchlarni kiritganini aytdi. Endi e'tibor 6-oktabrdagi Nigeriya bilan o'yinda.", "date": "2026-10-04T08:20:00+05:00", "link": "https://www.sports.ru/football/1117389184-karpin-o-60-s-namibiej-poradovalo-kak-oni-vyxodili-iz-oborony-dazhe-uc.html", "ord": 5}, {"id": "s7", "kind": "news", "seed": true, "src": "Sports.ru", "title": "Bulykin: «Endi kim bilan o'ynash muhim emas, hatto Narniya bilan ham»", "text": "Rossiyaning sobiq hujumchisi Dmitriy Bulykin Namibiyaga 6:0 g'alabani sharhladi va Nigeriya bilan o'yin ancha qiyin bo'lishiga shubha yo'qligini aytdi.", "date": "2026-10-04T07:30:00+05:00", "link": "https://www.sports.ru/football/1117389158-bulykin-o-60-s-namibiej-sejchas-voobshhe-ne-vazhno-s-kem-igrat-xot-pro.html", "ord": 6}, {"id": "s8", "kind": "news", "seed": true, "src": "Sports.ru", "title": "«Zenit» «Krasnodar» o'yini uchun chiptalarni o'zi sotib olishni taklif qildi", "text": "Sankt-Peterburg klubi mezbonlardan chipta kvotasini bir haftadan ko'p vaqt kuta olmayotganini, reglament uni kafolatlashini bildirdi.", "date": "2026-10-03T01:50:00+05:00", "link": "https://www.sports.ru/football/1117389543-zenit-predlozhil-samostoyatelno-vykupit-bilety-na-match-s-krasnodarom-.html", "ord": 7}, {"id": "s9", "kind": "news", "seed": true, "src": "Sports.ru", "title": "RPL klublarining do'stlik o'yinlari: «Zenit» — BATE, «Dinamo» — «Rodina»", "text": "4-oktabrda Rossiya klublari xalqaro tanaffusda do'stlik o'yinlari o'tkazadi: «Zenit» BATE bilan, «Dinamo» «Rodina» bilan, CSKA ham maydonga tushadi.", "date": "2026-10-04T11:00:00+05:00", "link": "https://www.sports.ru/football/1117389527-tovarishheskie-matchi-zenit-sygraet-s-bate-dinamo-protiv-rodiny-czska-.html", "ord": 8}, {"id": "s10", "kind": "news", "seed": true, "src": "Sports.ru", "title": "Belgiya terma jamoasining sobiq futbolchisi Deshaxt ayollar futboli haqidagi gapi bilan bahs uyg'otdi", "text": "«Qarashga chiday olmayman» — degan fikr izoh va munozaralarga sabab bo'ldi.", "date": "2026-10-04T12:00:00+05:00", "link": "https://www.sports.ru/football/1117388364-eks-igrok-sbornoj-belgii-desxaxt-ne-mogu-smotret-na-zhenskij-futbol-es.html", "ord": 9}];
+
+/* rasmi yo'q xabarlar uchun: Worker maqola sahifasidan og:image ni olib beradi (brauzerda 6 soat saqlanadi) */
+let ogBusy=false;
+/* Rasmlar wsrv.nl orqali: aniq (retina 2x), WebP, hotlink-bloksiz. Ishlamasa — asl manzil. */
+const PX=(u,w)=>"https://wsrv.nl/?url="+encodeURIComponent(u)+"&w="+w+"&q=85&output=webp&we";
+function imgErr(i){if(!i.dataset.f){i.dataset.f=1;i.removeAttribute("srcset");i.src=i.dataset.o;}else i.remove();}
+const imgT=(u,w,at="")=>`<img src="${esc(PX(u,w))}" srcset="${esc(PX(u,w))} 1x, ${esc(PX(u,w*2))} 2x" data-o="${esc(u)}" referrerpolicy="no-referrer" alt="" decoding="async" ${at} onerror="imgErr(this)">`;
+/* maqola sahifasidan og:image — Worker /og bo'lmasa yoki rasm bermasa, brauzerning o'zi ochiq proxy orqali oladi */
+async function ogClient(link){
+  const px=[u=>"https://corsproxy.io/?url="+encodeURIComponent(u),u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u),u=>"https://api.codetabs.com/v1/proxy?quest="+encodeURIComponent(u)];
+  for(const w of px){
+    try{
+      const c=new AbortController(),t=setTimeout(()=>c.abort(),8000);
+      const r=await fetch(w(link),{signal:c.signal});clearTimeout(t);
+      if(!r.ok)continue;
+      const h=(await r.text()).slice(0,250000);
+      const m=h.match(/<meta[^>]+(?:property|name)=["']og:image["'][^>]*content=["']([^"']+)["']/i)||h.match(/<meta[^>]+content=["']([^"']+)["'][^>]*(?:property|name)=["']og:image["']/i);
+      if(m){let u=m[1].replace(/&amp;/g,"&");if(u.startsWith("//"))u="https:"+u;if(/^https?:\/\//.test(u))return u;}
+    }catch(e){}
+  }
+  return "";
+}
+async function enrichImgs(){
+  if(ogBusy||!news)return;
+  const need=news.filter(x=>x.kind==="news"&&!x.img&&/^https:\/\/(www\.)?sports\.ru\//.test(x.link||""));
+  if(!need.length)return;
+  let c={};try{c=JSON.parse(localStorage.getItem("og2")||"{}")}catch(e){}
+  const save=()=>{try{localStorage.setItem("og2",JSON.stringify(c))}catch(e){}};
+  const now=Date.now();let got=0;
+  const fill=(l,u)=>{for(const x of need)if(!x.img&&x.link===l){x.img=u;got++;}};
+  for(const x of need){const e=c[x.link];if(e&&e.i&&now-e.t<864e5){x.img=e.i;got++;}}
+  let miss=[...new Set(need.filter(x=>!x.img).map(x=>x.link))];
+  ogBusy=true;
+  try{
+    if(miss.length){            /* 1) Worker /og */
+      try{
+        const r=await fetch(WORKER+"/og?"+miss.slice(0,16).map(u=>"u="+encodeURIComponent(u)).join("&"));
+        if(r.ok){const m=(await r.json()).map||{};for(const l of miss)if(m[l]){fill(l,m[l]);c[l]={i:m[l],t:now};}save();}
+      }catch(e){}
+      miss=miss.filter(l=>!need.some(x=>x.link===l&&x.img));
+    }
+    if(got)renderNews();
+    if(miss.length){            /* 2) brauzer orqali (zaxira) */
+      const q=miss.slice(0,16);let rt=0;
+      const run=async()=>{while(q.length){const l=q.shift(),u=await ogClient(l);
+        if(u){fill(l,u);c[l]={i:u,t:Date.now()};save();clearTimeout(rt);rt=setTimeout(renderNews,350);}}};
+      await Promise.all([run(),run(),run(),run()]);
+    }
+  }finally{ogBusy=false;}
+}
 let newsSig="",newsTry=0,NUPD=0;
 async function loadNews(){
   const c=new AbortController(),t=setTimeout(()=>c.abort(),15000);
@@ -1112,7 +1162,7 @@ async function loadNews(){
     if(merged.length){
       const sig=merged.map(x=>x.id).join();
       news=merged;try{localStorage.setItem("news3",JSON.stringify(news))}catch(e){}
-      if(sig!==newsSig){newsSig=sig;renderNews();}
+      if(sig!==newsSig){newsSig=sig;renderNews();}enrichImgs();
       newsTry=0;return;
     }
   }catch(e){}finally{clearTimeout(t);}
@@ -1141,7 +1191,7 @@ function openNews(id){
     const cd=c?`<div class="mcard"><div class="mrow"><b>${esc(un(c.h))}</b><strong>${esc(c.hs)} : ${esc(c.as)}</strong><b>${esc(un(c.a))}</b></div>${gl}</div>`:"";
     const body=String(x.body||"").split(/\n{2,}/).map(p=>`<p>${esc(p)}</p>`).join("");
     h=`<article class="art"><h2>${esc(x.title)}</h2><small class="ameta">${esc(KL[x.kind]||"")} · ${when(x.date)}</small>${cd}${body}<small class="anote">ONSPORTS.UZ · matn rasmiy o'yin ma'lumotlari asosida avtomatik tayyorlandi</small></article>`;
-  }else h=`<article class="art">${x.img?`<img class="aimg" src="${esc(x.img)}" alt="" onerror="this.remove()">`:""}<h2>${esc(x.title)}</h2><small class="ameta">${esc(x.src||"")} · ${when(x.date)}</small>${x.text?`<p>${esc(x.text)}</p>`:""}<a class="asrc" href="${esc(x.link)}" target="_blank" rel="noopener noreferrer">Manba: ${esc(x.src||"")} ↗</a></article>`;
+  }else h=`<article class="art">${x.img?`${imgT(x.img,1100,'class="aimg"')}`:""}<h2>${esc(x.title)}</h2><small class="ameta">${esc(x.src||"")} · ${when(x.date)}</small>${x.text?`<p>${esc(x.text)}</p>`:""}<a class="asrc" href="${esc(x.link)}" target="_blank" rel="noopener noreferrer">Manba: ${esc(x.src||"")} ↗</a></article>`;
   $("#mc").innerHTML=h;
   $("#mo").hidden=false;document.body.style.overflow="hidden";
 }
@@ -1151,7 +1201,7 @@ const KL={report:"📝 O'YIN HISOBOTI",preview:"🔮 TAHLIL",recap:"🌙 KUN XUL
 const nph=x=>x.card?`<span class="bsc"><b>${esc(x.card.hs)} : ${esc(x.card.as)}</b><em>${esc(un(x.card.h))} — ${esc(un(x.card.a))}</em></span>`:`<span>${KL[x.kind]||"ONSPORTS.UZ"}</span>`;
 const SRCC={"Sports.ru":"#1faa59","BBC Sport":"#bb1919","The Guardian":"#1c6fc4","Sky Sports":"#e0242f","The Independent":"#e6007e","The Telegraph":"#0b7c9c"};
 const sp=x=>x.src?`<span class="nsrc" style="--sc:${SRCC[x.src]||"var(--ac)"}">${esc(x.src)}</span>`:"";
-const ncard=(x,i=0)=>`<a class="ncard" style="--i:${Math.min(i,12)}" href="#" data-n="${esc(x.id)}"><div class="nimg">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy" decoding="async" width="480" height="300" onerror="this.remove()">`:nph(x)}${sp(x)}</div><div class="nbody"><h3>${esc(x.title)}</h3><small>${when(x.date)}</small></div></a>`;
+const ncard=(x,i=0)=>`<a class="ncard" style="--i:${Math.min(i,12)}" href="#" data-n="${esc(x.id)}"><div class="nimg">${x.img?imgT(x.img,640,'loading="lazy"'):nph(x)}${sp(x)}</div><div class="nbody"><h3>${esc(x.title)}</h3><small>${when(x.date)}</small></div></a>`;
 const nhead=n=>`<div class="nhead"><h1 class="nt"><i class="dot"></i>${T("news")}</h1><span class="nup">${NUPD?"⟳ "+ago(NUPD):""}${n?` · ${n}`:""}</span></div>`;
 const skel=()=>nhead(0)+`<div class="nwrap"><div class="nhero sk"></div><div class="nside">${'<div class="ncard sk"><div class="nimg"></div><div class="nbody"><i></i><i></i></div></div>'.repeat(4)}</div></div>`;
 const IC={s:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
@@ -1168,7 +1218,7 @@ function renderNews(){
   if(nf==="news")a.sort((x,y)=>(x.ord||0)-(y.ord||0));
   if(!a.length){$("#news").innerHTML=`<div class="empty">${lang==="ru"?"Пока нет материалов":"Hozircha maqola yo'q"}</div>`;return;}
   const hi=a.slice(0,4).findIndex(x=>x.img),f=a[hi>0?hi:0],rest=a.filter(x=>x!==f);
-  let h=nhead(a.length)+`<div class="nwrap"><a class="nhero" href="#" data-n="${esc(f.id)}">${f.img?`<img src="${esc(f.img)}" alt="" fetchpriority="high" decoding="async" width="800" height="450" onerror="this.remove()">`:""}<div class="ov"><div class="nbadges"><span class="hot">🔥 ${lang==="ru"?"Главное":"Kun xabari"}</span>${sp(f)}</div><h2>${esc(f.title)}</h2>${f.text?`<p>${esc(f.text)}</p>`:""}<small>${when(f.date)}</small></div></a>`
+  let h=nhead(a.length)+`<div class="nwrap"><a class="nhero" href="#" data-n="${esc(f.id)}">${f.img?imgT(f.img,1280,'fetchpriority="high"'):""}<div class="ov"><div class="nbadges"><span class="hot">🔥 ${lang==="ru"?"Главное":"Kun xabari"}</span>${sp(f)}</div><h2>${esc(f.title)}</h2>${f.text?`<p>${esc(f.text)}</p>`:""}<small>${when(f.date)}</small></div></a>`
     +`<div class="nside">${rest.slice(0,4).map((x,i)=>ncard(x,i+1)).join("")}</div></div>`;
   if(rest.length>4)h+=`<div class="more">${T("more")}</div><div class="ngrid">${rest.slice(4).map((x,i)=>ncard(x,i)).join("")}</div>`;
   $("#news").innerHTML=h;
@@ -1211,8 +1261,8 @@ document.addEventListener("keydown",e=>{
 function showTab(t){if(!document.querySelector(".tab#"+t))t="yangilik";document.querySelectorAll(".tab").forEach(x=>x.hidden=x.id!==t);
   document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("on",x.dataset.tab===t));window.scrollTo(0,0);if(t==="tv")loadTV();}
 showTab((location.hash||"").slice(1).replace(/^$/,"yangilik"));
-try{news=JSON.parse(localStorage.getItem("news3")||"null");if(news){newsSig=news.map(x=>x.id).join();renderNews();}}catch(e){}
-if(!news||!news.some(x=>x.kind==="news")){news=SEED.concat((news||[]).filter(x=>x.kind!=="news"));newsSig="";renderNews();}
+try{news=JSON.parse(localStorage.getItem("news3")||"null");if(news){newsSig=news.map(x=>x.id).join();renderNews();enrichImgs();}}catch(e){}
+if(!news||!news.some(x=>x.kind==="news")){news=SEED.concat((news||[]).filter(x=>x.kind!=="news"));newsSig="";renderNews();enrichImgs();}
 loadNews();renderMatches();setTimeout(()=>{loadAll();loadTable(lg);},0);
 setInterval(()=>{
   if(document.hidden)return;
