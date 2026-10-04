@@ -1062,6 +1062,11 @@ async function openEfir(id){
     vr.oninput=()=>{v.volume=+vr.value;v.muted=+vr.value===0;};
     v.addEventListener("volumechange",sync);sync();
     rt.append(mb,vr);cb.append(bd,rt);w.appendChild(cb);
+    /* ekranga bir bosilsa belgilar (sarlavha, ⛶, ×, JONLI, ovoz) yashirinadi, yana bosilsa qaytadi */
+    {const hd=o.firstElementChild;let hid=false;
+    w.addEventListener("click",ev=>{if(rt.contains(ev.target))return;hid=!hid;const op=hid?"0":"1";
+      cb.style.transition=hd.style.transition="opacity .25s";cb.style.opacity=op;hd.style.opacity=op;
+      hd.style.pointerEvents=hid?"none":"";rt.style.pointerEvents=hid?"none":"auto";});}
   }
   const DBG=/[?&]debug\b/.test(location.search);   /* adminga: saytni ?debug bilan ochsangiz texnik yozuvlar ko'rinadi */
   const note=t=>{
