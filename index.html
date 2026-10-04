@@ -865,6 +865,35 @@ function tvPing(x){try{const u=WORKER+"/tvhb?c="+VID+(x?"&x=1":"");if(x&&navigat
 function tvHbStart(id){if(_hbOn||String(id).indexOf("t_")!==0)return;_hbOn=true;tvPing();_hbT=setInterval(()=>tvPing(),100000);}
 function tvHbStop(){if(!_hbOn)return;_hbOn=false;clearInterval(_hbT);tvPing(true);}
 addEventListener("pagehide",tvHbStop);
+/* TV efirdagi logotiplar: bot orqali joylashtiriladi, video rasmining ichida (qora chetlarsiz) joylashadi */
+function tvLogos(o,w,v,lg){
+  const els={};let cfg=[];
+  const lay=()=>{
+    const W=w.clientWidth,H=w.clientHeight,vw=v.videoWidth,vh=v.videoHeight;
+    let pw=W,ph=H,l=0,t=0;
+    if(vw&&vh){const s=Math.min(W/vw,H/vh);pw=vw*s;ph=vh*s;l=(W-pw)/2;t=(H-ph)/2;}
+    cfg.forEach(c=>{const e=els[c.id];if(!e)return;e.style.left=(l+pw*c.x/100)+"px";e.style.top=(t+ph*c.y/100)+"px";e.style.width=(pw*c.w/100)+"px";e.style.opacity=c.o/100;});
+  };
+  const load=async()=>{
+    try{
+      const r=await fetch(WORKER+"/tvlogo");if(!r.ok)return;
+      cfg=(await r.json()).items||[];
+      const ids=new Set(cfg.map(c=>String(c.id)));
+      Object.keys(els).forEach(k=>{if(!ids.has(k)){els[k].remove();delete els[k];}});
+      cfg.forEach(c=>{
+        let e=els[c.id];
+        if(!e){e=document.createElement("img");e.alt="";e.draggable=false;e.style.cssText="position:absolute;transform:translate(-50%,-50%);height:auto;pointer-events:none;user-select:none";lg.appendChild(e);els[c.id]=e;}
+        const s=WORKER+"/tvlogo/img?i="+c.id+"&v="+c.h;if(e.getAttribute("src")!==s)e.src=s;
+      });
+      lay();
+    }catch(e){}
+  };
+  load();
+  const t=setInterval(()=>{if(!document.body.contains(o)){clearInterval(t);return;}load();},15000);
+  ["loadedmetadata","resize","playing"].forEach(ev=>v.addEventListener(ev,lay));
+  if(window.ResizeObserver)new ResizeObserver(lay).observe(w);
+  addEventListener("resize",lay);
+}
 function closeEfir(){tvHbStop();if(_pl){try{_pl.destroy();}catch(e){}_pl=null;}const o=document.getElementById("efp");if(o)o.remove();}
 function tsInfo(b){
   let o=-1;for(let i=0;i<Math.min(b.length-376,1500);i++){if(b[i]===0x47&&b[i+188]===0x47&&b[i+376]===0x47){o=i;break;}}
@@ -905,6 +934,20 @@ async function openEfir(id){
   o.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;color:#fff;font:700 14px system-ui"><span>'+esc(e.h)+(e.a?' \u2014 '+esc(e.a):'')+'</span><button id="efx" style="background:#e5484d;color:#fff;border:0;border-radius:8px;padding:6px 14px;font:700 16px system-ui;cursor:pointer">\u00d7</button></div><video id="efv" controls autoplay playsinline style="flex:1;width:100%;min-height:0;background:#000"></video><div id="efm" style="position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;padding:0 28px;color:#fff;font:600 16px/1.5 system-ui;pointer-events:none;text-shadow:0 2px 8px #000"></div>';
   document.body.appendChild(o);
   const v=o.querySelector("#efv"),msg=o.querySelector("#efm"),src=WORKER+"/p?id="+encodeURIComponent(id);
+  if(String(id).indexOf("t_")===0){   /* faqat ONSPORTS TV: videoni o'rab, ustiga logotiplar qatlamini qo'yamiz */
+    const w=document.createElement("div");w.style.cssText="position:relative;flex:1;min-height:0;display:flex;background:#000";
+    v.parentNode.insertBefore(w,v);w.appendChild(v);
+    const lg=document.createElement("div");lg.style.cssText="position:absolute;inset:0;pointer-events:none;overflow:hidden";w.appendChild(lg);
+    if(w.requestFullscreen){   /* to'liq ekranda ham logo ko'rinishi uchun: videoning o'zi emas, qatlam to'liq ekranga chiqadi */
+      v.setAttribute("controlsList","nofullscreen");
+      const x=o.querySelector("#efx"),hb=document.createElement("div"),fs=document.createElement("button");
+      hb.style.cssText="display:flex;gap:8px";fs.textContent="\u26F6";fs.setAttribute("aria-label","To'liq ekran");
+      fs.style.cssText="background:#2a3550;color:#fff;border:0;border-radius:8px;padding:6px 12px;font:700 16px system-ui;cursor:pointer";
+      fs.onclick=()=>{if(document.fullscreenElement)document.exitFullscreen();else w.requestFullscreen();};
+      x.replaceWith(hb);hb.append(fs,x);
+    }
+    tvLogos(o,w,v,lg);
+  }
   const note=t=>{msg.textContent=t||""};
   o.querySelector("#efx").onclick=closeEfir;
   v.addEventListener("playing",()=>{on=true;note("");tvHbStart(id)});
