@@ -384,8 +384,15 @@ const isLive=m=>m.st==="IN_PLAY"||m.st==="PAUSED"||(m.st==="TIMED"&&started(m));
 const ymd=o=>{const d=new Date(Date.now()+o*864e5);return d.toISOString().slice(0,10).replace(/-/g,"")};
 function ago(d){if(!d)return"";const m=Math.max(1,Math.round((Date.now()-new Date(d))/6e4));
   return m<60?`${m} ${T("agoM")}`:m<1440?`${Math.round(m/60)} ${T("agoH")}`:`${Math.round(m/1440)} ${T("agoD")}`;}
-async function jget(url,ms=12000){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
+async function jget0(url,ms=12000){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
   try{const r=await fetch(url,{signal:c.signal});if(!r.ok)throw new Error(r.status);return await r.json();}finally{clearTimeout(t);}}
+/* ESPN to'g'ridan-to'g'ri ochilmasa (tarmoq, reklama bloklovchi) yoki 3.5 soniyada javob bermasa — shu so'rov worker orqali ham yuboriladi; qaysi biri birinchi kelsa, o'sha olinadi */
+async function jget(url,ms=12000){
+  if(!/^https:\/\/site(\.web)?\.api\.espn\.com\//.test(url))return jget0(url,ms);
+  const px=()=>jget0(WORKER+"/?url="+encodeURIComponent(url),ms);
+  try{return await Promise.any([jget0(url,ms).catch(()=>px()),new Promise(r=>setTimeout(r,3500)).then(px)]);}
+  catch(e){throw (e&&e.errors&&e.errors[0])||e;}
+}
 const num=v=>{const n=parseInt(v);return isNaN(n)?null:n};
 
 function parseEvents(d,slug){
