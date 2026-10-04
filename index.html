@@ -231,7 +231,7 @@ body{background:radial-gradient(900px 420px at 10% -8%,rgba(47,208,138,.13),tran
 .ncard,.nhero{transition:transform .25s,box-shadow .25s,border-color .25s}
 .ncard:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(0,0,0,.3)}
 .nhero:hover{transform:translateY(-2px);box-shadow:0 18px 44px rgba(47,208,138,.18)}
-.nhero>img,.nimg img{transition:transform .5s}
+.nhero>img,.nimg img{transition:transform .5s;object-position:50% 28%}
 .nhero:hover>img,.ncard:hover .nimg img{transform:scale(1.06)}
 .nimg{background:linear-gradient(135deg,#1b4a5c,#17335a 55%,#2a1d57)}
 .nhero .ov{background:linear-gradient(transparent 20%,rgba(5,10,22,.92))}
@@ -1107,47 +1107,73 @@ let ogBusy=false;
 const PX=(u,w)=>"https://wsrv.nl/?url="+encodeURIComponent(u)+"&w="+w+"&q=85&output=webp&we";
 function imgErr(i){if(!i.dataset.f){i.dataset.f=1;i.removeAttribute("srcset");i.src=i.dataset.o;}else i.remove();}
 const imgT=(u,w,at="")=>`<img src="${esc(PX(u,w))}" srcset="${esc(PX(u,w))} 1x, ${esc(PX(u,w*2))} 2x" data-o="${esc(u)}" referrerpolicy="no-referrer" alt="" decoding="async" ${at} onerror="imgErr(this)">`;
-/* maqola sahifasidan og:image — Worker /og bo'lmasa yoki rasm bermasa, brauzerning o'zi ochiq proxy orqali oladi */
-async function ogClient(link){
-  const px=[u=>"https://corsproxy.io/?url="+encodeURIComponent(u),u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u),u=>"https://api.codetabs.com/v1/proxy?quest="+encodeURIComponent(u)];
-  for(const w of px){
-    try{
-      const c=new AbortController(),t=setTimeout(()=>c.abort(),8000);
-      const r=await fetch(w(link),{signal:c.signal});clearTimeout(t);
-      if(!r.ok)continue;
-      const h=(await r.text()).slice(0,250000);
-      const m=h.match(/<meta[^>]+(?:property|name)=["']og:image["'][^>]*content=["']([^"']+)["']/i)||h.match(/<meta[^>]+content=["']([^"']+)["'][^>]*(?:property|name)=["']og:image["']/i);
-      if(m){let u=m[1].replace(/&amp;/g,"&");if(u.startsWith("//"))u="https:"+u;if(/^https?:\/\//.test(u))return u;}
-    }catch(e){}
+/* Yangilikka mos rasm: sarlavhadagi jamoa/futbolchi nomi bo'yicha Wikipedia + Wikimedia Commons'dan (jpg, >=1000px) */
+const ENT=[
+[/messi/,"Lionel Messi"],[/skaloni/,"Lionel Scaloni"],[/dibala/,"Paulo Dybala"],[/lautaro/,"Lautaro Martínez"],[/karpin/,"Valery Karpin"],[/bilich/,"Slaven Bilić"],
+[/bellingem/,"Jude Bellingham"],[/\bkeyn/,"Harry Kane"],[/\bsaka\b/,"Bukayo Saka"],[/modrich/,"Luka Modrić"],[/ronaldu/,"Cristiano Ronaldo"],[/mbapp?e/,"Kylian Mbappé"],
+[/xaaland|xolland|haaland/,"Erling Haaland"],[/salax|salah/,"Mohamed Salah"],[/vinisius/,"Vinícius Júnior"],[/yamal/,"Lamine Yamal"],[/neymar/,"Neymar"],
+[/gvardiola/,"Pep Guardiola"],[/murinyo|mourinho/,"José Mourinho"],[/ancelotti/,"Carlo Ancelotti"],[/tuxel|tuchel/,"Thomas Tuchel"],[/arteta/,"Mikel Arteta"],[/bulykin/,"Dmitri Bulykin"],
+[/angliy/,"England national football team"],[/xorvatiy/,"Croatia national football team"],[/rossiya(?!\s*premer)/,"Russia national football team"],[/namibiy/,"Namibia national football team"],
+[/argentin/,"Argentina national football team"],[/burkina/,"Burkina Faso national football team"],[/nigeriy/,"Nigeria national football team"],[/braziliy/,"Brazil national football team"],
+[/fransiy/,"France national football team"],[/ispaniy/,"Spain national football team"],[/germaniy/,"Germany national football team"],[/italiy/,"Italy national football team"],
+[/portugaliy/,"Portugal national football team"],[/belgiy/,"Belgium national football team"],[/gollandiy|niderlandiy/,"Netherlands national football team"],
+[/o'zbekiston|ozbekiston/,"Uzbekistan national football team"],[/\beron/,"Iran national football team"],[/yaponiy/,"Japan national football team"],[/janubiy koreya/,"South Korea national football team"],
+[/\broma(?:ning|ni|ga|dan|da)?\b/,"A.S. Roma"],[/zenit/,"FC Zenit Saint Petersburg"],[/krasnodar/,"FC Krasnodar"],[/spartak/,"FC Spartak Moscow"],[/\bcska\b/,"PFC CSKA Moscow"],
+[/lokomotiv/,"FC Lokomotiv Moscow"],[/\bbate\b/,"FC BATE Borisov"],[/barselona/,"FC Barcelona"],[/real madrid|real\b/,"Real Madrid CF"],[/manchester\s*siti|man\.?\s*siti/,"Manchester City F.C."],
+[/yunayted|manchester\s*yu/,"Manchester United F.C."],[/liverpul/,"Liverpool F.C."],[/arsenal/,"Arsenal F.C."],[/chelsi/,"Chelsea F.C."],[/tottenxem/,"Tottenham Hotspur F.C."],
+[/bavariya/,"FC Bayern Munich"],[/yuventus/,"Juventus F.C."],[/\binter\b/,"Inter Milan"],[/\bmilan\b/,"A.C. Milan"],[/napoli/,"S.S.C. Napoli"],[/\bpsj\b/,"Paris Saint-Germain F.C."],
+[/borussiya/,"Borussia Dortmund"],[/premer-liga|premier liga/,"Premier League"],[/millatlar ligasi/,"UEFA Nations League"],[/chempionlar ligasi/,"UEFA Champions League"],
+[/jahon chempionati/,"2026 FIFA World Cup"],[/\brpl\b/,"Russian Premier League"]];
+const wkq=x=>{
+  const f=t=>{t=" "+String(t||"").toLowerCase().replace(/[ʻʼ’`]/g,"'")+" ";const r=[];
+    for(const [re,w] of ENT){const m=re.exec(t);if(m)r.push([m.index,w]);}return r.sort((a,b)=>a[0]-b[0]).map(a=>a[1]);};
+  return [...new Set([...f(x.title),...f(String(x.text||"").slice(0,220))])].slice(0,4);
+};
+async function jget(u,ms){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms||8000);
+  try{const r=await fetch(u,{signal:c.signal});return r.ok?await r.json():null}catch(e){return null}finally{clearTimeout(t)}}
+async function wkList(t,wc){
+  const e=wc[t];if(e&&Date.now()-e.t<2592e6)return e.l;
+  const l=[],gen=t[0]==="~";
+  if(!gen){
+    const d=await jget("https://en.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(t.replace(/ /g,"_")));
+    const o=d&&d.originalimage;
+    if(o&&o.width>=800&&!/\.svg/i.test(o.source))l.push(o.source);
   }
-  return "";
+  const d=await jget("https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrnamespace=6&gsrlimit=10&gsrsearch="
+    +encodeURIComponent((gen?t.slice(1):t)+" filetype:bitmap")+"&prop=imageinfo&iiprop=url|size|mime&iiurlwidth=1280");
+  const pg=d&&d.query&&Object.values(d.query.pages||{}).sort((a,b)=>a.index-b.index);
+  for(const g of pg||[]){const i=g.imageinfo&&g.imageinfo[0];
+    if(i&&/jpeg/.test(i.mime)&&i.width>=1000&&i.width>=i.height*1.15)l.push(i.thumburl||i.url);}
+  if(l.length)wc[t]={l,t:Date.now()};
+  return l;
 }
 async function enrichImgs(){
   if(ogBusy||!news)return;
-  const need=news.filter(x=>x.kind==="news"&&!x.img&&/^https:\/\/(www\.)?sports\.ru\//.test(x.link||""));
+  const need=news.filter(x=>x.kind==="news"&&!x.img);
   if(!need.length)return;
-  let c={};try{c=JSON.parse(localStorage.getItem("og2")||"{}")}catch(e){}
-  const save=()=>{try{localStorage.setItem("og2",JSON.stringify(c))}catch(e){}};
-  const now=Date.now();let got=0;
-  const fill=(l,u)=>{for(const x of need)if(!x.img&&x.link===l){x.img=u;got++;}};
-  for(const x of need){const e=c[x.link];if(e&&e.i&&now-e.t<864e5){x.img=e.i;got++;}}
-  let miss=[...new Set(need.filter(x=>!x.img).map(x=>x.link))];
+  let c={},wc={};try{c=JSON.parse(localStorage.getItem("og3")||"{}");wc=JSON.parse(localStorage.getItem("wk3")||"{}")}catch(e){}
+  const save=()=>{try{localStorage.setItem("og3",JSON.stringify(c));localStorage.setItem("wk3",JSON.stringify(wc))}catch(e){}};
+  const key=x=>x.link||x.id,now=Date.now();let got=0;
+  for(const x of need){const e=c[key(x)];if(e&&e.i&&now-e.t<6048e5){x.img=e.i;if(e.w)x.wk=1;got++;}}
   ogBusy=true;
   try{
-    if(miss.length){            /* 1) Worker /og */
-      try{
-        const r=await fetch(WORKER+"/og?"+miss.slice(0,16).map(u=>"u="+encodeURIComponent(u)).join("&"));
-        if(r.ok){const m=(await r.json()).map||{};for(const l of miss)if(m[l]){fill(l,m[l]);c[l]={i:m[l],t:now};}save();}
-      }catch(e){}
-      miss=miss.filter(l=>!need.some(x=>x.link===l&&x.img));
-    }
-    if(got)renderNews();
-    if(miss.length){            /* 2) brauzer orqali (zaxira) */
-      const q=miss.slice(0,16);let rt=0;
-      const run=async()=>{while(q.length){const l=q.shift(),u=await ogClient(l);
-        if(u){fill(l,u);c[l]={i:u,t:Date.now()};save();clearTimeout(rt);rt=setTimeout(renderNews,350);}}};
-      await Promise.all([run(),run(),run(),run()]);
-    }
+    /* 1) sports.ru'ning o'z rasmi (Worker /og) */
+    let miss=[...new Set(need.filter(x=>!x.img&&/^https:\/\/(www\.)?sports\.ru\//.test(x.link||"")).map(x=>x.link))];
+    if(miss.length){try{
+      const r=await fetch(WORKER+"/og?"+miss.slice(0,16).map(u=>"u="+encodeURIComponent(u)).join("&"));
+      if(r.ok){const m=(await r.json()).map||{};for(const x of need)if(!x.img&&m[x.link]){x.img=m[x.link];c[key(x)]={i:x.img,t:now};got++;}}
+    }catch(e){}}
+    if(got){save();renderNews();}
+    /* 2) mos rasm — jamoa/futbolchi bo'yicha Wikipedia/Commons */
+    const used=new Set(news.filter(x=>x.img).map(x=>x.img));
+    const q=need.filter(x=>!x.img).slice(0,24);let rt=0;
+    const run=async()=>{while(q.length){
+      const x=q.shift(),ts=wkq(x);ts.push("~football match");
+      let pick="";
+      for(const t of ts){const l=await wkList(t,wc);pick=l.find(u=>!used.has(u))||"";if(pick)break;}
+      if(pick){used.add(pick);x.img=pick;x.wk=1;c[key(x)]={i:pick,t:Date.now(),w:1};save();clearTimeout(rt);rt=setTimeout(renderNews,350);}
+    }};
+    await Promise.all([run(),run(),run()]);
   }finally{ogBusy=false;}
 }
 let newsSig="",newsTry=0,NUPD=0;
@@ -1191,7 +1217,7 @@ function openNews(id){
     const cd=c?`<div class="mcard"><div class="mrow"><b>${esc(un(c.h))}</b><strong>${esc(c.hs)} : ${esc(c.as)}</strong><b>${esc(un(c.a))}</b></div>${gl}</div>`:"";
     const body=String(x.body||"").split(/\n{2,}/).map(p=>`<p>${esc(p)}</p>`).join("");
     h=`<article class="art"><h2>${esc(x.title)}</h2><small class="ameta">${esc(KL[x.kind]||"")} · ${when(x.date)}</small>${cd}${body}<small class="anote">ONSPORTS.UZ · matn rasmiy o'yin ma'lumotlari asosida avtomatik tayyorlandi</small></article>`;
-  }else h=`<article class="art">${x.img?`${imgT(x.img,1100,'class="aimg"')}`:""}<h2>${esc(x.title)}</h2><small class="ameta">${esc(x.src||"")} · ${when(x.date)}</small>${x.text?`<p>${esc(x.text)}</p>`:""}<a class="asrc" href="${esc(x.link)}" target="_blank" rel="noopener noreferrer">Manba: ${esc(x.src||"")} ↗</a></article>`;
+  }else h=`<article class="art">${x.img?`${imgT(x.img,1100,'class="aimg"')}${x.wk?'<small class="ameta">Rasm: Wikipedia / Wikimedia Commons</small>':""}`:""}<h2>${esc(x.title)}</h2><small class="ameta">${esc(x.src||"")} · ${when(x.date)}</small>${x.text?`<p>${esc(x.text)}</p>`:""}<a class="asrc" href="${esc(x.link)}" target="_blank" rel="noopener noreferrer">Manba: ${esc(x.src||"")} ↗</a></article>`;
   $("#mc").innerHTML=h;
   $("#mo").hidden=false;document.body.style.overflow="hidden";
 }
@@ -1200,7 +1226,7 @@ function when(d){if(!d)return"";const k=x=>new Date(x).toLocaleDateString("sv",{
 const KL={report:"📝 O'YIN HISOBOTI",preview:"🔮 TAHLIL",recap:"🌙 KUN XULOSASI"};
 const nph=x=>x.card?`<span class="bsc"><b>${esc(x.card.hs)} : ${esc(x.card.as)}</b><em>${esc(un(x.card.h))} — ${esc(un(x.card.a))}</em></span>`:`<span>${KL[x.kind]||"ONSPORTS.UZ"}</span>`;
 const SRCC={"Sports.ru":"#1faa59","BBC Sport":"#bb1919","The Guardian":"#1c6fc4","Sky Sports":"#e0242f","The Independent":"#e6007e","The Telegraph":"#0b7c9c"};
-const sp=x=>x.src?`<span class="nsrc" style="--sc:${SRCC[x.src]||"var(--ac)"}">${esc(x.src)}</span>`:"";
+const sp=x=>"";
 const ncard=(x,i=0)=>`<a class="ncard" style="--i:${Math.min(i,12)}" href="#" data-n="${esc(x.id)}"><div class="nimg">${x.img?imgT(x.img,640,'loading="lazy"'):nph(x)}${sp(x)}</div><div class="nbody"><h3>${esc(x.title)}</h3><small>${when(x.date)}</small></div></a>`;
 const nhead=n=>`<div class="nhead"><h1 class="nt"><i class="dot"></i>${T("news")}</h1><span class="nup">${NUPD?"⟳ "+ago(NUPD):""}${n?` · ${n}`:""}</span></div>`;
 const skel=()=>nhead(0)+`<div class="nwrap"><div class="nhero sk"></div><div class="nside">${'<div class="ncard sk"><div class="nimg"></div><div class="nbody"><i></i><i></i></div></div>'.repeat(4)}</div></div>`;
