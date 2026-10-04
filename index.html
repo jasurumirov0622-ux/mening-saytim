@@ -865,13 +865,13 @@ function tvPing(x){try{const u=WORKER+"/tvhb?c="+VID+(x?"&x=1":"");if(x&&navigat
 function tvHbStart(id){if(_hbOn||String(id).indexOf("t_")!==0)return;_hbOn=true;tvPing();_hbT=setInterval(()=>tvPing(),100000);}
 function tvHbStop(){if(!_hbOn)return;_hbOn=false;clearInterval(_hbT);tvPing(true);}
 addEventListener("pagehide",tvHbStop);
-/* TV efirdagi logotiplar: bot orqali joylashtiriladi, video rasmining ichida (qora chetlarsiz) joylashadi */
+/* TV efirdagi logotiplar: bot orqali joylashtiriladi; joylashuv Telegram efiri (onsports.py) bilan bir xil */
 function tvLogos(o,w,v,lg){
   const els={};let cfg=[];
   const lay=()=>{
-    const W=w.clientWidth,H=w.clientHeight,vw=v.videoWidth,vh=v.videoHeight;
-    let pw=W,ph=H,l=0,t=0;
-    if(vw&&vh){const s=Math.min(W/vw,H/vh);pw=vw*s;ph=vh*s;l=(W-pw)/2;t=(H-ph)/2;}
+    const W=w.clientWidth,H=w.clientHeight;
+    /* Telegram efiridagi kabi: hisob 16:9 kadrga nisbatan, x/y — logoning chap-yuqori burchagi */
+    const s=Math.min(W/16,H/9),pw=16*s,ph=9*s,l=(W-pw)/2,t=(H-ph)/2;
     cfg.forEach(c=>{const e=els[c.id];if(!e)return;e.style.left=(l+pw*c.x/100)+"px";e.style.top=(t+ph*c.y/100)+"px";e.style.width=(pw*c.w/100)+"px";e.style.opacity=c.o/100;});
   };
   const load=async()=>{
@@ -882,7 +882,7 @@ function tvLogos(o,w,v,lg){
       Object.keys(els).forEach(k=>{if(!ids.has(k)){els[k].remove();delete els[k];}});
       cfg.forEach(c=>{
         let e=els[c.id];
-        if(!e){e=document.createElement("img");e.alt="";e.draggable=false;e.style.cssText="position:absolute;transform:translate(-50%,-50%);height:auto;pointer-events:none;user-select:none";lg.appendChild(e);els[c.id]=e;}
+        if(!e){e=document.createElement("img");e.alt="";e.draggable=false;e.style.cssText="position:absolute;height:auto;pointer-events:none;user-select:none";lg.appendChild(e);els[c.id]=e;}
         const s=WORKER+"/tvlogo/img?i="+c.id+"&v="+c.h;if(e.getAttribute("src")!==s)e.src=s;
       });
       lay();
