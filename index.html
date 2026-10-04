@@ -133,6 +133,8 @@ header{background:none;backdrop-filter:none;border:0;padding:0}
 .mo[hidden]{display:none}
 .mb{position:relative;width:100%;max-width:640px;margin:auto 0;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px 16px 20px}
 .mx{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--tx);font-size:20px;line-height:1}
+.mlk{position:absolute;top:10px;right:52px;height:34px;padding:0 12px;border-radius:17px;border:1px solid var(--line);background:var(--bg);color:var(--tx);font:700 13px system-ui;cursor:pointer}
+.mlk.ok{color:var(--ac);border-color:var(--ac)}
 .mcomp{text-align:center;color:var(--mu);font-size:13px;margin:0 36px 12px}
 .mh{display:grid;grid-template-columns:1fr 96px 1fr;gap:8px;align-items:center}
 .mh .t{flex-direction:column;text-align:center;gap:6px}
@@ -355,7 +357,7 @@ body{background:radial-gradient(900px 420px at 10% -8%,rgba(47,208,138,.13),tran
   <a class="tgcta" href="https://t.me/onsportsuz" target="_blank" rel="noopener"><b>@onsportsuz</b><span data-i="tgcta">Natijalar va yangiliklar Telegram kanalimizda</span></a>
 </div>
 <footer>© 2026 ONSPORTS.UZ</footer>
-<div id="mo" class="mo" hidden><div class="mb" role="dialog" aria-modal="true"><button class="mx" aria-label="Yopish">×</button><div id="mc"></div></div></div>
+<div id="mo" class="mo" hidden><div class="mb" role="dialog" aria-modal="true"><button class="mx" aria-label="Yopish">×</button><button class="mlk" type="button" aria-label="Havolani nusxalash">🔗 Havola</button><div id="mc"></div></div></div>
 
 <script>
 let lang="uz";try{lang=localStorage.getItem("lang")==="ru"?"ru":"uz"}catch(e){}
@@ -943,6 +945,7 @@ async function loadSum(){
 }
 function openMatch(id){
   curM=id;mTab=null;mFT="h";$("#mo").hidden=false;document.body.style.overflow="hidden";
+  setHash("#"+curTab()+"/oyin/"+encodeURIComponent(id));
   paintModal();loadSum();clearInterval(mt);
   mt=setInterval(()=>{const m=M.find(x=>x.id===curM);if(m&&isLive(m)&&!document.hidden&&!window.__sumBusy){window.__sumBusy=1;loadSum().finally(()=>{window.__sumBusy=0;});}},3000);
 }
@@ -1067,6 +1070,17 @@ async function openEfir(id){
     w.addEventListener("click",ev=>{if(rt.contains(ev.target))return;hid=!hid;const op=hid?"0":"1";
       cb.style.transition=hd.style.transition="opacity .25s";cb.style.opacity=op;hd.style.opacity=op;
       hd.style.pointerEvents=hid?"none":"";rt.style.pointerEvents=hid?"none":"auto";});}
+    /* yozib olishdan himoya (to'liq to'sib bo'lmaydi, lekin to'siqlar): PiP/yuklab olish/translyatsiya o'chiriladi, PrintScreen bosilsa video yashiriladi, ustida siljuvchi ID belgisi turadi (yozib tarqatilsa kimdan chiqqani ma'lum bo'ladi) */
+    {v.disablePictureInPicture=true;v.disableRemotePlayback=true;v.setAttribute("controlsList","nofullscreen nodownload noremoteplayback");
+    const wm=document.createElement("div");
+    wm.style.cssText="position:absolute;z-index:4;pointer-events:none;user-select:none;white-space:nowrap;color:rgba(255,255,255,.3);font:700 13px system-ui;text-shadow:0 0 3px rgba(0,0,0,.6)";
+    wm.textContent="ONSPORTS.UZ \u00b7 "+VID.slice(0,6).toUpperCase();w.appendChild(wm);
+    const mv=()=>{wm.style.left=(4+Math.random()*58)+"%";wm.style.top=(8+Math.random()*78)+"%";};mv();
+    const wt=setInterval(()=>{if(!o.isConnected){clearInterval(wt);return;}mv();},12000);
+    const shield=()=>{v.style.visibility="hidden";try{navigator.clipboard.writeText(" ")}catch(_){}setTimeout(()=>{v.style.visibility="";},1500);};
+    const kd=ev=>{if(!o.isConnected){removeEventListener("keydown",kd);removeEventListener("keyup",kd);return;}
+      if(ev.key==="PrintScreen"||ev.code==="PrintScreen"||(ev.metaKey&&ev.shiftKey&&/^(s|3|4|5)$/i.test(ev.key)))shield();};
+    addEventListener("keydown",kd);addEventListener("keyup",kd);}
   }
   const DBG=/[?&]debug\b/.test(location.search);   /* adminga: saytni ?debug bilan ochsangiz texnik yozuvlar ko'rinadi */
   const note=t=>{
@@ -1138,7 +1152,7 @@ async function openEfir(id){
     setTimeout(()=>{if(o.isConnected&&v.readyState<2)note("Efir hali boshlanmadi ["+k+(info?": "+info:"")+"]"+(pg?" "+pg:"")+(lastErr?" xato: "+lastErr:"")+". Bu kanalda hozir o'yin ketmayotgan bo'lishi yoki video/audio kodeki brauzerda qo'llanmasligi mumkin.");},45000);
   }catch(er){note("Player yuklanmadi. Sahifani yangilab qayta urinib ko'ring.");}
 }
-function closeMatch(){$("#mc").innerHTML="";curM=null;curN=null;clearInterval(mt);$("#mo").hidden=true;document.body.style.overflow="";}
+function closeMatch(){$("#mc").innerHTML="";curM=null;curN=null;clearInterval(mt);$("#mo").hidden=true;document.body.style.overflow="";setHash(tabHash());}
 
 const SOFAQ={"uzb.1":"Uzbekistan Super League"};
 const SOFAID={"uefa.champions":7,"uefa.europa":679,"uefa.nations":10783,"eng.1":17,"esp.1":8,"ger.1":35,"ita.1":23,"fra.1":34,"por.1":238,"ned.1":37,"tur.1":52,"ksa.1":955};
@@ -1312,6 +1326,7 @@ function openNews(id){
   }else h=`<article class="art">${x.img?`${imgT(x.img,1100,'class="aimg"')}${x.wk?'<small class="ameta">Rasm: Wikipedia / Wikimedia Commons</small>':""}`:""}<h2>${esc(x.title)}</h2><small class="ameta">${esc(x.src||"")} · ${when(x.date)}</small>${x.text?`<p>${esc(x.text)}</p>`:""}<a class="asrc" href="${esc(x.link)}" target="_blank" rel="noopener noreferrer">Manba: ${esc(x.src||"")} ↗</a></article>`;
   $("#mc").innerHTML=h;
   $("#mo").hidden=false;document.body.style.overflow="hidden";
+  setHash("#"+curTab()+"/xabar/"+encodeURIComponent(id));
 }
 function when(d){if(!d)return"";const k=x=>new Date(x).toLocaleDateString("sv",{timeZone:TZ});
   const day=k(d)===k(Date.now())?T("today"):k(d)===k(Date.now()-864e5)?T("yest"):dshort(d);return `${ago(d)} · ${day}, ${tm(d)}`;}
@@ -1363,6 +1378,9 @@ document.addEventListener("click",e=>{
   const nw=e.target.closest("[data-n]");if(nw){e.preventDefault();openNews(nw.dataset.n);return;}
   const d=e.target.closest("[data-d]"),c=e.target.closest("[data-c]"),l=e.target.closest("[data-l]");
   const tb=e.target.closest("[data-tab]"),mm=e.target.closest("[data-m]");
+  const lk=e.target.closest(".mlk");
+  if(lk){const u=location.href,ok=()=>{lk.classList.add("ok");lk.textContent="✓ Nusxalandi";setTimeout(()=>{lk.classList.remove("ok");lk.textContent="🔗 Havola";},1800);};
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(ok,()=>prompt("Havola:",u));else prompt("Havola:",u);return;}
   if(e.target.id==="mo"||e.target.closest(".mx")){closeMatch();return;}
   const rt=e.target.closest("[data-retry]");
   if(rt){const mm2=M.find(x=>x.id===rt.dataset.retry);if(mm2){const x=SX[mm2.id];if(x){x.n=0;x.ok=false;x.t=0;}delete SFC[mm2.id];loadExtra(mm2);getSum(mm2).then(d=>{if(d){SM[mm2.id]=d;if(applySum(mm2,d))renderMatches();}if(curM===mm2.id)paintModal();});}return;}
@@ -1371,23 +1389,50 @@ document.addEventListener("click",e=>{
   if(ftb){mFT=ftb.dataset.ft;paintModal();return;}
   if(mm){openMatch(mm.dataset.m);return;}
   if(tb){e.preventDefault();showTab(tb.dataset.tab);return;}
-  if(d){day=d.dataset.d==="live"?"live":+d.dataset.d;cf="*";renderMatches();}
+  if(d){day=d.dataset.d==="live"?"live":+d.dataset.d;cf="*";renderMatches();setHash(tabHash("oyinlar"));}
   else if(c){cf=c.dataset.c;renderMatches();}
-  else if(l){lg=l.dataset.l;try{sessionStorage.setItem("lg",lg);}catch(e){}loadTable(lg);}
+  else if(l){lg=l.dataset.l;try{sessionStorage.setItem("lg",lg);}catch(e){}loadTable(lg);setHash(tabHash("jadval"));}
 });
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape"&&(curM||curN))closeMatch();
   else if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches(".m[data-m]")){e.preventDefault();openMatch(e.target.dataset.m);}
 });
+/* HAVOLALAR: har bir sahifa/o'yin/xabar/jadval o'z manziliga (kodiga) ega. Masalan: #oyinlar/oyin/401234  #yangilik/xabar/ab12cd  #jadval/liga/esp.1  #oyinlar/kun/1  */
+const TABN=["yangilik","oyinlar","jadval","tv"];
+function curTab(){const t=document.querySelector(".tab:not([hidden])");return t?t.id:"yangilik";}
+function setHash(h){try{if(location.hash!==h)history.replaceState(history.state,"",h);}catch(e){}}
+function tabHash(t){t=t||curTab();if(t==="jadval")return "#jadval/liga/"+encodeURIComponent(lg);
+  if(t==="oyinlar"&&String(day)!=="0")return "#oyinlar/kun/"+encodeURIComponent(day);return "#"+t;}
+function parseHash(){const p=(location.hash||"").slice(1).split("/").map(x=>{try{return decodeURIComponent(x)}catch(e){return x}});
+  if(!TABN.includes(p[0]))return null;const o={tab:p[0]};for(let i=1;i+1<p.length;i+=2)o[p[i]]=p[i+1];return o;}
+let _pend=null,_pendT=null;
+function applyRoute(){
+  const r=parseHash();
+  if(!r){if(!(location.hash||"").slice(1)){if(curM||curN)closeMatch();showTab("yangilik");}return;}
+  if(r.kun!==undefined)day=r.kun==="live"?"live":(["-1","0","1"].includes(r.kun)?+r.kun:0);
+  if(r.liga!==undefined&&r.tab==="jadval"&&TABS.indexOf(r.liga)>=0){lg=r.liga;try{sessionStorage.setItem("lg",lg);}catch(e){}}
+  if(!r.oyin&&!r.xabar&&(curM||curN))closeMatch();
+  showTab(r.tab);
+  if(r.tab==="oyinlar"){try{renderMatches();}catch(e){}}
+  if(r.tab==="jadval"){try{loadTable(lg);}catch(e){}}
+  /* o'yin / xabar oynasi: ma'lumot yuklanguncha (20 soniyagacha) kutiladi */
+  const want=r.oyin?{m:r.oyin}:r.xabar?{n:r.xabar}:null;
+  clearInterval(_pendT);_pend=want;if(!want)return;
+  let tries=0;_pendT=setInterval(()=>{tries++;
+    if(want.m&&(M||[]).find(x=>x.id===want.m)){clearInterval(_pendT);if(curM!==want.m)openMatch(want.m);}
+    else if(want.n&&(news||[]).find(x=>x.id===want.n)){clearInterval(_pendT);if(curN!==want.n)openNews(want.n);}
+    else if(tries>40){clearInterval(_pendT);setHash(tabHash(r.tab));}},500);
+}
+addEventListener("hashchange",applyRoute);
 function showTab(t){if(!document.querySelector(".tab#"+t))t="yangilik";document.querySelectorAll(".tab").forEach(x=>x.hidden=x.id!==t);
   document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("on",x.dataset.tab===t));window.scrollTo(0,0);if(t==="tv")loadTV();
   /* yangilanganda shu menyuda qolish uchun: manzildagi # va sessiyada saqlanadi (tarix yozuvi qo'shilmaydi) */
   try{sessionStorage.setItem("tab",t);}catch(e){}
-  try{if(location.hash!=="#"+t)history.replaceState(history.state,"","#"+t);}catch(e){}}
-(function(){let t=(location.hash||"").slice(1);
-  if(!t||!document.querySelector(".tab#"+t)){try{t=sessionStorage.getItem("tab")||"";}catch(e){t="";}}
+  if(!(curM||curN))setHash(tabHash(t));}
+(function(){const r=parseHash();let t=r?r.tab:"";
+  if(!t){try{t=sessionStorage.getItem("tab")||"";}catch(e){t="";}}
   try{const l=sessionStorage.getItem("lg");if(l&&TABS.indexOf(l)>=0)lg=l;}catch(e){}
-  showTab(t||"yangilik");})();
+  if(r)applyRoute();else showTab(t||"yangilik");})();
 try{news=JSON.parse(localStorage.getItem("news3")||"null");if(news){newsSig=news.map(x=>x.id).join();renderNews();enrichImgs();}}catch(e){}
 if(!news||!news.some(x=>x.kind==="news")){news=SEED.concat((news||[]).filter(x=>x.kind!=="news"));newsSig="";renderNews();enrichImgs();}
 loadNews();renderMatches();setTimeout(()=>{loadAll();loadTable(lg);},0);
