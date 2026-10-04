@@ -1031,10 +1031,10 @@ let q="";
 const NFL=()=>lang==="ru"?[["*","Все"],["news","🔥 Горячее"],["report","📝 Отчёты"],["preview","🔮 Анонсы"]]:[["*","Hammasi"],["news","🔥 Shov-shuvli"],["report","📝 Hisobotlar"],["preview","🔮 Tahlil"]];
 const nfm=(x,f)=>f==="*"||(f==="report"?(x.kind==="report"||x.kind==="recap"):x.kind===f);
 function renderNews(){
-  const all=news||[];if(!all.length)return;
+  const all=(news||[]).filter(x=>x.kind==="news");if(!all.length)return;   /* faqat yangiliklar: hisobot/tahlil maqolalari ko'rsatilmaydi */
   if(q){const r=all.filter(x=>((x.title||"")+" "+(x.text||"")).toLowerCase().includes(q));
     $("#news").innerHTML=`<div class="crumb">${T("home")} › <b>${T("searchT")}</b> <i>•</i> ${r.length}</div>`+(r.length?`<div class="ngrid">${r.map(ncard).join("")}</div>`:`<div class="empty">${T("nothing")}</div>`);return;}
-  const chips=`<div class="chips" style="max-width:1068px;margin:0 auto">${NFL().map(([k,l])=>`<button class="chip${nf===k?" on":""}" data-nf="${k}">${l}<i>${all.filter(x=>nfm(x,k)).length}</i></button>`).join("")}</div>`;
+  const chips="";
   const a=all.filter(x=>nfm(x,nf));
   if(nf==="news")a.sort((x,y)=>(x.ord||0)-(y.ord||0));
   if(!a.length){$("#news").innerHTML=chips+`<div class="empty">${lang==="ru"?"Пока нет материалов":"Hozircha maqola yo'q"}</div>`;return;}
