@@ -944,9 +944,9 @@ async function loadSum(){
   }
   if(!SF[id].hd&&!sumH&&SF[id].h2h.length<5&&!SF[id].busy){SF[id].busy=1;await loadH2H(m);SF[id].busy=0;if(curM===id)paintModal();}
 }
-function openMatch(id){
-  curM=id;mTab=null;mFT="h";$("#mo").hidden=false;document.body.style.overflow="hidden";
-  setUrl("/oyin/"+encodeURIComponent(id));
+function openMatch(id,t){
+  curM=id;mTab=t||null;mFT="h";$("#mo").hidden=false;document.body.style.overflow="hidden";
+  setUrl(matchPath(id,t));
   paintModal();loadSum();clearInterval(mt);
   mt=setInterval(()=>{const m=M.find(x=>x.id===curM);if(m&&isLive(m)&&!document.hidden&&!window.__sumBusy){window.__sumBusy=1;loadSum().finally(()=>{window.__sumBusy=0;});}},3000);
 }
@@ -1223,8 +1223,7 @@ async function loadTable(slug){
   const c=TB[slug];paintTabs();if(c&&Date.now()-c.t<6e5)return renderTable();
   $("#tbl").innerHTML=`<div class="empty">${T("loading")}</div>`;
   let rows=[];
-  if(slug==="uzb.1"){try{const d=await jget0(WORKER+"/pfl-table",15000);rows=(d.rows||[]).map(r=>({...r,gi:0,grp:""}));}catch(e){rows=[];}}   /* Superliga — rasmiy UzPFL (pfl.uz) */
-  if(!rows.length)try{
+  try{
     const d=await jget(`${ESPN2}${slug}/standings`);
     const ch=d.children||[];
     const g=(e,n)=>{const s=(e.stats||[]).find(x=>x.name===n);return s?s.value:null;};
@@ -1370,7 +1369,7 @@ function openNews(id){
   }else h=`<article class="art">${x.img?`${imgT(x.img,1100,'class="aimg"')}${x.wk?'<small class="ameta">Rasm: Wikipedia / Wikimedia Commons</small>':""}`:""}<h2>${esc(x.title)}</h2><small class="ameta">${when(x.date)}</small>${x.text?`<p>${esc(x.text)}</p>`:""}</article>`;
   $("#mc").innerHTML=h;
   $("#mo").hidden=false;document.body.style.overflow="hidden";
-  setUrl("/xabar/"+encodeURIComponent(id));
+  setUrl(newsPath(id));
 }
 function when(d){if(!d)return"";const k=x=>new Date(x).toLocaleDateString("sv",{timeZone:TZ});
   const day=k(d)===k(Date.now())?T("today"):k(d)===k(Date.now()-864e5)?T("yest"):dshort(d);return `${ago(d)} · ${day}, ${tm(d)}`;}
@@ -1426,7 +1425,7 @@ document.addEventListener("click",e=>{
   const rt=e.target.closest("[data-retry]");
   if(rt){const mm2=M.find(x=>x.id===rt.dataset.retry);if(mm2){const x=SX[mm2.id];if(x){x.n=0;x.ok=false;x.t=0;}delete SFC[mm2.id];loadExtra(mm2);getSum(mm2).then(d=>{if(d){SM[mm2.id]=d;if(applySum(mm2,d))renderMatches();}if(curM===mm2.id)paintModal();});}return;}
   const mtb=e.target.closest("[data-mt]"),ftb=e.target.closest("[data-ft]");
-  if(mtb){mTab=mtb.dataset.mt;paintModal();return;}
+  if(mtb){mTab=mtb.dataset.mt;paintModal();if(curM)setUrl(matchPath(curM,mTab));return;}
   if(ftb){mFT=ftb.dataset.ft;paintModal();return;}
   if(mm){openMatch(mm.dataset.m);return;}
   if(tb){e.preventDefault();showTab(tb.dataset.tab);return;}
@@ -1441,6 +1440,12 @@ document.addEventListener("keydown",e=>{
 /* HAVOLALAR (onsports.uz/...): har bir sahifa/o'yin/xabar/jadval o'z manziliga ega.
    /  /oyinlar  /oyinlar/kun/1  /oyin/401234  /xabar/ab12cd  /jadval/esp.1  /tv      (eski #oyinlar/... havolalar ham ishlaydi) */
 const TABN=["yangilik","oyinlar","jadval","tv"];
+/* o'qiladigan havola: nomni lotinchaga o'giramiz (arsenal-chelsi, kiril ham) */
+const CYR={"а":"a","б":"b","в":"v","г":"g","д":"d","е":"e","ё":"yo","ж":"j","з":"z","и":"i","й":"y","к":"k","л":"l","м":"m","н":"n","о":"o","п":"p","р":"r","с":"s","т":"t","у":"u","ф":"f","х":"x","ц":"ts","ч":"ch","ш":"sh","щ":"sh","ъ":"","ы":"i","ь":"","э":"e","ю":"yu","я":"ya","ў":"o","қ":"q","ғ":"g","ҳ":"h"};
+function slug(t,n){return String(t||"").toLowerCase().replace(/[\u0400-\u04ff]/g,c=>CYR[c]??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[ʻʼ`'’]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,n||60);}
+const MTU={st:"statistika",ev:"voqealar",h2h:"yuzma-yuz",fm:"forma"},MTR=Object.fromEntries(Object.entries(MTU).map(([k,v])=>[v,k]));
+function matchPath(id,t){const m=(M||[]).find(x=>x.id===id);return "/oyin/"+encodeURIComponent(id)+(m?"/"+slug(tn(m.h)+" "+tn(m.a)):"")+(m&&t&&MTU[t]?"/"+MTU[t]:"");}
+function newsPath(id){const x=(news||[]).find(n=>n.id===id);return "/xabar/"+encodeURIComponent(id)+(x&&x.title?"/"+slug(x.title,70):"");}
 const BASE=(()=>{if(!/\.github\.io$/.test(location.hostname))return"";const q=location.pathname.split("/")[1]||"";return q&&q!=="index.html"&&!["oyin","xabar"].concat(TABN).includes(q)?"/"+q:"";})();
 const dec=x=>{try{return decodeURIComponent(x)}catch(e){return x}};
 function curTab(){const t=document.querySelector(".tab:not([hidden])");return t?t.id:"yangilik";}
@@ -1449,7 +1454,7 @@ function tabPath(t){t=t||curTab();if(t==="jadval")return "/jadval/"+encodeURICom
   if(t==="oyinlar"&&String(day)!=="0")return "/oyinlar/kun/"+encodeURIComponent(day);return t==="yangilik"?"/":"/"+t;}
 function parsePath(){let pa=location.pathname;if(BASE&&pa.indexOf(BASE)===0)pa=pa.slice(BASE.length);
   const p=pa.split("/").filter(Boolean).map(dec);if(!p.length)return null;
-  if(p[0]==="oyin"&&p[1])return{tab:"oyinlar",oyin:p[1]};
+  if(p[0]==="oyin"&&p[1])return{tab:"oyinlar",oyin:p[1],mt:MTR[p[3]]};
   if(p[0]==="xabar"&&p[1])return{tab:"yangilik",xabar:p[1]};
   if(!TABN.includes(p[0]))return null;
   const o={tab:p[0]};if(p[0]==="oyinlar"&&p[1]==="kun"&&p[2]!==undefined)o.kun=p[2];if(p[0]==="jadval"&&p[1])o.liga=p[1];return o;}
@@ -1467,10 +1472,10 @@ function applyRoute(){
   if(r.tab==="oyinlar"){try{renderMatches();}catch(e){}}
   if(r.tab==="jadval"){try{loadTable(lg);}catch(e){}}
   /* o'yin / xabar oynasi: ma'lumot yuklanguncha (20 soniyagacha) kutiladi */
-  const want=r.oyin?{m:r.oyin}:r.xabar?{n:r.xabar}:null;
+  const want=r.oyin?{m:r.oyin,t:r.mt}:r.xabar?{n:r.xabar}:null;
   clearInterval(_pendT);_pend=want;if(!want)return;
   let tries=0;_pendT=setInterval(()=>{tries++;
-    if(want.m&&(M||[]).find(x=>x.id===want.m)){clearInterval(_pendT);if(curM!==want.m)openMatch(want.m);}
+    if(want.m&&(M||[]).find(x=>x.id===want.m)){clearInterval(_pendT);if(curM!==want.m)openMatch(want.m,want.t);}
     else if(want.n&&(news||[]).find(x=>x.id===want.n)){clearInterval(_pendT);if(curN!==want.n)openNews(want.n);}
     else if(tries>40){clearInterval(_pendT);setUrl(tabPath(r.tab));}},500);
 }
