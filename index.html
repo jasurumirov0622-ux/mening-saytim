@@ -960,6 +960,16 @@ const efUrl=m=>EFIR_LINKS[m.id]||EFIR_URL;
 /* ===== Jonli efir: Worker orqali sayt ichida ===== */
 const WORKER="https://bold-band-499d.jasurumirov0622.workers.dev";
 let EFIR={},_pl=null;
+/* Kunlik tashrif hisobi: har bir brauzer kuniga 1 marta. Admin qurilmasi hisoblanmaydi: bir marta onsports.uz/?me=1 ni oching (qaytarish: ?me=0) */
+(function(){try{
+  if(/[?&]me=1\b/.test(location.search))localStorage.setItem("os_me","1");
+  if(/[?&]me=0\b/.test(location.search))localStorage.removeItem("os_me");
+  if(localStorage.getItem("os_me")||/bot|crawl|spider|headless|lighthouse|preview/i.test(navigator.userAgent))return;
+  let id=localStorage.getItem("os_uid");if(!id){id=Math.random().toString(36).slice(2,12)+Date.now().toString(36);localStorage.setItem("os_uid",id);}
+  const d=new Date(Date.now()+5*3600e3).toISOString().slice(0,10);
+  if(localStorage.getItem("os_day")===d)return;
+  fetch(WORKER+"/v?u="+id,{method:"POST",keepalive:true,mode:"no-cors"}).then(()=>{try{localStorage.setItem("os_day",d)}catch(e){}}).catch(()=>{});
+}catch(e){}})();
 async function loadEfir(){try{const r=await fetch(WORKER+"/efir");if(r.ok){const n=await r.json();const ch=Object.keys(n).sort().join()!==Object.keys(EFIR).sort().join();EFIR=n;if(ch&&!curM&&typeof renderMatches==="function"&&$("#oyinlar")&&!$("#oyinlar").hidden)renderMatches();}}catch(e){}}
 loadEfir();setInterval(loadEfir,30000);
 const _ld={};
