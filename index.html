@@ -136,8 +136,6 @@ header{background:none;backdrop-filter:none;border:0;padding:0}
 .mo[hidden]{display:none}
 .mb{position:relative;width:100%;max-width:640px;margin:auto 0;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px 16px 20px}
 .mx{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--tx);font-size:20px;line-height:1}
-.mlk{position:absolute;top:10px;right:52px;height:34px;padding:0 12px;border-radius:17px;border:1px solid var(--line);background:var(--bg);color:var(--tx);font:700 13px system-ui;cursor:pointer}
-.mlk.ok{color:var(--ac);border-color:var(--ac)}
 .mcomp{text-align:center;color:var(--mu);font-size:13px;margin:0 36px 12px}
 .mh{display:grid;grid-template-columns:1fr 96px 1fr;gap:8px;align-items:center}
 .mh .t{flex-direction:column;text-align:center;gap:6px}
@@ -360,7 +358,7 @@ body{background:radial-gradient(900px 420px at 10% -8%,rgba(47,208,138,.13),tran
   <a class="tgcta" href="https://t.me/onsportsuz" target="_blank" rel="noopener"><b>@onsportsuz</b><span data-i="tgcta">Natijalar va yangiliklar Telegram kanalimizda</span></a>
 </div>
 <footer>© 2026 ONSPORTS.UZ</footer>
-<div id="mo" class="mo" hidden><div class="mb" role="dialog" aria-modal="true"><button class="mx" aria-label="Yopish">×</button><button class="mlk" type="button" aria-label="Havolani nusxalash">🔗 Havola</button><div id="mc"></div></div></div>
+<div id="mo" class="mo" hidden><div class="mb" role="dialog" aria-modal="true"><button class="mx" aria-label="Yopish">×</button><div id="mc"></div></div></div>
 
 <script>
 let lang="uz";try{lang=localStorage.getItem("lang")==="ru"?"ru":"uz"}catch(e){}
@@ -1200,7 +1198,7 @@ async function openEfir(id){
 function closeMatch(){$("#mc").innerHTML="";curM=null;curN=null;clearInterval(mt);$("#mo").hidden=true;document.body.style.overflow="";setUrl(tabPath());}
 
 const SOFAQ={"uzb.1":"Uzbekistan Super League"};
-const SOFAID={"uefa.champions":7,"uefa.europa":679,"uefa.nations":10783,"eng.1":17,"esp.1":8,"ger.1":35,"ita.1":23,"fra.1":34,"por.1":238,"ned.1":37,"tur.1":52,"ksa.1":955};
+const SOFAID={"uefa.champions":7,"uefa.europa":679,"uefa.nations":10783,"eng.1":17,"esp.1":8,"ger.1":35,"ita.1":23,"fra.1":34,"por.1":238,"ned.1":37,"tur.1":52,"ksa.1":955,"uzb.1":772};
 async function sofaStand(slug){
   const q=SOFAQ[slug];if(!q&&!SOFAID[slug])throw 0;
   const S="https://api.sofascore.com/api/v1/",g=u=>jget0(WORKER+"/?url="+encodeURIComponent(S+u),15000);
@@ -1423,9 +1421,6 @@ document.addEventListener("click",e=>{
   const d=e.target.closest("[data-d]"),c=e.target.closest("[data-c]"),l=e.target.closest("[data-l]");
   const tb=e.target.closest("[data-tab]"),mm=e.target.closest("[data-m]");
   const lgo=e.target.closest("a.logo");if(lgo){e.preventDefault();if(curM||curN)closeMatch();showTab("yangilik");return;}
-  const lk=e.target.closest(".mlk");
-  if(lk){const u=location.href,ok=()=>{lk.classList.add("ok");lk.textContent="✓ Nusxalandi";setTimeout(()=>{lk.classList.remove("ok");lk.textContent="🔗 Havola";},1800);};
-    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(ok,()=>prompt("Havola:",u));else prompt("Havola:",u);return;}
   if(e.target.id==="mo"||e.target.closest(".mx")){closeMatch();return;}
   const rt=e.target.closest("[data-retry]");
   if(rt){const mm2=M.find(x=>x.id===rt.dataset.retry);if(mm2){const x=SX[mm2.id];if(x){x.n=0;x.ok=false;x.t=0;}delete SFC[mm2.id];loadExtra(mm2);getSum(mm2).then(d=>{if(d){SM[mm2.id]=d;if(applySum(mm2,d))renderMatches();}if(curM===mm2.id)paintModal();});}return;}
