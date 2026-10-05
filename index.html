@@ -1115,7 +1115,7 @@ async function openEfir(id){
     addEventListener("keydown",kd);addEventListener("keyup",kd);}
   }
   const DBG=/[?&]debug\b/.test(location.search);   /* adminga: saytni ?debug bilan ochsangiz texnik yozuvlar ko'rinadi */
-  let on=false,rtm=0,start;
+  let on=false,rtm=0,start,deg=0,dq=0,mrec=0;   /* deg: dekoder xatolari soni — oshgan sari sifat pasaytiriladi */
   const spin=()=>{if(msg.dataset.sp!=="1"){msg.dataset.sp="1";msg.innerHTML='<div style="width:40px;height:40px;margin:0 auto;border:4px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:efsp 1s linear infinite"></div>';}};
   const retry=()=>{if(rtm||DBG)return;rtm=setTimeout(()=>{rtm=0;if(o.isConnected&&!on&&start)start();},8000);};
   const note=t=>{
@@ -1125,11 +1125,24 @@ async function openEfir(id){
     try{console.log("[efir]",t)}catch(_){}
     on=false;spin();retry();
   };
+  /* KOMPYUTERLARDA «PIPELINE_ERROR_DECODE»: telefon uni apparat dekoderida o'qiydi, kompyuter brauzeri esa ba'zi oqimlarda (1080p/o'zgaruvchan sifat/boshi kalit kadrsiz) yiqiladi.
+     Yechim: sifatni 720p ga qulflaymiz, xato bo'lsa pog'onama-pog'ona pastga tushib (720→480→eng past) darrov qayta ulanamiz. */
+  const decErr=w=>{
+    if(!o.isConnected||dq)return;
+    dq=setTimeout(()=>{dq=0;},1200);
+    deg++;mrec=0;on=false;
+    try{console.log("[efir] dekoder xatosi:",w,"deg="+deg)}catch(_){}
+    if(_pl){try{_pl.destroy();}catch(_){}_pl=null;}
+    try{v.removeAttribute("src");v.load();}catch(_){}
+    if(DBG)msg.textContent="Dekoder xatosi ("+w+"). Past sifat bilan qayta ulanmoqda… #"+deg;else spin();
+    clearTimeout(rtm);
+    rtm=setTimeout(()=>{rtm=0;if(o.isConnected&&!on&&start)start();},deg<4?500:4000);
+  };
   o.querySelector("#efx").onclick=closeEfir;
   v.addEventListener("playing",()=>{on=true;note("");tvHbStart(id)});
-  v.addEventListener("error",()=>{const x=v.error;note("Video xatosi: "+(x?x.code+" "+(x.message||""):""))});
+  v.addEventListener("error",()=>{const x=v.error;if(x&&x.code===3){decErr("video "+(x.message||"").slice(0,80));return;}note("Video xatosi: "+(x?x.code+" "+(x.message||""):""))});
   note("Efirga ulanmoqda…");
-  let k=e.k,info="",lastErr="",pg="",mrec=0,cod="";
+  let k=e.k,info="",lastErr="",pg="",cod="";
   start=async()=>{
   if(_pl){try{_pl.destroy();}catch(_){}_pl=null;}
   try{
@@ -1169,24 +1182,36 @@ async function openEfir(id){
       try{await loadJsAny(["https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.17/hls.min.js","https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js","https://unpkg.com/hls.js@1.5.17/dist/hls.min.js"])}catch(_){}
       if(typeof Hls==="undefined"||!Hls.isSupported()){v.src=src;}
       else{
-        const h=new Hls({manifestLoadingTimeOut:20000,levelLoadingTimeOut:20000,fragLoadingTimeOut:60000,fragLoadingMaxRetry:4});_pl=h;
+        const h=new Hls({manifestLoadingTimeOut:20000,levelLoadingTimeOut:20000,fragLoadingTimeOut:60000,fragLoadingMaxRetry:4,capLevelToPlayerSize:false,backBufferLength:30});_pl=h;
         const st={l:0,fl:0,fd:0,by:0};
         const prog=()=>{pg="ro'yxat: "+(st.l?"✓":"…")+" · bo'lak: "+st.fd+"/"+st.fl+" yuklandi"+(st.by?" ("+(st.by/1048576).toFixed(1)+" MB)":"");if(!on)note("Efirga ulanmoqda… ["+k+(info?": "+info:"")+"] "+pg);};
         h.on(Hls.Events.LEVEL_LOADED,()=>{st.l=1;prog()});
         h.on(Hls.Events.FRAG_LOADING,()=>{st.fl++;prog()});
         h.on(Hls.Events.FRAG_LOADED,(_,d)=>{st.fd++;st.by+=(d.frag&&d.frag.stats&&d.frag.stats.total)||0;prog()});
         h.on(Hls.Events.BUFFER_CODECS,(_,t)=>{try{cod=Object.keys(t).map(n=>n+":"+(t[n].codec||t[n].levelCodec||"")).join(" ")}catch(_){}});
+        h.on(Hls.Events.MANIFEST_PARSED,(_,d)=>{   /* bir nechta sifat bo'lsa: H.264 va 720p dan oshmaydigan eng yaxshisini tanlab QULFLAYMIZ (avtomatik sakrash yo'q) */
+          try{const L=d.levels||[];if(L.length<2)return;
+            let c=L.map((l,i)=>{const cc=l.videoCodec||l.codecs||"";return {i,h:l.height||0,b:l.bitrate||0,a:!cc||/avc[13]/i.test(cc)};});
+            const av=c.filter(x=>x.a);if(av.length)c=av;
+            c.sort((x,y)=>(x.h-y.h)||(x.b-y.b));
+            const cap=deg===0?720:deg===1?480:0;
+            const ok=cap?c.filter(x=>x.h?x.h<=cap:x.b<=(cap===720?3.5e6:1.5e6)):[];
+            const pk=ok.length?ok[ok.length-1]:c[0];
+            h.startLevel=pk.i;h.currentLevel=pk.i;
+            try{console.log("[efir] sifat:",pk.h+"p",Math.round(pk.b/1000)+"kbps")}catch(_){}
+          }catch(_){}
+        });
         h.loadSource(src);h.attachMedia(v);
         h.on(Hls.Events.ERROR,(_,d)=>{lastErr=d.details+(d.response?" "+d.response.code:"")+(d.sourceBufferName?" buf="+d.sourceBufferName:"")+(d.error&&d.error.message?" "+String(d.error.message).slice(0,90):"");
           if(d.fatal){
-            if(d.type===Hls.ErrorTypes.MEDIA_ERROR&&mrec<3){mrec++;if(mrec===2)h.swapAudioCodec();h.recoverMediaError();return;}   /* bufferAppendError: avval o'zi tiklashga urinadi */
+            if(d.type===Hls.ErrorTypes.MEDIA_ERROR){if(mrec<2){mrec++;if(mrec===2)h.swapAudioCodec();h.recoverMediaError();return;}decErr("hls "+lastErr);return;}   /* bufferAppendError: avval o'zi tiklashga urinadi */
             note("Efir ochilmadi ("+lastErr+")"+(info?" ["+info+"]":"")+(cod?" {"+cod+"}":"")+". Birozdan keyin qayta urinib ko'ring.");}});
       }
     }else{
       await loadJsAny(["https://cdn.jsdelivr.net/npm/mpegts.js@1.7.3/dist/mpegts.js","https://unpkg.com/mpegts.js@1.7.3/dist/mpegts.js","https://cdnjs.cloudflare.com/ajax/libs/mpegts.js/1.7.3/mpegts.min.js"]);
       if(typeof mpegts==="undefined"||!mpegts.isSupported()){note("Brauzer bu efir turini qo'llamaydi.");return;}
-      const p=mpegts.createPlayer({type:"mpegts",isLive:true,url:src});_pl=p;
-      p.on(mpegts.Events.ERROR,(t,d)=>note("Efir uzildi ("+d+")."));
+      const p=mpegts.createPlayer({type:"mpegts",isLive:true,url:src},{enableWorker:true,autoCleanupSourceBuffer:true,autoCleanupMaxBackwardDuration:60,autoCleanupMinBackwardDuration:30,fixAudioTimestampGap:true});_pl=p;
+      p.on(mpegts.Events.ERROR,(t,d)=>{if(t===mpegts.ErrorTypes.MEDIA_ERROR)decErr("ts "+d);else note("Efir uzildi ("+d+").");});
       p.attachMediaElement(v);p.load();
     }
     const pr=v.play();if(pr&&pr.catch)pr.catch(()=>{if(String(id).indexOf("t_")===0){v.muted=true;v.play().catch(()=>{});}});
