@@ -1223,7 +1223,8 @@ async function loadTable(slug){
   const c=TB[slug];paintTabs();if(c&&Date.now()-c.t<6e5)return renderTable();
   $("#tbl").innerHTML=`<div class="empty">${T("loading")}</div>`;
   let rows=[];
-  try{
+  if(slug==="uzb.1"){try{const d=await jget0(WORKER+"/pfl-table",15000);rows=(d.rows||[]).map(r=>({...r,gi:0,grp:""}));}catch(e){rows=[];}}   /* Superliga — rasmiy UzPFL (pfl.uz) */
+  if(!rows.length)try{
     const d=await jget(`${ESPN2}${slug}/standings`);
     const ch=d.children||[];
     const g=(e,n)=>{const s=(e.stats||[]).find(x=>x.name===n);return s?s.value:null;};
