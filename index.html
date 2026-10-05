@@ -1097,7 +1097,7 @@ async function openEfir(id){
   v.addEventListener("playing",()=>{on=true;note("");tvHbStart(id)});
   v.addEventListener("error",()=>{const x=v.error;note("Video xatosi: "+(x?x.code+" "+(x.message||""):""))});
   note("Efirga ulanmoqda…");
-  let k=e.k,info="",lastErr="",pg="";
+  let k=e.k,info="",lastErr="",pg="",mrec=0;
   start=async()=>{
   if(_pl){try{_pl.destroy();}catch(_){}_pl=null;}
   try{
@@ -1144,7 +1144,10 @@ async function openEfir(id){
         h.on(Hls.Events.FRAG_LOADING,()=>{st.fl++;prog()});
         h.on(Hls.Events.FRAG_LOADED,(_,d)=>{st.fd++;st.by+=(d.frag&&d.frag.stats&&d.frag.stats.total)||0;prog()});
         h.loadSource(src);h.attachMedia(v);
-        h.on(Hls.Events.ERROR,(_,d)=>{lastErr=d.details+(d.response?" "+d.response.code:"");if(d.fatal)note("Efir ochilmadi ("+d.details+"). Birozdan keyin qayta urinib ko'ring.");});
+        h.on(Hls.Events.ERROR,(_,d)=>{lastErr=d.details+(d.response?" "+d.response.code:"");
+          if(d.fatal){
+            if(d.type===Hls.ErrorTypes.MEDIA_ERROR&&mrec<3){mrec++;if(mrec===2)h.swapAudioCodec();h.recoverMediaError();return;}   /* bufferAppendError: avval o'zi tiklashga urinadi */
+            note("Efir ochilmadi ("+d.details+")"+(info?" ["+info+"]":"")+". Birozdan keyin qayta urinib ko'ring.");}});
       }
     }else{
       await loadJsAny(["https://cdn.jsdelivr.net/npm/mpegts.js@1.7.3/dist/mpegts.js","https://unpkg.com/mpegts.js@1.7.3/dist/mpegts.js","https://cdnjs.cloudflare.com/ajax/libs/mpegts.js/1.7.3/mpegts.min.js"]);
