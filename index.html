@@ -1046,30 +1046,39 @@ async function openEfir(id){
     const w=document.createElement("div");w.style.cssText="position:relative;flex:1;min-height:0;display:flex;background:#000";
     v.parentNode.insertBefore(w,v);w.appendChild(v);
     const lg=document.createElement("div");lg.style.cssText="position:absolute;inset:0;pointer-events:none;overflow:hidden";w.appendChild(lg);
+    {const x=o.querySelector("#efx"),hb=document.createElement("div"),bs="background:#2a3550;color:#fff;border:0;border-radius:8px;padding:6px 12px;font:700 16px system-ui;cursor:pointer";
+    hb.style.cssText="display:flex;gap:8px";
     if(w.requestFullscreen){   /* to'liq ekranda ham logo ko'rinishi uchun: videoning o'zi emas, qatlam to'liq ekranga chiqadi */
       v.setAttribute("controlsList","nofullscreen");
-      const x=o.querySelector("#efx"),hb=document.createElement("div"),fs=document.createElement("button");
-      hb.style.cssText="display:flex;gap:8px";fs.textContent="\u26F6";fs.setAttribute("aria-label","To'liq ekran");
-      fs.style.cssText="background:#2a3550;color:#fff;border:0;border-radius:8px;padding:6px 12px;font:700 16px system-ui;cursor:pointer";
+      const fs=document.createElement("button");fs.textContent="\u26F6";fs.setAttribute("aria-label","To'liq ekran");fs.style.cssText=bs;
       fs.onclick=()=>{if(document.fullscreenElement)document.exitFullscreen();else w.requestFullscreen();};
-      x.replaceWith(hb);hb.append(fs,x);
+      hb.append(fs);
     }
-    tvLogos(o,w,v,lg);
-    /* Telefon: TV ochilganda ekran avtomatik yonga (landscape) buriladi */
-    {const touch=matchMedia("(pointer:coarse)").matches;
-    if(touch){
-      const base=o.style.cssText;
+    /* telefon: burish tugmasi — bosilsa ekran yonga buriladi, yana bosilsa tik holatga qaytadi */
+    if(matchMedia("(pointer:coarse)").matches){
+      const base=o.style.cssText;let rot=false,fsOwn=false;
+      const rb=document.createElement("button");rb.textContent="\u27F3";rb.setAttribute("aria-label","Ekranni burish");rb.style.cssText=bs;
       const fit=()=>{if(!o.isConnected){removeEventListener("resize",fit);removeEventListener("orientationchange",fit);return;}
         const W=innerWidth,H=innerHeight;
-        if(H>W){o.style.cssText=base+";inset:auto;top:0;left:100%;width:"+H+"px;height:"+W+"px;transform-origin:0 0;transform:rotate(90deg)";}   /* qulf ishlamasa (iPhone): oynani o'zimiz yonga aylantiramiz */
+        if(rot&&H>W)o.style.cssText=base+";inset:auto;top:0;left:100%;width:"+H+"px;height:"+W+"px;transform-origin:0 0;transform:rotate(90deg)";   /* qulf ishlamasa (iPhone) oynani o'zimiz yonga aylantiramiz */
         else o.style.cssText=base;};
-      const land=async()=>{try{if(w.requestFullscreen&&!document.fullscreenElement)await w.requestFullscreen();}catch(_){}
-        try{await screen.orientation.lock("landscape");}catch(_){}
-        fit();};
+      rb.onclick=async()=>{
+        rot=!rot;
+        if(rot){
+          try{if(w.requestFullscreen&&!document.fullscreenElement){await w.requestFullscreen();fsOwn=true;}}catch(_){}
+          try{await screen.orientation.lock("landscape");}catch(_){}
+        }else{
+          try{screen.orientation.unlock();}catch(_){}
+          try{if(fsOwn&&document.fullscreenElement)await document.exitFullscreen();}catch(_){}
+          fsOwn=false;
+        }
+        fit();setTimeout(fit,300);
+      };
       addEventListener("resize",fit);addEventListener("orientationchange",fit);
-      fit();land();
-      w.addEventListener("click",()=>{if(!document.fullscreenElement)land();},{once:true});
-    }}
+      hb.append(rb);
+    }
+    x.replaceWith(hb);hb.append(x);}
+    tvLogos(o,w,v,lg);
     /* faqat jonli rejim: standart boshqaruv (vaqt, surish chizig'i, pauza) olib tashlanadi; faqat ovoz va to'liq ekran qoladi */
     v.removeAttribute("controls");v.controls=false;
     v.addEventListener("contextmenu",e=>e.preventDefault());
