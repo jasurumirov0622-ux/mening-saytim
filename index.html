@@ -963,6 +963,7 @@ let EFIR={},_pl=null;
 async function loadEfir(){try{const r=await fetch(WORKER+"/efir");if(r.ok){const n=await r.json();const ch=Object.keys(n).sort().join()!==Object.keys(EFIR).sort().join();EFIR=n;if(ch&&!curM&&typeof renderMatches==="function"&&$("#oyinlar")&&!$("#oyinlar").hidden)renderMatches();}}catch(e){}}
 loadEfir();setInterval(loadEfir,30000);
 const _ld={};
+async function loadJsAny(a){let e;for(const u of a){try{await loadJs(u);return;}catch(x){e=x;}}throw e||new Error("js");}
 function loadJs(u){return _ld[u]||(_ld[u]=new Promise((ok,no)=>{const s=document.createElement("script");s.src=u;s.onload=ok;s.onerror=()=>{delete _ld[u];no();};document.head.appendChild(s);}));}
 /* TV tomoshabinlar soni: efir haqiqatan ijro etilayotganda har 100 soniyada "shu yerdaman" signali, yopilganda chiqish signali */
 const VID=Math.random().toString(36).slice(2,12)+Date.now().toString(36).slice(-4);
@@ -1028,9 +1029,10 @@ async function peek(u,max,ms){
   return {st:200,b};
 }
 const asTxt=b=>new TextDecoder().decode(b);
-function cdc(ti){
+function hevcOk(){try{const t='video/mp4; codecs="hvc1.1.6.L93.B0"';return !!(window.MediaSource&&MediaSource.isTypeSupported&&MediaSource.isTypeSupported(t))}catch(_){return false}}
+function cdc(ti,hls){
   const nm={27:"H.264",36:"H.265 (HEVC)",2:"MPEG-2 video",16:"MPEG-4 video",15:"AAC",17:"AAC",3:"MP2/MP3",4:"MP2/MP3",129:"AC-3",135:"E-AC-3",6:"AC-3/boshqa"};
-  return {info:ti.map(x=>nm[x]||("0x"+x.toString(16))).join(" + "),bad:!ti.includes(27)&&(ti.includes(36)||ti.includes(2))};
+  return {info:ti.map(x=>nm[x]||("0x"+x.toString(16))).join(" + "),bad:!ti.includes(27)&&((ti.includes(36)&&!(hls&&hevcOk()))||ti.includes(2))};
 }
 async function openEfir(id){
   const e=EFIR[id]||TVC[id];if(!e)return;
@@ -1075,31 +1077,31 @@ async function openEfir(id){
       hd.style.pointerEvents=hid?"none":"";rt.style.pointerEvents=hid?"none":"auto";});}
     /* yozib olishdan himoya (to'liq to'sib bo'lmaydi, lekin to'siqlar): PiP/yuklab olish/translyatsiya o'chiriladi, PrintScreen bosilsa video yashiriladi, ustida siljuvchi ID belgisi turadi (yozib tarqatilsa kimdan chiqqani ma'lum bo'ladi) */
     {v.disablePictureInPicture=true;v.disableRemotePlayback=true;v.setAttribute("controlsList","nofullscreen nodownload noremoteplayback");
-    const wm=document.createElement("div");
-    wm.style.cssText="position:absolute;z-index:4;pointer-events:none;user-select:none;white-space:nowrap;color:rgba(255,255,255,.3);font:700 13px system-ui;text-shadow:0 0 3px rgba(0,0,0,.6)";
-    wm.textContent="ONSPORTS.UZ \u00b7 "+VID.slice(0,6).toUpperCase();w.appendChild(wm);
-    const mv=()=>{wm.style.left=(4+Math.random()*58)+"%";wm.style.top=(8+Math.random()*78)+"%";};mv();
-    const wt=setInterval(()=>{if(!o.isConnected){clearInterval(wt);return;}mv();},12000);
     const shield=()=>{v.style.visibility="hidden";try{navigator.clipboard.writeText(" ")}catch(_){}setTimeout(()=>{v.style.visibility="";},1500);};
     const kd=ev=>{if(!o.isConnected){removeEventListener("keydown",kd);removeEventListener("keyup",kd);return;}
       if(ev.key==="PrintScreen"||ev.code==="PrintScreen"||(ev.metaKey&&ev.shiftKey&&/^(s|3|4|5)$/i.test(ev.key)))shield();};
     addEventListener("keydown",kd);addEventListener("keyup",kd);}
   }
   const DBG=/[?&]debug\b/.test(location.search);   /* adminga: saytni ?debug bilan ochsangiz texnik yozuvlar ko'rinadi */
+  let on=false,rtm=0,start;
+  const spin=()=>{if(msg.dataset.sp!=="1"){msg.dataset.sp="1";msg.innerHTML='<div style="width:40px;height:40px;margin:0 auto;border:4px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:efsp 1s linear infinite"></div>';}};
+  const retry=()=>{if(rtm||DBG)return;rtm=setTimeout(()=>{rtm=0;if(o.isConnected&&!on&&start)start();},8000);};
   const note=t=>{
     if(DBG){msg.textContent=t||"";return;}
     if(!t){msg.dataset.sp="";msg.textContent="";return;}
-    if(/^Efirga ulanmoqda/.test(t)){if(msg.dataset.sp!=="1"){msg.dataset.sp="1";msg.innerHTML='<div style="width:40px;height:40px;margin:0 auto;border:4px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:efsp 1s linear infinite"></div>';}return;}
+    if(/^Efirga ulanmoqda/.test(t)){spin();return;}
     try{console.log("[efir]",t)}catch(_){}
-    msg.dataset.sp="";msg.textContent="Efir hozir ochilmadi. Birozdan keyin qayta urinib ko'ring.";
+    on=false;spin();retry();
   };
   o.querySelector("#efx").onclick=closeEfir;
   v.addEventListener("playing",()=>{on=true;note("");tvHbStart(id)});
   v.addEventListener("error",()=>{const x=v.error;note("Video xatosi: "+(x?x.code+" "+(x.message||""):""))});
   note("Efirga ulanmoqda…");
-  let k=e.k,info="",lastErr="",pg="",on=false;
+  let k=e.k,info="",lastErr="",pg="";
+  start=async()=>{
+  if(_pl){try{_pl.destroy();}catch(_){}_pl=null;}
   try{
-    const r=await peek(src,150000,4000);
+    const r=await peek(src,150000,8000);
     if(r.st!==200){note("Efir manbasi javob bermadi ("+r.st+"). "+(r.t||""));return;}
     if(!r.b.length){note("Efir manbasi bo'sh javob berdi (4 soniyada hech narsa kelmadi).");return;}
     if(asTxt(r.b.slice(0,7))==="#EXTM3U"){
@@ -1117,7 +1119,7 @@ async function openEfir(id){
       const sr=await peek(seg,150000,5000);
       if(sr.st!==200){note("Efir bo'lagi ochilmadi ("+sr.st+"). "+(sr.t||""));return;}
       const ti=tsInfo(sr.b);
-      if(ti){const c=cdc(ti);info=c.info;if(c.bad){note("Bu kanalning video kodeki ("+info+") brauzerda ishlamaydi. H.264 formatidagi kanal kerak.");return;}}
+      if(ti){const c=cdc(ti,true);info=c.info;if(c.bad){note("Bu kanalning video kodeki ("+info+") brauzerda ishlamaydi. H.264 formatidagi kanal kerak.");return;}}
     }else{
       const bb=r.b,ti=tsInfo(bb);
       if(!ti){
@@ -1132,7 +1134,7 @@ async function openEfir(id){
     note("Efirga ulanmoqda… ["+k+(info?": "+info:"")+"]");
     if(!o.isConnected)return;
     if(k==="hls"){
-      try{await loadJs("https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.17/hls.min.js")}catch(_){}
+      try{await loadJsAny(["https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.17/hls.min.js","https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js","https://unpkg.com/hls.js@1.5.17/dist/hls.min.js"])}catch(_){}
       if(typeof Hls==="undefined"||!Hls.isSupported()){v.src=src;}
       else{
         const h=new Hls({manifestLoadingTimeOut:20000,levelLoadingTimeOut:20000,fragLoadingTimeOut:60000,fragLoadingMaxRetry:4});_pl=h;
@@ -1145,8 +1147,8 @@ async function openEfir(id){
         h.on(Hls.Events.ERROR,(_,d)=>{lastErr=d.details+(d.response?" "+d.response.code:"");if(d.fatal)note("Efir ochilmadi ("+d.details+"). Birozdan keyin qayta urinib ko'ring.");});
       }
     }else{
-      await loadJs("https://cdn.jsdelivr.net/npm/mpegts.js@1.7.3/dist/mpegts.js");
-      if(!mpegts.isSupported()){note("Brauzer bu efir turini qo'llamaydi.");return;}
+      await loadJsAny(["https://cdn.jsdelivr.net/npm/mpegts.js@1.7.3/dist/mpegts.js","https://unpkg.com/mpegts.js@1.7.3/dist/mpegts.js","https://cdnjs.cloudflare.com/ajax/libs/mpegts.js/1.7.3/mpegts.min.js"]);
+      if(typeof mpegts==="undefined"||!mpegts.isSupported()){note("Brauzer bu efir turini qo'llamaydi.");return;}
       const p=mpegts.createPlayer({type:"mpegts",isLive:true,url:src});_pl=p;
       p.on(mpegts.Events.ERROR,(t,d)=>note("Efir uzildi ("+d+")."));
       p.attachMediaElement(v);p.load();
@@ -1154,6 +1156,8 @@ async function openEfir(id){
     const pr=v.play();if(pr&&pr.catch)pr.catch(()=>{if(String(id).indexOf("t_")===0){v.muted=true;v.play().catch(()=>{});}});
     setTimeout(()=>{if(o.isConnected&&v.readyState<2)note("Efir hali boshlanmadi ["+k+(info?": "+info:"")+"]"+(pg?" "+pg:"")+(lastErr?" xato: "+lastErr:"")+". Bu kanalda hozir o'yin ketmayotgan bo'lishi yoki video/audio kodeki brauzerda qo'llanmasligi mumkin.");},45000);
   }catch(er){note("Player yuklanmadi. Sahifani yangilab qayta urinib ko'ring.");}
+  };
+  start();
 }
 function closeMatch(){$("#mc").innerHTML="";curM=null;curN=null;clearInterval(mt);$("#mo").hidden=true;document.body.style.overflow="";setUrl(tabPath());}
 
