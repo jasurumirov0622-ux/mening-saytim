@@ -265,12 +265,12 @@ body{background:radial-gradient(900px 420px at 10% -8%,rgba(47,208,138,.13),tran
 .tvplay{width:64px;height:64px;border-radius:50%;border:0;background:var(--ac);color:#052015;font-size:26px;cursor:pointer;transition:transform .2s,box-shadow .2s}
 .tvplay:hover{transform:scale(1.06);box-shadow:0 8px 24px rgba(47,208,138,.4)}
 .tvhero small{display:block;color:var(--mu)}
-.tvgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:14px 16px}
-.tvcard{display:flex;align-items:center;gap:14px;width:100%;padding:20px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(135deg,rgba(47,208,138,.12),transparent),var(--card);color:var(--tx);font:inherit;text-align:left;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s}
+.tvgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 16px}
+.tvcard{display:flex;align-items:center;gap:12px;width:100%;padding:12px 16px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg,rgba(47,208,138,.12),transparent),var(--card);color:var(--tx);font:inherit;text-align:left;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s}
 .tvcard:hover{transform:translateY(-2px);border-color:var(--ac);box-shadow:0 8px 24px rgba(47,208,138,.18)}
-.tvcard .tvn{flex:none;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:var(--ac);color:#052015;font:900 24px system-ui}
-.tvcard b{display:block;font-size:16px}
-.tvcard small{display:block;margin-top:2px;color:var(--mu)}
+.tvcard .tvn{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--ac);color:#052015;font:900 18px system-ui}
+.tvcard b{display:block;font-size:15px;white-space:nowrap}
+.tvcard small{display:block;margin-top:1px;font-size:13px;white-space:nowrap;color:var(--mu)}
 .tvcard small i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#ff3b3b;margin-right:6px}
 .tvcard.off{opacity:.5;cursor:default}
 .tvcard.off:hover{transform:none;border-color:var(--line);box-shadow:none}
@@ -1389,8 +1389,8 @@ async function loadTV(){
     /* 4 ta kanal: ONSPORTS TV 1–4. Eski worker faqat bitta kanal (d.id) qaytarsa, u 1-o'ringa qo'yiladi */
     const S=[1,2,3,4].map(n=>{const x=(d.slots||[]).find(z=>z.n===n)||(!d.slots&&n===1&&d.id?{n:1,id:d.id,k:d.k}:null);return x&&x.id?x:{n}});
     TVC={};S.forEach(x=>{if(x.id)TVC[x.id]={k:x.k,h:"ONSPORTS.UZ TV "+x.n,a:""}});
-    box.innerHTML=`<h2 class="pt">ONSPORTS TV</h2><div class="tvgrid">`+S.map(x=>x.id
-      ?`<button class="tvcard" data-ef="${esc(x.id)}" aria-label="ONSPORTS.UZ TV ${x.n}"><span class="tvn">${x.n}</span><span><b>ONSPORTS.UZ TV ${x.n}</b><small><i></i>Jonli efir · ko'rish uchun bosing</small></span></button>`
+    box.innerHTML=`<h2 class="pt">ONSPORTS.UZ TELEKANALLAR</h2><div class="tvgrid">`+S.map(x=>x.id
+      ?`<button class="tvcard" data-ef="${esc(x.id)}" aria-label="ONSPORTS.UZ TV ${x.n}"><span class="tvn">${x.n}</span><span><b>ONSPORTS.UZ TV ${x.n}</b><small><i></i>Jonli efir</small></span></button>`
       :`<div class="tvcard off" aria-disabled="true"><span class="tvn">${x.n}</span><span><b>ONSPORTS.UZ TV ${x.n}</b><small>Hozircha efir yo'q</small></span></div>`).join("")+`</div>`;
   }catch(e){box.innerHTML=`<div class="empty">Efir hozir yuklanmadi. Birozdan keyin qayta urinib ko'ring.</div>`}
 }
