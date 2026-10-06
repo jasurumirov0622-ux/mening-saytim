@@ -2,7 +2,14 @@
 <html lang="uz">
 <head>
 <meta charset="utf-8">
+<script>/* 404.html dan kelgan chiroyli havolani (onsports.uz/oyin/123) tiklaydi */
+(function(l){if(l.search[1]==='/'){var d=l.search.slice(1).split('&').map(function(x){return x.replace(/~and~/g,'&')}).join('?');history.replaceState(null,null,l.pathname.slice(0,-1)+d+l.hash)}}(window.location))
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon.png">
+<link rel="apple-touch-icon" href="/favicon.png">
+<link rel="preconnect" href="https://bold-band-499d.jasurumirov0622.workers.dev" crossorigin>
+<meta name="theme-color" content="#0b1220">
 <title>ONSPORTS.UZ — futbol natijalari va yangiliklar</title>
 <meta name="description" content="ONSPORTS.UZ: jonli futbol natijalari, o'yinlar jadvali, liga turnir jadvallari va yangiliklar o'zbek tilida.">
 <script>try{if(localStorage.getItem("theme")==="light")document.documentElement.dataset.theme="light"}catch(e){}</script>
@@ -155,12 +162,188 @@ header{background:none;backdrop-filter:none;border:0;padding:0}
 .fb{margin-top:8px}.fb>b{display:flex;align-items:center;gap:8px;font-size:14px;margin:10px 0 2px}.fb>b img{width:20px;height:20px}
 .fl{display:grid;grid-template-columns:74px 1fr 56px 26px;gap:6px;align-items:center;padding:6px 0;border-top:1px solid var(--line);font-size:13px}
 .fl small{color:var(--mu)}.fl .s{text-align:center;font-weight:800;font-variant-numeric:tabular-nums}
+
+/* modal tabs & cards */
+.mt{display:flex;gap:4px;margin:16px 0 8px;padding:4px;background:var(--bg);border:1px solid var(--line);border-radius:14px}
+.mt button{flex:1;border:0;background:none;color:var(--mu);padding:9px 4px;border-radius:10px;font:inherit;font-size:13px;font-weight:700;white-space:nowrap;cursor:pointer}
+.mt button.on{background:var(--ac);color:#052015}
+.h2s{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px 0}
+.h2s>div{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px 6px;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
+.h2s>div b{display:block;font-size:26px;line-height:1.1}
+.h2s>div span{font-weight:700}
+.h2s>div.dw{color:var(--mu)}
+.h2s>div.w:first-child b{color:var(--ac)}.h2s>div.w:last-child b{color:#4a7bd8}
+.h2,.fl{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:6px}
+.h2 .s{background:var(--card);border-radius:8px;padding:4px 0}
+.fs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.fs button{display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:none;color:var(--mu);padding:10px 8px;border-radius:12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;min-width:0}
+.fs button span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fs button.on{background:var(--ac);border-color:var(--ac);color:#052015}
+.fs img{width:20px;height:20px;flex:none}
+.fp{display:flex;justify-content:center;gap:6px;margin:4px 0 12px}
+.fp .fc{width:30px;height:30px;font-size:13px;margin:0}
+
+/* jonli efir */
+.mt{overflow-x:auto;scrollbar-width:none}.mt::-webkit-scrollbar{display:none}
+.mt button{flex:1 0 auto;padding:9px 12px}
+.mt button.ef{color:#ff6b6b}.mt button.ef.on{background:#e5484d;color:#fff}
+.chip.lvc{display:inline-flex;align-items:center;gap:6px;border-color:#e5484d;color:#ff6b6b;font-weight:700}
+.chip.lvc.on{background:#e5484d;border-color:#e5484d;color:#fff}
+.ld{width:8px;height:8px;border-radius:50%;background:currentColor;animation:bl 1.2s infinite}
+@keyframes bl{50%{opacity:.25}}
+.efs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.efs button{border:1px solid var(--line);background:none;color:var(--mu);padding:7px 14px;border-radius:99px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.efs button.on{background:var(--ac);border-color:var(--ac);color:#052015}
+.efv{position:relative;background:#000;border-radius:14px;overflow:hidden;aspect-ratio:16/9}
+.efv video{width:100%;height:100%;display:block;background:#000}
+.efm{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:13px;text-align:center;padding:12px;pointer-events:none}
+.efbtn{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:14px;padding:12px;border-radius:12px;background:#e5484d;color:#fff;font-weight:800;text-decoration:none}
+.efbtn .ld{background:#fff}
+.art{padding-top:26px}
+.art .aimg{display:block;width:100%;max-height:320px;object-fit:cover;border-radius:14px;margin:0 0 14px}
+.art h2{margin:0 0 8px;font-size:22px;line-height:1.25}
+.art .ameta{display:block;color:var(--mu);font-size:12px;margin-bottom:14px}
+.art p{margin:0 0 18px;font-size:16px;line-height:1.6}
+.art .asrc{color:var(--mu);font-size:12px;text-decoration:underline}
+.bsc{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px;text-align:center}
+.bsc b{font-size:30px;color:#fff;letter-spacing:1px}
+.bsc em{font-style:normal;font-size:12px;color:var(--mu)}
+.mcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 16px}
+.mrow{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;text-align:center}
+.mrow b{font-size:15px}.mrow strong{font-size:26px;color:var(--ac)}
+.mg{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:4px;font-size:13px;color:var(--mu)}
+.mg li.r{text-align:right}
+.anote{color:var(--mu);font-size:12px;display:block;margin-top:6px}
+/* === Yangi dizayn === */
+::selection{background:var(--ac);color:#052015}
+html{scrollbar-color:#2a3a5e transparent}
+body{background:radial-gradient(900px 420px at 10% -8%,rgba(47,208,138,.13),transparent 60%),radial-gradient(800px 380px at 94% 0,rgba(88,120,255,.14),transparent 60%),var(--bg);background-attachment:fixed}
+:root:not([data-theme="light"]) header{background:rgba(11,18,32,.7);backdrop-filter:blur(16px) saturate(1.5)}
+.logo{letter-spacing:-.5px}
+.logo span{background:linear-gradient(90deg,#2fd08a,#5ee3ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bar nav a{transition:background .2s,color .2s,transform .2s,box-shadow .2s}
+.bar nav a:not(.tgb):hover{background:#fff;color:#0b1220;transform:translateY(-1px);box-shadow:0 6px 18px rgba(255,255,255,.14)}
+[data-theme="light"] .bar nav a:not(.tgb):hover{background:#0b1220;color:#fff;box-shadow:0 6px 18px rgba(11,18,32,.25)}
+.bar nav a.on:not(:hover){color:var(--tx);box-shadow:inset 0 0 0 1px var(--line)}
+.bar nav a.tgb:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(47,208,138,.38)}
+.chip{transition:all .2s}
+.chip:hover{border-color:var(--ac);color:var(--tx);transform:translateY(-1px)}
+.chip.on{box-shadow:0 4px 16px rgba(47,208,138,.3)}
+#lgs{gap:10px}
+.chip.lgl{display:inline-flex;align-items:center;justify-content:center;min-width:64px;height:48px;padding:6px 14px}
+.chip.lgl img{height:32px;width:auto;max-width:84px;object-fit:contain;display:block}
+.chip.lgl.on{background:rgba(47,208,138,.14);border-color:var(--ac);box-shadow:0 4px 16px rgba(47,208,138,.25)}
+.lgcap{margin:10px 16px 2px;font-weight:700}
+.grp{margin:14px 16px 2px;color:var(--mu);font-size:13px;font-weight:700}
+.lg,.card{border-radius:20px;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent),var(--card);transition:border-color .2s,box-shadow .2s}
+.lg:hover,.card:hover{border-color:#2d4271;box-shadow:0 10px 30px rgba(0,0,0,.22)}
+.ncard,.nhero{transition:transform .25s,box-shadow .25s,border-color .25s}
+.ncard:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(0,0,0,.3)}
+.nhero:hover{transform:translateY(-2px);box-shadow:0 18px 44px rgba(47,208,138,.18)}
+.nhero>img,.nimg img{transition:transform .5s;object-position:50% 28%}
+.nhero:hover>img,.ncard:hover .nimg img{transform:scale(1.06)}
+.nimg{background:linear-gradient(135deg,#1b4a5c,#17335a 55%,#2a1d57)}
+.nhero .ov{background:linear-gradient(transparent 20%,rgba(5,10,22,.92))}
+.pt{background:linear-gradient(90deg,var(--tx),var(--mu));-webkit-background-clip:text;background-clip:text;color:transparent}
+.mcard{background:linear-gradient(135deg,rgba(47,208,138,.1),transparent),var(--card)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.xo{position:fixed;inset:0;z-index:99;background:rgba(5,10,22,.72);backdrop-filter:blur(6px);display:grid;place-items:center;padding:20px}
+.xo[hidden]{display:none}
+.xb{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px 22px 22px;max-width:340px;width:100%;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.xb h3{margin:0 0 6px;font-size:21px}
+.xb p{margin:0 0 20px;color:var(--mu)}
+.xb .r{display:grid;gap:10px}
+.xb button{padding:12px 16px;border-radius:99px;border:1px solid var(--line);background:none;color:var(--tx);font-weight:700;transition:transform .2s,box-shadow .2s}
+.xb button:hover{transform:translateY(-1px)}
+.xb .y{background:var(--ac);border-color:var(--ac);color:#052015}
+.xb .y:hover{box-shadow:0 6px 20px rgba(47,208,138,.38)}
+.tvgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-top:14px}
+.tvc{display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--tx);font-weight:600;text-align:left;cursor:pointer;transition:transform .2s,border-color .2s}
+.tvc span{color:var(--ac)}
+.tvc:hover{transform:translateY(-2px);border-color:var(--ac)}
+.tvhero{display:flex;align-items:center;gap:16px;padding:22px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(135deg,rgba(47,208,138,.12),transparent),var(--card);margin-top:14px}
+.tvplay{width:64px;height:64px;border-radius:50%;border:0;background:var(--ac);color:#052015;font-size:26px;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.tvplay:hover{transform:scale(1.06);box-shadow:0 8px 24px rgba(47,208,138,.4)}
+.tvhero small{display:block;color:var(--mu)}
+.tvgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:14px 16px}
+.tvcard{display:flex;align-items:center;gap:14px;width:100%;padding:20px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(135deg,rgba(47,208,138,.12),transparent),var(--card);color:var(--tx);font:inherit;text-align:left;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s}
+.tvcard:hover{transform:translateY(-2px);border-color:var(--ac);box-shadow:0 8px 24px rgba(47,208,138,.18)}
+.tvcard .tvn{flex:none;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:var(--ac);color:#052015;font:900 24px system-ui}
+.tvcard b{display:block;font-size:16px}
+.tvcard small{display:block;margin-top:2px;color:var(--mu)}
+.tvcard small i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#ff3b3b;margin-right:6px}
+.tvcard.off{opacity:.5;cursor:default}
+.tvcard.off:hover{transform:none;border-color:var(--line);box-shadow:none}
+.tvcard.off .tvn{background:var(--line);color:var(--mu)}
+.tvb{display:inline-flex;align-items:center;gap:8px;margin-left:auto;padding:9px 14px 9px 12px;border-radius:99px;font-weight:800;font-size:13px;letter-spacing:.3px;color:#fff;background:linear-gradient(135deg,#e5484d,#ff7a45);box-shadow:0 6px 18px rgba(229,72,77,.35);transition:transform .2s,box-shadow .2s}
+.tvb svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.tvb .lv{width:8px;height:8px;border-radius:50%;background:#fff;animation:lvp 1.4s infinite}
+@keyframes lvp{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+.tvb:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(229,72,77,.5)}
+.tvb.on{box-shadow:0 0 0 2px rgba(255,255,255,.4),0 6px 18px rgba(229,72,77,.35)}
+@media(max-width:640px){.tvb span{display:none}.tvb{padding:9px}}
+
+/* ===== menyu: yangi dizayn ===== */
+.bar nav{margin:0 auto;gap:2px;padding:4px;background:var(--bg);border:1px solid var(--line);border-radius:99px}
+.bar nav a{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:99px;color:var(--mu);font-weight:600;font-size:14px;box-shadow:none;transform:none;transition:background .25s,color .25s}
+.bar nav a svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.bar nav a:not(.tgb):hover,[data-theme="light"] .bar nav a:not(.tgb):hover{background:color-mix(in srgb,var(--ac) 10%,transparent);color:var(--tx);transform:none;box-shadow:none}
+.bar nav a.on,.bar nav a.on:not(:hover){background:linear-gradient(135deg,var(--ac),color-mix(in srgb,var(--ac) 70%,#2a7fff));color:#052015;font-weight:800;box-shadow:0 4px 14px color-mix(in srgb,var(--ac) 40%,transparent)}
+.bar nav a.tgb{border:0;margin-left:2px;padding-left:14px;border-left:1px solid var(--line);border-radius:0 99px 99px 0;color:#37aee2}
+.bar nav a.tgb:hover{background:color-mix(in srgb,#37aee2 14%,transparent);color:#37aee2;transform:none;box-shadow:none}
+.tvb,.tvb:hover{text-decoration:none}
+.tvb{margin-left:0;padding:8px 15px 8px 12px;gap:7px;font-size:14px;font-weight:900;letter-spacing:1.5px}
+.tvb .lv{position:relative;width:7px;height:7px;animation:none}
+.tvb .lv::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid #fff;animation:tvr 1.6s ease-out infinite}
+@keyframes tvr{0%{transform:scale(.4);opacity:.9}100%{transform:scale(1.5);opacity:0}}
+.tvb.on{box-shadow:0 0 0 2px rgba(255,255,255,.5),0 6px 18px rgba(229,72,77,.35)}
+@media(max-width:640px){
+ .bar nav{width:100%;margin:0;justify-content:space-between}
+ .bar nav a:not(.tgb){flex:1;justify-content:center;padding:8px 6px;font-size:13px;gap:5px}
+ .bar nav a svg{width:16px;height:16px}
+ .tvb span{display:inline}.tvb{padding:8px 13px 8px 10px;margin-left:auto}
+}
+@keyframes efsp{to{transform:rotate(360deg)}}
+
+/* ===== YANGILIKLAR: yangi dizayn ===== */
+.nhead{max-width:1068px;margin:6px auto 4px;padding:6px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.nt{margin:0;font-size:clamp(22px,4vw,30px);font-weight:800;letter-spacing:-.5px;display:flex;align-items:center;gap:10px}
+.nt .dot{width:10px;height:10px;border-radius:50%;background:var(--live);box-shadow:0 0 0 0 rgba(255,90,95,.6);animation:npulse 1.8s infinite}
+@keyframes npulse{70%{box-shadow:0 0 0 9px rgba(255,90,95,0)}100%{box-shadow:0 0 0 0 rgba(255,90,95,0)}}
+.nup{color:var(--mu);font-size:12px;font-weight:600;white-space:nowrap}
+.nwrap{max-width:1068px;margin:0 auto}
+.nhero{min-height:420px;border:1px solid var(--line);box-shadow:0 12px 40px rgba(0,0,0,.28);animation:nin .5s both}
+.nhero .ov{padding:26px;gap:2px;background:linear-gradient(180deg,transparent 15%,rgba(5,10,22,.55) 50%,rgba(5,10,22,.95))}
+.nhero h2{font-size:clamp(22px,3.4vw,34px);line-height:1.18;font-weight:800;letter-spacing:-.4px;text-shadow:0 2px 14px rgba(0,0,0,.5);display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.nhero p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:2px 0 12px}
+.nbadges{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.hot{background:linear-gradient(135deg,#ff5a5f,#ff9a3c);color:#fff;font-weight:800;font-size:12px;letter-spacing:.4px;padding:5px 12px;border-radius:99px;box-shadow:0 4px 16px rgba(255,90,95,.45)}
+.nsrc{position:absolute;left:10px;top:10px;z-index:1;background:color-mix(in srgb,var(--sc) 88%,#000);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px;backdrop-filter:blur(6px);box-shadow:0 2px 10px rgba(0,0,0,.35)}
+.nbadges .nsrc{position:static}
+.ncard{animation:nin .45s both;animation-delay:calc(var(--i,0)*55ms);border-radius:18px}
+.nimg{position:relative}
+.nimg::after{content:"";position:absolute;inset:auto 0 0 0;height:40%;background:linear-gradient(transparent,rgba(5,10,22,.35));pointer-events:none}
+.nbody{padding:12px 14px 14px;flex:1;justify-content:space-between}
+.nbody h3{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-weight:700}
+.ncard:hover h3{color:var(--ac)}
+.more{max-width:1068px;margin:34px auto 16px}
+.ngrid{max-width:1068px;margin:0 auto}
+@keyframes nin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.sk{pointer-events:none;animation:none;border-color:var(--line)}
+.sk,.sk .nimg,.sk .nbody i{background:linear-gradient(100deg,var(--card) 30%,color-mix(in srgb,var(--card) 70%,var(--tx) 12%) 50%,var(--card) 70%);background-size:300% 100%;animation:nsh 1.3s linear infinite}
+.sk .nimg::after{display:none}
+.sk .nbody i{display:block;height:12px;border-radius:6px}.sk .nbody i+i{width:55%}
+@keyframes nsh{from{background-position:100% 0}to{background-position:0 0}}
+.art .aimg{border-radius:16px;width:100%;height:auto;max-height:340px;object-fit:cover;margin-bottom:14px}
+@media(max-width:820px){.nhero{min-height:340px}.nhero .ov{padding:18px}}
+@media(prefers-reduced-motion:reduce){.ncard,.nhero,.sk,.sk *,.nt .dot{animation:none!important}}
 </style>
 </head>
 <body>
 <header><div class="bar">
-  <a class="logo" href="#"><span>ONSPORTS</span>.UZ</a>
-  <nav><a href="#yangilik" data-tab="yangilik" class="on" data-i="home">Asosiy</a><a href="#oyinlar" data-tab="oyinlar" data-i="games">O'yinlar</a><a href="#jadval" data-tab="jadval" data-i="tab">Jadval</a><a class="tgb" href="https://t.me/onsportsuz" target="_blank" rel="noopener">Telegram</a></nav>
+  <a class="logo" href="/"><span>ONSPORTS</span>.UZ</a>
+  <nav><a href="#yangilik" data-tab="yangilik" class="on"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg><span data-i="home">Asosiy</span></a><a href="#oyinlar" data-tab="oyinlar"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5l3.6 2.6-1.4 4.2H9.8L8.4 10.1z"/></svg><span data-i="games">O'yinlar</span></a><a href="#jadval" data-tab="jadval"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 10h16M10 10v10"/></svg><span data-i="tab">Jadval</span></a><a class="tgb" href="https://t.me/onsportsuz" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 4L3 11l6 2.2L11 20l3-4.5 4.5 3.3z"/><path d="M9 13.2L21 4"/></svg><span>Telegram</span></a></nav>
+  <a href="#tv" data-tab="tv" class="tvb" aria-label="ONSPORTS TV"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="12" rx="3"/><path d="M8 3l4 4 4-4"/></svg><span>TV</span><i class="lv"></i></a>
   <div class="tools"><input id="sq" type="search" placeholder="Qidirish…" aria-label="Qidirish" hidden><button id="sb" class="ib" aria-label="Qidirish"></button><button id="tb" class="ib" aria-label="Kun/tun rejimi"></button><button id="lb" class="ib lb" aria-label="Til"></button></div>
 </div></header>
 
@@ -180,6 +363,7 @@ header{background:none;backdrop-filter:none;border:0;padding:0}
       <div class="chips" id="lgs"></div>
       <div class="card" id="tbl"><div class="empty" data-i="loading">Yuklanmoqda…</div></div>
     </section>
+    <section id="tv" class="tab" hidden><div id="tvbox"><div class="empty">Yuklanmoqda…</div></div></section>
   </main>
   <a class="tgcta" href="https://t.me/onsportsuz" target="_blank" rel="noopener"><b>@onsportsuz</b><span data-i="tgcta">Natijalar va yangiliklar Telegram kanalimizda</span></a>
 </div>
@@ -224,38 +408,60 @@ uz:{home:"Asosiy",games:"O'yinlar",tab:"Jadval",tableT:"Turnir jadvali",search:"
  yest:"Kecha",today:"Bugun",tom:"Ertaga",all:"Hammasi",live1:"jonli",live2:"Jonli",pause:"Tanaffus",ft:"Tugadi",postp:"Kechiktirildi",canc:"Bekor",
  nogames:"Bu kunda o'yin yo'q",soon:"Yaqinda",team:"Jamoa",pl:"O",pts:"Ochko",notable:"Bu liga uchun jadval topilmadi",more:"Davomi",news:"Yangiliklar",
  searchT:"Qidiruv",nothing:"Hech narsa topilmadi",tgnews:"Yangiliklar Telegramda",tgnewsd:"Hozir bu yerda ko'rsatib bo'lmadi. Kanalni ochish uchun bosing.",
- loadfail1:"O'yinlar yuklanmadi.",loadfail2:"Reklama bloklovchini (AdBlock) o'chirib, sahifani yangilang.",agoM:"daq oldin",agoH:"soat oldin",agoD:"kun oldin",pens:"Penaltilar",pen:"pen.",penw:"Penaltilarda g'olib",aet:"Q.V.",evs:"O'yin voqealari",stt:"Statistika",shoot:"Penalti seriyasi",noev:"Hozircha voqealar yo'q",pgt:"penalti",ogt:"o'z darvozasiga",goal:"Gol",noh2h:"So'nggi yillarda o'zaro o'yin topilmadi",h2h:"O'zaro uchrashuvlar",form:"Oxirgi 5 ta o'yin",win:"g'alaba",draw:"Durang",noh:"Bu o'yin uchun ma'lumot topilmadi",fW:"G",fD:"D",fL:"M"},
+ loadfail1:"O'yinlar yuklanmadi.",loadfail2:"Reklama bloklovchini (AdBlock) o'chirib, sahifani yangilang.",agoM:"daq oldin",agoH:"soat oldin",agoD:"kun oldin",pens:"Penaltilar",pen:"pen.",penw:"Penaltilarda g'olib",aet:"Q.V.",evs:"O'yin voqealari",stt:"Statistika",shoot:"Penalti seriyasi",noev:"Hozircha voqealar yo'q",pgt:"penalti",ogt:"o'z darvozasiga",goal:"Gol",noh2h:"So'nggi yillarda o'zaro o'yin topilmadi",h2h:"O'zaro uchrashuvlar",tabEv:"Voqealar",tabLive:"Jonli efir",efwatch:"Jonli efirda ko'rish",tabEf:"📺 Efir",nolive:"Hozir jonli o'yinlar yo'q",efnone:"Efir manbalari hali ulanmagan.",efload:"Efir yuklanmoqda…",eferr:"Efir ochilmadi. Boshqa kanalni tanlang yoki keyinroq urinib ko'ring.",tabH2:"O'zaro",tabFm:"Forma",form:"Oxirgi 5 ta o'yin",win:"g'alaba",draw:"Durang",noh:"Bu o'yin uchun ma'lumot topilmadi",fW:"G",fD:"D",fL:"M"},
 ru:{home:"Главная",games:"Матчи",tab:"Таблица",tableT:"Турнирная таблица",search:"Поиск…",loading:"Загрузка…",tgcta:"Результаты и новости в нашем Telegram-канале",
  yest:"Вчера",today:"Сегодня",tom:"Завтра",all:"Все",live1:"live",live2:"Идёт",pause:"Перерыв",ft:"Завершён",postp:"Перенесён",canc:"Отменён",
  nogames:"В этот день матчей нет",soon:"Скоро",team:"Команда",pl:"И",pts:"Очки",notable:"Таблица для этой лиги не найдена",more:"Ещё",news:"Новости",
  searchT:"Поиск",nothing:"Ничего не найдено",tgnews:"Новости в Telegram",tgnewsd:"Сейчас показать здесь не получилось. Нажмите, чтобы открыть канал.",
- loadfail1:"Матчи не загрузились.",loadfail2:"Отключите блокировщик рекламы (AdBlock) и обновите страницу.",agoM:"мин назад",agoH:"ч назад",agoD:"дн назад",pens:"Пенальти",pen:"пен.",penw:"Победа по пенальти",aet:"доп. время",evs:"События матча",stt:"Статистика",shoot:"Серия пенальти",noev:"Событий пока нет",pgt:"пенальти",ogt:"автогол",goal:"Гол",noh2h:"Личных встреч за последние годы не найдено",h2h:"Личные встречи",form:"Последние 5 матчей",win:"победа",draw:"Ничьи",noh:"Данных по этому матчу нет",fW:"В",fD:"Н",fL:"П"}};
+ loadfail1:"Матчи не загрузились.",loadfail2:"Отключите блокировщик рекламы (AdBlock) и обновите страницу.",agoM:"мин назад",agoH:"ч назад",agoD:"дн назад",pens:"Пенальти",pen:"пен.",penw:"Победа по пенальти",aet:"доп. время",evs:"События матча",stt:"Статистика",shoot:"Серия пенальти",noev:"Событий пока нет",pgt:"пенальти",ogt:"автогол",goal:"Гол",noh2h:"Личных встреч за последние годы не найдено",h2h:"Личные встречи",tabEv:"События",tabLive:"Прямой эфир",efwatch:"Смотреть в прямом эфире",tabEf:"📺 Эфир",nolive:"Сейчас нет матчей в прямом эфире",efnone:"Источники трансляции ещё не подключены.",efload:"Загрузка трансляции…",eferr:"Трансляция не открылась. Выберите другой канал или попробуйте позже.",tabH2:"Встречи",tabFm:"Форма",form:"Последние 5 матчей",win:"победа",draw:"Ничьи",noh:"Данных по этому матчу нет",fW:"В",fD:"Н",fL:"П"}};
 const T=k=>(I[lang]&&I[lang][k])||I.uz[k];
 const NAMER={"uzb.1":"Суперлига Узбекистана","uefa.champions":"Лига чемпионов","eng.1":"Английская Премьер-лига","esp.1":"Ла Лига","ita.1":"Серия A","ger.1":"Бундеслига","fra.1":"Лига 1","uefa.europa":"Лига Европы","uefa.europa.conf":"Лига конференций","uefa.nations":"Лига наций УЕФА","afc.champions":"Лига чемпионов АФК","afc.cup":"Лига чемпионов АФК 2","fifa.friendly":"Товарищеские матчи","tur.1":"Суперлига Турции","ned.1":"Эредивизи","por.1":"Лига Португалии","ksa.1":"Про-лига Саудовской Аравии","usa.1":"МЛС","eng.2":"Чемпионшип Англии"};
 const ESPN="https://site.api.espn.com/apis/site/v2/sports/soccer/";
 const ESPN2="https://site.api.espn.com/apis/v2/sports/soccer/";
 const TZ="Asia/Tashkent";
 const LEAGUES=[["uzb.1","O'zbekiston Superligasi"],["uefa.champions","Chempionlar ligasi"],["eng.1","Angliya Premer-ligasi"],["esp.1","Ispaniya La Ligasi"],["ita.1","Italiya Serie A"],["ger.1","Germaniya Bundesligasi"],["fra.1","Fransiya Liga 1"],["uefa.europa","Yevropa ligasi"],["uefa.europa.conf","Konferensiya ligasi"],["uefa.nations","UEFA Millatlar ligasi"],["afc.champions","AFC Chempionlar ligasi"],["afc.cup","AFC Chempionlar ligasi 2"],["fifa.friendly","O'rtoqlik uchrashuvlari"],["tur.1","Turkiya Superligasi"],["ned.1","Niderlandiya Eredivisie"],["por.1","Portugaliya ligasi"],["ksa.1","Saudiya Pro ligasi"],["usa.1","AQSh MLS"],["eng.2","Angliya Chempionship"]];
-const TABS=["eng.1","esp.1","ita.1","ger.1","fra.1","uzb.1","uefa.champions","uefa.europa","tur.1","ned.1","por.1","ksa.1"];
+const TABS=["uefa.champions","uefa.europa","uefa.nations","eng.1","esp.1","ger.1","ita.1","fra.1","por.1","ned.1","tur.1","ksa.1","uzb.1"];
+/* Liga logotiplari: ESPN javobidan olinadi va keshlanadi; topilmasa matnli tugma qoladi */
+const LLOGO=(()=>{try{return JSON.parse(localStorage.getItem("lgl")||"{}")}catch(e){return{}}})();
+/* Qo'lda belgilangan logolar (ESPN bermaydigan ligalar uchun): Wikimedia Commons */
+const FIXLOGO={"uzb.1":"https://commons.wikimedia.org/wiki/Special:FilePath/Uzbekistan_super_league_logo_2024.png?width=240"};
+Object.assign(LLOGO,FIXLOGO);
+function capLogo(d,slug){if(FIXLOGO[slug])return;try{const L=((d.leagues||[])[0]||{}).logos||[];if(!L.length)return;
+  const p=L.find(x=>(x.rel||[]).includes("dark"))||L.find(x=>(x.rel||[]).includes("default"))||L[0];
+  if(p&&p.href&&LLOGO[slug]!==p.href){LLOGO[slug]=p.href;try{localStorage.setItem("lgl",JSON.stringify(LLOGO))}catch(e){}paintTabs();}}catch(e){}}
+function paintTabs(){const el=$("#lgs");if(!el)return;
+  el.innerHTML=TABS.map(k=>{const u=LLOGO[k],n=esc(LN(k));
+    return u?`<button class="chip lgl ${k===lg?"on":""}" data-l="${k}" title="${n}" aria-label="${n}"><img src="${esc(u)}" alt="" referrerpolicy="no-referrer" onerror="var b=this.parentNode;b.classList.remove('lgl');this.replaceWith(document.createTextNode(b.title))"></button>`
+      :`<button class="chip ${k===lg?"on":""}" data-l="${k}">${n}</button>`;}).join("");}
 const NAME=Object.fromEntries(LEAGUES);
 const LN=s=>lang==="ru"?(NAMER[s]||NAME[s]||s):(NAME[s]||s);
 const WDS={uz:["Yak","Dush","Sesh","Chor","Pay","Juma","Shan"],ru:["Вс","Пн","Вт","Ср","Чт","Пт","Сб"]},MOS={uz:["yan","fev","mar","apr","may","iyn","iyl","avg","sen","okt","noy","dek"],ru:["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"]};
-let M=[],TB={},news=null,day=0,cf="*",lg="eng.1",failed=0;
+let M=[],TB={},news=null,curN=null,nf="*",TVC={},TVL=null,tvg="*",day=0,cf="*",lg="eng.1",failed=0;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const img=u=>u?`<img src="${esc(u)}" alt="" loading="lazy" onerror="this.remove()">`:"";
 const tm=u=>new Date(u).toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit",timeZone:TZ});
 const dkey=u=>new Date(u).toLocaleDateString("sv",{timeZone:TZ});
 const dshort=u=>{const d=new Date(new Date(u).toLocaleString("en-US",{timeZone:TZ}));return `${WDS[lang][d.getDay()]}, ${d.getDate()}${lang==="ru"?" ":"-"}${MOS[lang][d.getMonth()]}`};
-const isLive=m=>m.st==="IN_PLAY"||m.st==="PAUSED";
+/* O'yin vaqti kelgan, lekin ESPN hali "boshlanmadi" desa ham (kechikish) — 2.5 soat ichida jonli deb hisoblanadi */
+const started=m=>{const t=Date.now()-new Date(m.utc).getTime();return t>=0&&t<9e6;};
+const isLive=m=>m.st==="IN_PLAY"||m.st==="PAUSED"||(m.st==="TIMED"&&started(m));
 const ymd=o=>{const d=new Date(Date.now()+o*864e5);return d.toISOString().slice(0,10).replace(/-/g,"")};
 function ago(d){if(!d)return"";const m=Math.max(1,Math.round((Date.now()-new Date(d))/6e4));
   return m<60?`${m} ${T("agoM")}`:m<1440?`${Math.round(m/60)} ${T("agoH")}`:`${Math.round(m/1440)} ${T("agoD")}`;}
-async function jget(url,ms=12000){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
+async function jget0(url,ms=12000){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
   try{const r=await fetch(url,{signal:c.signal});if(!r.ok)throw new Error(r.status);return await r.json();}finally{clearTimeout(t);}}
+/* ESPN to'g'ridan-to'g'ri ochilmasa (tarmoq, reklama bloklovchi) yoki 3.5 soniyada javob bermasa — shu so'rov worker orqali ham yuboriladi; qaysi biri birinchi kelsa, o'sha olinadi */
+async function jget(url,ms=12000){
+  if(!/^https:\/\/site(\.web)?\.api\.espn\.com\//.test(url))return jget0(url,ms);
+  const px=()=>jget0(WORKER+"/?url="+encodeURIComponent(url),ms);
+  try{return await Promise.any([jget0(url,ms).catch(()=>px()),new Promise(r=>setTimeout(r,3500)).then(px)]);}
+  catch(e){throw (e&&e.errors&&e.errors[0])||e;}
+}
 const num=v=>{const n=parseInt(v);return isNaN(n)?null:n};
 
 function parseEvents(d,slug){
+  capLogo(d,slug);
   const out=[];
   for(const e of d.events||[]){
     try{
@@ -289,7 +495,7 @@ const ESPN_B=["https://site.api.espn.com/apis/site/v2/sports/soccer/","https://s
 async function loadLeague(slug){
   let evs=null;
   for(const b of ESPN_B){
-    try{evs=parseEvents(await jget(`${b}${slug}/scoreboard?dates=${ymd(-1)}-${ymd(2)}`),slug);break;}
+    try{evs=parseEvents(await jget(`${b}${slug}/scoreboard?dates=${ymd(-1)}-${ymd(2)}&_=${Date.now()}`),slug);break;}
     catch(e){lastErr=e.name==="AbortError"?"vaqt tugadi":String(e.message||e);}
   }
   if(evs===null){
@@ -297,12 +503,52 @@ async function loadLeague(slug){
     const ok=rs.filter(r=>r.status==="fulfilled");
     if(ok.length){const seen=new Map();ok.forEach(r=>parseEvents(r.value,slug).forEach(m=>seen.set(m.id,m)));evs=[...seen.values()];}
   }
-  if(evs===null)failed++;else M=M.filter(m=>m.slug!==slug).concat(evs);
+  if(evs!==null)evs.forEach(n=>{const o=SU[n.id];if(o&&Date.now()-o.t<120000&&((o.hs??0)+(o.as??0))>=((n.hs??0)+(n.as??0))&&(n.st==="TIMED"||n.st==="IN_PLAY")){n.hs=o.hs;n.as=o.as;n.st=o.st;if(o.clk)n.clk=o.clk;}});
+  if(evs===null)failed++;else M=M.filter(m=>m.slug!==slug&&!(m.sofa&&evs.length)).concat(evs);
   renderMatches();if(curM)paintModal();
+}
+/* ESPN ishlamasa: o'yinlar Sofascore'dan (worker proxy orqali) olinadi */
+const SOFA_T={7:"uefa.champions",679:"uefa.europa",10783:"uefa.nations",17:"eng.1",8:"esp.1",35:"ger.1",23:"ita.1",34:"fra.1",238:"por.1",37:"ned.1",52:"tur.1",955:"ksa.1"};
+let _sfm=0;
+async function sofaMatches(){
+  if(_sfm||M.length)return;_sfm=1;
+  try{
+    const days=[-1,0,1,2].map(o=>new Date(Date.now()+o*864e5).toISOString().slice(0,10));
+    const rs=await Promise.allSettled(days.map(d=>sofaGet(`sport/football/scheduled-events/${d}`,9000)));
+    const seen=new Map(),now=Date.now()/1e3;
+    rs.forEach(r=>{if(r.status!=="fulfilled")return;(r.value.events||[]).forEach(e=>{
+      try{
+        const ut=(e.tournament||{}).uniqueTournament||{},tn=String((e.tournament||{}).name||ut.name||"");
+        let slug=SOFA_T[ut.id];
+        if(!slug&&/uzbekistan/i.test(((ut.category||{}).name||"")+" "+tn)&&/super/i.test(tn))slug="uzb.1";
+        if(!slug&&/friendl/i.test(tn)&&/international|national|world/i.test(((ut.category||{}).name||"")+" "+tn+" "+(((e.homeTeam||{}).national)?"national":"")))slug="fifa.friendly";
+        if(!slug)return;
+        const ty=(e.status||{}).type||"",ds=String((e.status||{}).description||"");
+        let st="TIMED";
+        if(ty==="finished")st="FINISHED";else if(ty==="postponed")st="POSTPONED";else if(ty==="canceled")st="CANCELLED";
+        else if(ty==="inprogress")st=/half\s*time|^ht$|break/i.test(ds)?"PAUSED":"IN_PLAY";
+        const sc=["IN_PLAY","PAUSED","FINISHED"].includes(st),hS=e.homeScore||{},aS=e.awayScore||{};
+        let clk="";
+        if(st==="IN_PLAY"){const t=e.time||{},cps=t.currentPeriodStartTimestamp;
+          if(cps){const base=/2nd|second/i.test(ds)?45:/extra|et/i.test(ds)?90:0;clk=(base+Math.floor((now-cps)/60)+1)+"'";}}
+        const h=(e.homeTeam||{}).shortName||(e.homeTeam||{}).name||"",a=(e.awayTeam||{}).shortName||(e.awayTeam||{}).name||"";
+        const pen=sc&&(hS.penalties!=null||aS.penalties!=null);
+        seen.set("s"+e.id,{id:"s"+e.id,slug,comp:LN(slug),utc:new Date((e.startTimestamp||0)*1e3).toISOString(),st,h,a,
+          hc:e.homeTeam&&e.homeTeam.id?"https://img.sofascore.com/api/v1/team/"+e.homeTeam.id+"/image":"",
+          ac:e.awayTeam&&e.awayTeam.id?"https://img.sofascore.com/api/v1/team/"+e.awayTeam.id+"/image":"",
+          hs:sc?num(hS.current):null,as:sc?num(aS.current):null,clk,pen,pk:pen,aet:false,hp:pen?num(hS.penalties):null,ap:pen?num(aS.penalties):null,
+          hid:String((e.homeTeam||{}).id||""),aid:String((e.awayTeam||{}).id||""),det:[],uz:slug==="uzb.1"||/uzbekistan/i.test(h+" "+a),sofa:1});
+      }catch(x){}
+    });});
+    if(seen.size&&!M.some(m=>!m.sofa))M=[...seen.values()];
+  }catch(e){}
+  _sfm=0;renderMatches();
 }
 async function loadAll(){
   failed=0;
+  setTimeout(()=>{if(!M.length)sofaMatches();},6000);   /* 6 soniyada ESPN dan o'yin kelmasa — Sofascore */
   await Promise.allSettled(LEAGUES.map(([s])=>loadLeague(s)));
+  if(!M.length)await sofaMatches();
   if(failed===LEAGUES.length)$("#out").innerHTML=`<div class="empty">${T("loadfail1")}<br>${T("loadfail2")}<div class="err">${esc(lastErr)}</div></div>`;
 }
 
@@ -327,10 +573,10 @@ function cards(ms,dt){
 }
 const ord=m=>(m.uz?-1:0)*100+LEAGUES.findIndex(l=>l[0]===m.slug);
 function sortMs(ms){return ms.slice().sort((a,b)=>ord(a)-ord(b)||(a.utc<b.utc?-1:1));}
-function dayMs(d){const k=new Date(Date.now()+d*864e5).toLocaleDateString("sv",{timeZone:TZ});return M.filter(m=>dkey(m.utc)===k);}
+function dayMs(d){if(d==="live")return M.filter(isLive);const k=new Date(Date.now()+d*864e5).toLocaleDateString("sv",{timeZone:TZ});return M.filter(m=>dkey(m.utc)===k);}
 
 function renderMatches(){
-  $("#days").innerHTML=[["-1",T("yest")],["0",T("today")],["1",T("tom")]].map(([k,v])=>`<button class="chip ${k==String(day)?"on":""}" data-d="${k}">${v}</button>`).join("");
+  $("#days").innerHTML=[["-1",T("yest")],["0",T("today")],["1",T("tom")]].map(([k,v])=>`<button class="chip ${k==String(day)?"on":""}" data-d="${k}">${v}</button>`).join("")+`<button class="chip lvc ${day==="live"?"on":""}" data-d="live"><span class="ld"></span>${T("tabLive")}<i>${M.filter(isLive).length}</i></button>`;
   const all=sortMs(dayMs(day)),comps=[...new Set(all.map(m=>m.comp))];
   if(cf!=="*"&&!comps.includes(cf))cf="*";
   $("#comps").innerHTML=all.length?`<button class="chip ${cf==="*"?"on":""}" data-c="*">${T("all")}<i>${all.length}</i></button>`
@@ -338,17 +584,17 @@ function renderMatches(){
   if(!all.length){
     if(!M.length&&failed<LEAGUES.length){$("#out").innerHTML=`<div class="empty">${T("loading")}</div>`;return;}
     const nw=new Date().toISOString(),up=sortMs(M.filter(m=>m.utc>nw&&m.st==="TIMED")).sort((a,b)=>a.utc<b.utc?-1:1).slice(0,10);
-    $("#out").innerHTML=`<div class="empty">${T("nogames")}</div>`+(up.length?`<h3 class="sec">${T("soon")}</h3>`+cards(up,true):"");
+    $("#out").innerHTML=`<div class="empty">${day==="live"?T("nolive"):T("nogames")}</div>`+(up.length?`<h3 class="sec">${T("soon")}</h3>`+cards(up,true):"");
     return;}
   $("#out").innerHTML=cards(cf==="*"?all:all.filter(m=>m.comp===cf),false);
 }
 
 
 /* ===== O'yin tafsilotlari (modal) ===== */
-let curM=null,SM={},SF={},mt=null;
+let curM=null,SM={},SF={},mt=null,mTab=null,mFT="h";
 const SK=["possessionPct","totalShots","shotsOnTarget","wonCorners","foulsCommitted","offsides","yellowCards","redCards","saves"];
-const SL={uz:{possessionPct:"To'pga egalik",totalShots:"Zarbalar",shotsOnTarget:"Darvoza tomon zarbalar",wonCorners:"Burchak zarbalari",foulsCommitted:"Qoidabuzarliklar",offsides:"Ofsayd",yellowCards:"Sariq kartochkalar",redCards:"Qizil kartochkalar",saves:"Seyvlar"},
- ru:{possessionPct:"Владение мячом",totalShots:"Удары",shotsOnTarget:"Удары в створ",wonCorners:"Угловые",foulsCommitted:"Фолы",offsides:"Офсайды",yellowCards:"Жёлтые карточки",redCards:"Красные карточки",saves:"Сейвы"}};
+const SL={uz:{goals:"Gollar",possessionPct:"To'pga egalik",totalShots:"Zarbalar",shotsOnTarget:"Darvoza tomon zarbalar",wonCorners:"Burchak zarbalari",foulsCommitted:"Qoidabuzarliklar",offsides:"Ofsayd",yellowCards:"Sariq kartochkalar",redCards:"Qizil kartochkalar",saves:"Seyvlar"},
+ ru:{goals:"Голы",possessionPct:"Владение мячом",totalShots:"Удары",shotsOnTarget:"Удары в створ",wonCorners:"Угловые",foulsCommitted:"Фолы",offsides:"Офсайды",yellowCards:"Жёлтые карточки",redCards:"Красные карточки",saves:"Сейвы"}};
 const EVI={g:"⚽",pg:"⚽",og:"⚽",y:"🟨",r:"🟥",s:"🔁"};
 function normEv(e,m){
   const tx=(((e.type||{}).text)||"").toLowerCase();
@@ -368,7 +614,8 @@ function normEv(e,m){
 function evList(m,d){
   const hc=((((d||{}).header||{}).competitions||[])[0]||{}).details;
   const raw=(d&&d.keyEvents&&d.keyEvents.length)?d.keyEvents:(hc&&hc.length?hc:(m.det||[]));
-  return raw.map(e=>normEv(e,m)).filter(Boolean);
+  const prim=raw.map(e=>normEv(e,m)).filter(Boolean),x=SX[m.id];
+  return prim.length||!x?prim:x.ev;
 }
 function evRow(x){
   const nm=x.p.length?esc(x.k==="s"?x.p.join(" ⇄ "):x.p[0]):(x.k==="g"||x.k==="pg"||x.k==="og"?esc(T("goal")):"");
@@ -380,9 +627,16 @@ function evRow(x){
 function statRows(m,d){
   const ts=(((d||{}).boxscore||{}).teams)||[],by={};
   ts.forEach(t=>{const o={};(t.statistics||[]).forEach(z=>o[z.name]=z.displayValue);by[String((t.team||{}).id)]=o;});
-  const A=by[m.hid]||{},B=by[m.aid]||{};
-  return SK.filter(k=>A[k]!=null||B[k]!=null).map(k=>{
-    const a=A[k]??"0",b=B[k]??"0",x=parseFloat(a)||0,y=parseFloat(b)||0,tot=x+y,pa=tot?Math.round(x/tot*100):50;
+  const A=Object.assign({},by[m.hid]||{}),B=Object.assign({},by[m.aid]||{}),x=SX[m.id];
+  if(x)SK.forEach(k=>{if(A[k]==null&&B[k]==null&&(x.st.h[k]!=null||x.st.a[k]!=null)){A[k]=x.st.h[k]??"0";B[k]=x.st.a[k]??"0";}});
+  const ev=evList(m,d),cnt=(k,s)=>String(ev.filter(z=>z.k===k&&z.s===s&&!z.so).length);
+  A.goals=String(m.hs??0);B.goals=String(m.as??0);
+  if(A.yellowCards==null&&B.yellowCards==null){if(ev.length){A.yellowCards=cnt("y","h");B.yellowCards=cnt("y","a");}else{A.yellowCards="–";B.yellowCards="–";}}
+  if(A.redCards==null&&B.redCards==null){if(ev.length){A.redCards=cnt("r","h");B.redCards=cnt("r","a");}else{A.redCards="–";B.redCards="–";}}
+  if(A.offsides==null&&B.offsides==null){A.offsides="–";B.offsides="–";}
+  const top=["goals","yellowCards","redCards","offsides"],keys=top.concat(SK.filter(k=>!top.includes(k)));
+  return keys.filter(k=>A[k]!=null||B[k]!=null).map(k=>{
+    const a=A[k]??"0",b=B[k]??"0",xx=parseFloat(a)||0,y=parseFloat(b)||0,tot=xx+y,pa=tot?Math.round(xx/tot*100):50;
     const sf=k==="possessionPct"?"%":"";
     return `<div class="sr"><div class="sv">${esc(a)}${sf}</div><div class="sl">${SL[lang][k]}<div class="sb"><i style="width:${pa}%"></i><i class="b" style="width:${100-pa}%"></i></div></div><div class="sv">${esc(b)}${sf}</div></div>`;
   }).join("");
@@ -402,7 +656,7 @@ function h2hHtml(m,d){
   let wh=0,wa=0,dr=0;
   L.forEach(g=>{const hg=g.hi===m.hid?g.hs:g.as,ag=g.hi===m.hid?g.as:g.hs;if(hg>ag)wh++;else if(ag>hg)wa++;else dr++;});
   const nm=id=>esc(tn(id===m.hid?m.h:id===m.aid?m.a:""));
-  return `<div class="sec2">${T("h2h")}</div><div class="h2s"><div><b>${wh}</b>${esc(tn(m.h))}<br><small>${T("win")}</small></div><div><b>${dr}</b>${T("draw")}</div><div><b>${wa}</b>${esc(tn(m.a))}<br><small>${T("win")}</small></div></div>`
+  return `<div class="h2s"><div class="w"><b>${wh}</b><span>${esc(tn(m.h))}</span><small>${T("win")}</small></div><div class="dw"><b>${dr}</b><span>${T("draw")}</span></div><div class="w"><b>${wa}</b><span>${esc(tn(m.a))}</span><small>${T("win")}</small></div></div>`
    +L.map(g=>`<div class="h2"><small>${fdate(g.u)}</small><div class="a">${nm(g.hi)}</div><div class="s">${g.hs} – ${g.as}</div><div>${nm(g.ai)}</div></div>`).join("");
 }
 function normForm(e,tid){
@@ -417,32 +671,225 @@ function formHtml(m,d){
   let A=by[m.hid]||[],B=by[m.aid]||[];
   if(!A.length&&!B.length&&SF[m.id]){A=SF[m.id].form[m.hid]||[];B=SF[m.id].form[m.aid]||[];}
   if(!A.length&&!B.length)return"";
-  const blk=(nm,lg,L)=>`<div class="fb"><b>${img(lg)}${esc(tn(nm))}</b>`+(L.length?L.map(g=>`<div class="fl"><small>${g.u?fdate(g.u):""}</small><div>${esc(tn(g.on))}</div><div class="s">${esc(g.sc)}</div>${g.r?`<span class="fc ${g.r}">${T("f"+g.r)}</span>`:"<span></span>"}</div>`).join(""):`<div class="empty" style="padding:8px">—</div>`)+`</div>`;
-  return `<div class="sec2">${T("form")}</div>`+blk(m.h,m.hc,A)+blk(m.a,m.ac,B);
+  const L=mFT==="a"?B:A;
+  const sw=`<div class="fs"><button data-ft="h" class="${mFT!=="a"?"on":""}">${img(m.hc)}<span>${esc(tn(m.h))}</span></button><button data-ft="a" class="${mFT==="a"?"on":""}">${img(m.ac)}<span>${esc(tn(m.a))}</span></button></div>`;
+  const pills=L.some(g=>g.r)?`<div class="fp">${[...L].reverse().map(g=>g.r?`<span class="fc ${g.r}">${T("f"+g.r)}</span>`:"").join("")}</div>`:"";
+  const rows=L.length?L.map(g=>`<div class="fl"><small>${g.u?fdate(g.u):""}</small><div>${esc(tn(g.on))}</div><div class="s">${esc(g.sc)}</div>${g.r?`<span class="fc ${g.r}">${T("f"+g.r)}</span>`:"<span></span>"}</div>`).join(""):`<div class="empty" style="padding:14px">—</div>`;
+  return sw+pills+rows;
 }
 function paintModal(){
   const m=M.find(x=>x.id===curM);if(!m)return;
-  const d=SM[m.id]||null,up=m.st==="TIMED",pw=penWin(m);
+  const d=SM[m.id]||null,lv=isLive(m),up=m.st==="TIMED"&&!lv,pw=penWin(m);
   const mid=up?`<div class="c">${tm(m.utc)}<small>${dshort(m.utc)}</small></div>`
     :`<div class="c ${isLive(m)?"live":""}">${m.hs??0} – ${m.as??0}<small>${subOf(m)}</small>${pnOf(m)}</div>`;
   let h=`<div class="mcomp">${esc(m.comp)} · ${dshort(m.utc)}, ${tm(m.utc)}</div>`
    +`<div class="mh"><div class="t">${img(m.hc)}<b>${esc(tn(m.h))}</b></div>${mid}<div class="t">${img(m.ac)}<b>${esc(tn(m.a))}</b></div></div>`;
   if(pw)h+=`<div style="display:flex;justify-content:center;margin-top:10px"><span class="pwr">${bdg()}<b>${esc(tn(pw==="h"?m.h:m.a))}</b> <small style="color:var(--mu)">— ${esc(T("penw"))}</small></span></div>`;
-  if(!up){
+  const sr=up?"":statRows(m,d),hh=up?h2hHtml(m,d):"",fm=up?formHtml(m,d):"",sf=SF[m.id];
+  const tabs=[];
+  if(!up){tabs.push(["st",T("stt")],["ev",T("tabEv")]);}
+  else tabs.push(["h2h",T("tabH2")],["fm",T("tabFm")]);
+  const cur=tabs.some(t=>t[0]===mTab)?mTab:tabs[0][0];
+  if(EFIR[m.id]&&m.st!=="FINISHED")h+=`<a class="efbtn" href="#" data-ef="${esc(m.id)}"><span class="ld"></span>${T("efwatch")}</a>`;
+  else if(isLive(m))h+=`<a class="efbtn" href="${esc(efUrl(m))}" target="_blank" rel="noopener noreferrer"><span class="ld"></span>${T("efwatch")}</a>`;
+  h+=`<div class="mt" role="tablist">${tabs.map(t=>`<button role="tab" data-mt="${t[0]}" class="${t[0]===cur?"on":""}">${esc(t[1])}</button>`).join("")}</div><div class="mp">`;
+  if(cur==="ev"){
     const all=evList(m,d),main=all.filter(x=>!x.so),sh=all.filter(x=>x.so&&(x.k==="g"||x.k==="pg"||x.k==="pm"));
-    h+=`<div class="sec2">${T("evs")}</div>`+(main.length?main.map(evRow).join(""):`<div class="empty" style="padding:14px">${T("noev")}</div>`);
+    h+=(main.length?main.map(evRow).join(""):`<div class="empty" style="padding:14px">${T("noev")}${(m.st==="FINISHED"||isLive(m))?`<div style="margin-top:10px"><button class="retry" data-retry="${esc(m.id)}" style="padding:7px 14px;border-radius:10px;border:1px solid var(--bd,#2a3550);background:transparent;color:inherit;cursor:pointer">↻ ${lang==="ru"?"Обновить":"Qayta urinish"}</button></div>`:""}${(DEBUG&&SX[m.id]&&SX[m.id].dbg)?`<div style="font-size:11px;opacity:.6;margin-top:8px;line-height:1.5">${SX[m.id].dbg.map(esc).join("<br>")}</div>`:""}</div>`);
     if(sh.length)h+=`<div class="sec2">${T("shoot")}</div>`+sh.map(x=>`<div class="pk"><span>${esc(x.p[0]||"")}</span><span>${esc(tn(x.s==="h"?m.h:m.a))}</span><span class="${x.k==="pm"?"no":"ok"}">${x.k==="pm"?"✗":"✓"}</span></div>`).join("");
-    const sr=statRows(m,d);
-    if(sr)h+=`<div class="sec2">${T("stt")}</div>`+sr;
-  }
-  const hh=h2hHtml(m,d),fm=formHtml(m,d),sf=SF[m.id];
-  const hx=(up&&!hh&&sf)?`<div class="sec2">${T("h2h")}</div><div class="empty" style="padding:12px">${sf.hd?T("noh2h"):T("loading")}</div>`:"";
-  h+=hh+hx+fm;
-  if(up&&!hh&&!fm&&!sf)h+=`<div class="empty" style="padding:18px">${T("loading")}</div>`;
+  }else if(cur==="st"){h+=sr;}
+  else if(cur==="h2h"){h+=hh||`<div class="empty" style="padding:18px">${sf&&sf.hd?T("noh2h"):T("loading")}</div>`;}
+  else{h+=fm||`<div class="empty" style="padding:18px">${sf?T("noh"):T("loading")}</div>`;}
+  h+=`</div>`;
   $("#mc").innerHTML=h;
 }
+
+/* ===== Qo'shimcha manbalar: ESPN core API + TheSportsDB (ESPN summary bo'sh bo'lsa) ===== */
+const SX={};
+const DEBUG=/[?&]debug/.test(location.search);
+const CORE="https://sports.core.api.espn.com/v2/sports/soccer/leagues/";
+const TSD="https://www.thesportsdb.com/api/v1/json/3/";
+const tidOf=r=>{const x=String((r&&r.$ref)||"").match(/teams\/(\d+)/);return x?x[1]:"";};
+const nz=x=>String(x||"").toLowerCase().replace(/[^a-z0-9]/g,"");
+const TSN={"Yellow Cards":"yellowCards","Red Cards":"redCards","Offsides":"offsides","Corner Kicks":"wonCorners","Fouls":"foulsCommitted","Shots on Goal":"shotsOnTarget","Total Shots":"totalShots","Shots Total":"totalShots","Ball Possession":"possessionPct","Saves":"saves","Goalkeeper Saves":"saves"};
+async function coreFetch(m){
+  const eid=m.id.slice(1),base=`${CORE}${m.slug}/events/${eid}/competitions/${eid}`,out={ev:[],st:{h:{},a:{}},dbg:[]};
+  try{
+    const dj=await jget(`${base}/details?limit=300&_=${Date.now()}`,8000);
+    out.ev=(dj.items||[]).map(e=>normEv(Object.assign({},e,{team:{id:tidOf(e.team)}}),m)).filter(Boolean);
+    out.dbg.push("core voqea: "+(dj.items||[]).length+" xom / "+out.ev.length+" tushunildi");
+  }catch(e){out.dbg.push("core voqea xato: "+(e.message||e.name));}
+  await Promise.all([[m.hid,"h"],[m.aid,"a"]].map(async([tid,sd])=>{
+    if(!tid)return;
+    try{
+      const j=await jget(`${base}/competitors/${tid}/statistics?_=${Date.now()}`,8000);
+      ((j.splits||{}).categories||[]).forEach(c=>(c.stats||[]).forEach(z=>{if(z.name&&z.displayValue!=null)out.st[sd][z.name]=String(z.displayValue).replace("%","");}));
+      out.dbg.push("core stat "+sd+": "+Object.keys(out.st[sd]).length);
+    }catch(e){out.dbg.push("core stat "+sd+" xato: "+(e.message||e.name));}
+  }));
+  return out;
+}
+async function tsdFetch(m){
+  const out={ev:[],st:{h:{},a:{}},dbg:[]},days=[...new Set([m.utc.slice(0,10),dkey(m.utc)])];
+  let ev=null,swap=false;
+  for(const dy of days){
+    try{
+      const j=await jget(`${TSD}eventsday.php?d=${dy}&s=Soccer`,8000);
+      for(const e of (j.events||[])){
+        const H=nz(e.strHomeTeam),A=nz(e.strAwayTeam),h=nz(m.h),a=nz(m.a);
+        const ok=(x,y)=>x&&y&&(x.includes(y)||y.includes(x));
+        if(ok(H,h)&&ok(A,a)){ev=e;swap=false;break;}
+        if(ok(H,a)&&ok(A,h)){ev=e;swap=true;break;}
+      }
+    }catch(e){out.dbg.push("tsd kun xato: "+(e.message||e.name));}
+    if(ev)break;
+  }
+  if(!ev){out.dbg.push("tsd: o'yin topilmadi");return out;}
+  out.dbg.push("tsd: o'yin topildi");
+  try{
+    const j=await jget(`${TSD}lookuptimeline.php?id=${ev.idEvent}`,8000);
+    out.ev=(j.timeline||[]).map(t=>{
+      const tl=String(t.strTimeline||"").toLowerCase(),dt=String(t.strTimelineDetail||"").toLowerCase();
+      let k="";
+      if(tl==="goal")k=dt.includes("own")?"og":dt.includes("pen")?"pg":"g";
+      else if(tl==="card")k=dt.includes("red")?"r":"y";
+      else if(tl.startsWith("subst"))k="s";
+      if(!k)return null;
+      let sd=String(t.strHome).toLowerCase()==="yes"?"h":"a";if(swap)sd=sd==="h"?"a":"h";
+      const p=[t.strPlayer,k==="s"?t.strAssist:""].filter(Boolean);
+      return {k,so:false,t:t.intTime?t.intTime+"'":"",s:sd,p};
+    }).filter(Boolean);
+    out.dbg.push("tsd voqea: "+out.ev.length);
+  }catch(e){out.dbg.push("tsd voqea xato: "+(e.message||e.name));}
+  try{
+    const j=await jget(`${TSD}lookupeventstats.php?id=${ev.idEvent}`,8000);
+    (j.eventstats||[]).forEach(z=>{
+      const k=TSN[z.strStat];if(!k)return;
+      let a=String(z.intHome??"").replace("%",""),b=String(z.intAway??"").replace("%","");
+      if(swap)[a,b]=[b,a];
+      out.st.h[k]=a;out.st.a[k]=b;
+    });
+    out.dbg.push("tsd stat: "+Object.keys(out.st.h).length);
+  }catch(e){out.dbg.push("tsd stat xato: "+(e.message||e.name));}
+  return out;
+}
+
+/* ===== SOFASCORE (asosiy manba) =====
+   Sofascore brauzerdan to'g'ridan-to'g'ri ochilmasligi mumkin (CORS/403). Eng ishonchli yo'l — o'z Cloudflare Worker proxy'ingiz:
+   SOFA_PROXY="https://sizning-worker.workers.dev/?url="  (pastda worker kodi izohda). Bo'sh bo'lsa — to'g'ridan-to'g'ri va ochiq proxy'lar sinab ko'riladi. */
+const SOFA_PROXY="https://bold-band-499d.jasurumirov0622.workers.dev/?url=";
+const SOFA="https://api.sofascore.com/api/v1/";
+const SFK={ballPossession:"possessionPct",totalShotsOnGoal:"totalShots",shotsOnGoal:"shotsOnTarget",cornerKicks:"wonCorners",fouls:"foulsCommitted",offsides:"offsides",yellowCards:"yellowCards",redCards:"redCards",goalkeeperSaves:"saves"};
+const SFC={};
+let SOFA_OK=-1;
+async function sofaGet(path,ms=6000){
+  const hosts=["https://api.sofascore.com/api/v1/","https://www.sofascore.com/api/v1/"];
+  const wrap=SOFA_PROXY?[x=>SOFA_PROXY+encodeURIComponent(x)]
+    :[x=>x,x=>"https://corsproxy.io/?url="+encodeURIComponent(x),x=>"https://api.allorigins.win/raw?url="+encodeURIComponent(x),x=>"https://api.codetabs.com/v1/proxy?quest="+encodeURIComponent(x)];
+  const tries=[];hosts.forEach(h=>wrap.forEach((w,i)=>tries.push([i,w(h+path)])));
+  const order=SOFA_OK>=0?tries.filter(t=>t[0]===SOFA_OK).concat(tries.filter(t=>t[0]!==SOFA_OK)):tries;
+  /* hammasi bir vaqtda — birinchi muvaffaqiyatli javob olinadi */
+  return await Promise.any(order.map(async([i,u])=>{const j=await jget(u,ms);if(!j||typeof j!=="object")throw new Error("bo'sh");SOFA_OK=i;return j;}))
+    .catch(e=>{throw new Error("sofa: barcha yo'llar yopiq");});
+}
+async function sofaFetch(m){
+  const out={ev:[],st:{h:{},a:{}},dbg:[]};
+  try{
+    const days=[...new Set([m.utc.slice(0,10),dkey(m.utc)])],t0=new Date(m.utc).getTime()/1e3,h=nz(m.h),a=nz(m.a);
+    const ok=(x,y)=>x&&y&&(x.includes(y)||y.includes(x));
+    let ev=SFC[m.id]||null,swap=false;
+    for(const dy of days){
+      if(ev)break;
+      const j=await sofaGet(`sport/football/scheduled-events/${dy}`);
+      for(const e of (j.events||[])){
+        if(Math.abs((e.startTimestamp||0)-t0)>7200)continue;
+        const H=nz(e.homeTeam&&e.homeTeam.name),A=nz(e.awayTeam&&e.awayTeam.name);
+        const H2=nz(e.homeTeam&&e.homeTeam.shortName),A2=nz(e.awayTeam&&e.awayTeam.shortName);
+        if((ok(H,h)||ok(H2,h))&&(ok(A,a)||ok(A2,a))){ev=e;swap=false;break;}
+        if((ok(H,a)||ok(H2,a))&&(ok(A,h)||ok(A2,h))){ev=e;swap=true;break;}
+      }
+    }
+    if(!ev){out.dbg.push("sofa: o'yin topilmadi");return out;}
+    SFC[m.id]=ev;out.dbg.push("sofa: o'yin topildi #"+ev.id);
+    try{
+      const j=await sofaGet(`event/${ev.id}/incidents`);
+      out.ev=(j.incidents||[]).slice().reverse().map(i=>{
+        const ty=i.incidentType,cl=i.incidentClass;let k="";
+        if(ty==="goal")k=cl==="ownGoal"?"og":cl==="penalty"?"pg":"g";
+        else if(ty==="card")k=cl==="red"||cl==="yellowRed"?"r":"y";
+        else if(ty==="substitution")k="s";
+        else if(ty==="inGamePenalty"&&/miss|save/i.test(cl||""))k="pm";
+        if(!k)return null;
+        let sd=i.isHome?"h":"a";if(swap)sd=sd==="h"?"a":"h";
+        const nm=o=>o&&(o.shortName||o.name)||"";
+        const p=k==="s"?[nm(i.playerIn),nm(i.playerOut)].filter(Boolean):[nm(i.player)].filter(Boolean);
+        return {k,so:false,t:i.time!=null?i.time+(i.addedTime?"+"+i.addedTime:"")+"'":"",s:sd,p};
+      }).filter(Boolean);
+      out.dbg.push("sofa voqea: "+out.ev.length);
+    }catch(e){out.dbg.push("sofa voqea xato: "+(e.message||e.name));}
+    try{
+      const j=await sofaGet(`event/${ev.id}/statistics`);
+      const all=(j.statistics||[]).find(z=>z.period==="ALL")||(j.statistics||[])[0];
+      ((all&&all.groups)||[]).forEach(g=>(g.statisticsItems||[]).forEach(z=>{
+        const k=SFK[z.key];if(!k)return;
+        let x=z.homeValue!=null?z.homeValue:parseFloat(z.home),y=z.awayValue!=null?z.awayValue:parseFloat(z.away);
+        if(swap)[x,y]=[y,x];
+        out.st.h[k]=String(x);out.st.a[k]=String(y);
+      }));
+      out.dbg.push("sofa stat: "+Object.keys(out.st.h).length);
+    }catch(e){out.dbg.push("sofa stat xato: "+(e.message||e.name));}
+  }catch(e){out.dbg.push("sofa xato: "+(e.message||e.name));}
+  return out;
+}
+/* Cloudflare Worker (bepul) — SOFA_PROXY uchun:
+export default{async fetch(r){const u=new URL(r.url).searchParams.get("url");
+ if(!u||!u.startsWith("https://api.sofascore.com/"))return new Response("no",{status:400});
+ const x=await fetch(u,{headers:{"User-Agent":"Mozilla/5.0","Referer":"https://www.sofascore.com/"}});
+ return new Response(x.body,{status:x.status,headers:{"Access-Control-Allow-Origin":"*","Content-Type":"application/json"}});}} */
+async function loadExtra(m){
+  const id=m.id,lv=isLive(m),x=SX[id]||(SX[id]={ev:[],st:{h:{},a:{}},n:0,t:0,ok:false,busy:false});
+  if(x.busy)return;
+  if(lv){if(Date.now()-x.t<2500)return;}else if(x.ok||x.n>=12||Date.now()-x.t<20000)return;
+  x.busy=true;x.n++;x.t=Date.now();
+  try{
+    const hasSt=o=>Object.keys(o.st.h).length+Object.keys(o.st.a).length>0;
+    const mergeIn=(r,t)=>{if(t.ev.length>r.ev.length)r.ev=t.ev;
+      ["h","a"].forEach(sd=>Object.keys(t.st[sd]).forEach(k=>{if(r.st[sd][k]==null)r.st[sd][k]=t.st[sd][k];}));};
+    let r=await sofaFetch(m);x.dbg=r.dbg.slice();           /* 1) Sofascore */
+    if(!r.ev.length||!hasSt(r)){                              /* 2) ESPN core */
+      const c=await coreFetch(m);x.dbg=x.dbg.concat(c.dbg);mergeIn(r,c);
+    }
+    if(!r.ev.length||!hasSt(r)){                              /* 3) TheSportsDB */
+      const t=await tsdFetch(m);x.dbg=x.dbg.concat(t.dbg);mergeIn(r,t);
+    }
+    if(r.ev.length>=x.ev.length)x.ev=r.ev;
+    ["h","a"].forEach(sd=>Object.assign(x.st[sd],r.st[sd]));
+    x.ok=!lv&&(x.ev.length>0||hasSt(x));
+  }catch(e){}
+  x.busy=false;
+  if(curM===id)paintModal();
+}
+const SU={};
+function applySum(m,d){
+  try{
+    const c=(((d||{}).header||{}).competitions||[])[0];if(!c)return false;
+    const cs=c.competitors||[],home=cs.find(x=>x.homeAway==="home"),away=cs.find(x=>x.homeAway==="away");
+    const so=c.status||{},tp=so.type||{},nm=(tp.name||"").toUpperCase(),state=tp.state;
+    let st=m.st;
+    if(nm.includes("POSTPONED"))st="POSTPONED";else if(nm.includes("CANCEL")||nm.includes("ABANDON"))st="CANCELLED";
+    else if(nm.replace(/_/g,"").includes("HALFTIME"))st="PAUSED";
+    else if(state==="in")st="IN_PLAY";else if(state==="post")st="FINISHED";
+    let hs=m.hs,as=m.as;
+    if(home&&away&&st!=="TIMED"){const a=scr(home),b=scr(away);if(a!=null)hs=a;if(b!=null)as=b;}
+    const clk=st==="IN_PLAY"?(so.displayClock||m.clk):"";
+    const ch=hs!==m.hs||as!==m.as||st!==m.st||clk!==m.clk;
+    m.hs=hs;m.as=as;m.st=st;m.clk=clk;m.pk=nm.includes("SHOOTOUT");
+    SU[m.id]={hs,as,st,clk,t:Date.now()};
+    return ch;
+  }catch(e){return false;}
+}
 async function getSum(m){
-  for(const b of ESPN_B){try{return await jget(`${b}${m.slug}/summary?event=${m.id.slice(1)}`);}catch(e){}}
+  for(const sl of [m.slug,"all"])for(const b of ESPN_B){try{const d=await jget(`${b}${sl}/summary?event=${m.id.slice(1)}&_=${Date.now()}`,8000);if(d&&(d.header||d.keyEvents||d.boxscore))return d;}catch(e){}}
   return null;
 }
 const scr=x=>{const v=x&&x.score;return num(v&&typeof v==="object"?(v.displayValue??v.value):v);};
@@ -495,8 +942,10 @@ async function loadH2H(m){
 async function loadSum(){
   const id=curM,m=M.find(x=>x.id===id);if(!m)return;
   const d=await getSum(m);SM[id]=d||SM[id]||false;
+  if(d&&applySum(m,d))renderMatches();
   if(curM===id)paintModal();
-  if(m.st!=="TIMED")return;
+  if(m.st!=="TIMED"||isLive(m))loadExtra(m);
+  if(m.st!=="TIMED"||isLive(m))return;
   const sumH=!!h2hHtml(m,SM[id]);
   if(SF[id]===undefined){
     if(!formHtml(m,SM[id]))await loadSched(m);else SF[id]={h2h:[],form:{},hd:false};
@@ -505,73 +954,485 @@ async function loadSum(){
   }
   if(!SF[id].hd&&!sumH&&SF[id].h2h.length<5&&!SF[id].busy){SF[id].busy=1;await loadH2H(m);SF[id].busy=0;if(curM===id)paintModal();}
 }
-function openMatch(id){
-  curM=id;$("#mo").hidden=false;document.body.style.overflow="hidden";
+function openMatch(id,t){
+  curM=id;mTab=t||null;mFT="h";$("#mo").hidden=false;document.body.style.overflow="hidden";
+  setUrl(matchPath(id,t));
   paintModal();loadSum();clearInterval(mt);
-  mt=setInterval(()=>{const m=M.find(x=>x.id===curM);if(m&&isLive(m))loadSum();},30000);
+  mt=setInterval(()=>{const m=M.find(x=>x.id===curM);if(m&&isLive(m)&&!document.hidden&&!window.__sumBusy){window.__sumBusy=1;loadSum().finally(()=>{window.__sumBusy=0;});}},3000);
 }
-function closeMatch(){curM=null;clearInterval(mt);$("#mo").hidden=true;document.body.style.overflow="";}
+/* ===== Jonli efir: tashqi havola (yangi oynada ochiladi) ===== */
+/* Efir sahifasi havolasini shu yerga yozing. Kerak bo'lsa, ayrim o'yinlar uchun alohida havola: EFIR_LINKS["match_id"]="https://..." */
+const EFIR_URL="https://t.me/onsportsuz";
+const EFIR_LINKS={};
+const efUrl=m=>EFIR_LINKS[m.id]||EFIR_URL;
+/* ===== Jonli efir: Worker orqali sayt ichida ===== */
+const WORKER="https://bold-band-499d.jasurumirov0622.workers.dev";
+let EFIR={},_pl=null;
+/* Kunlik tashrif hisobi: har bir brauzer kuniga 1 marta. Admin qurilmasi hisoblanmaydi: bir marta onsports.uz/?me=1 ni oching (qaytarish: ?me=0) */
+(function(){try{
+  if(/[?&]me=1\b/.test(location.search))localStorage.setItem("os_me","1");
+  if(/[?&]me=0\b/.test(location.search))localStorage.removeItem("os_me");
+  if(localStorage.getItem("os_me")||/bot|crawl|spider|headless|lighthouse|preview/i.test(navigator.userAgent))return;
+  let id=localStorage.getItem("os_uid");if(!id){id=Math.random().toString(36).slice(2,12)+Date.now().toString(36);localStorage.setItem("os_uid",id);}
+  const d=new Date(Date.now()+5*3600e3).toISOString().slice(0,10);
+  if(localStorage.getItem("os_day")===d)return;
+  fetch(WORKER+"/v?u="+id,{method:"POST",keepalive:true,mode:"no-cors"}).then(()=>{try{localStorage.setItem("os_day",d)}catch(e){}}).catch(()=>{});
+}catch(e){}})();
+async function loadEfir(){try{const r=await fetch(WORKER+"/efir");if(r.ok){const n=await r.json();const ch=Object.keys(n).sort().join()!==Object.keys(EFIR).sort().join();EFIR=n;if(ch&&!curM&&typeof renderMatches==="function"&&$("#oyinlar")&&!$("#oyinlar").hidden)renderMatches();}}catch(e){}}
+loadEfir();setInterval(loadEfir,30000);
+const _ld={};
+async function loadJsAny(a){let e;for(const u of a){try{await loadJs(u);return;}catch(x){e=x;}}throw e||new Error("js");}
+function loadJs(u){return _ld[u]||(_ld[u]=new Promise((ok,no)=>{const s=document.createElement("script");s.src=u;s.onload=ok;s.onerror=()=>{delete _ld[u];no();};document.head.appendChild(s);}));}
+/* TV tomoshabinlar soni: efir haqiqatan ijro etilayotganda har 100 soniyada "shu yerdaman" signali, yopilganda chiqish signali */
+const VID=Math.random().toString(36).slice(2,12)+Date.now().toString(36).slice(-4);
+let _hbT=null,_hbOn=false;
+function tvPing(x){try{const u=WORKER+"/tvhb?c="+VID+(x?"&x=1":"");if(x&&navigator.sendBeacon){navigator.sendBeacon(u);return;}fetch(u,{method:"POST",keepalive:true,mode:"no-cors"}).catch(()=>{});}catch(e){}}
+function tvHbStart(id){if(_hbOn||String(id).indexOf("t_")!==0)return;_hbOn=true;tvPing();_hbT=setInterval(()=>tvPing(),100000);}
+function tvHbStop(){if(!_hbOn)return;_hbOn=false;clearInterval(_hbT);tvPing(true);}
+addEventListener("pagehide",tvHbStop);
+/* TV efirdagi logotiplar: bot orqali joylashtiriladi; joylashuv Telegram efiri (onsports.py) bilan bir xil */
+function tvLogos(o,w,v,lg){
+  const els={};let cfg=[];
+  const lay=()=>{
+    const W=w.clientWidth,H=w.clientHeight;
+    /* Telegram efiridagi kabi: hisob 16:9 kadrga nisbatan, x/y — logoning chap-yuqori burchagi */
+    const s=Math.min(W/16,H/9),pw=16*s,ph=9*s,l=(W-pw)/2,t=(H-ph)/2;
+    cfg.forEach(c=>{const e=els[c.id];if(!e)return;e.style.left=(l+pw*c.x/100)+"px";e.style.top=(t+ph*c.y/100)+"px";e.style.width=(pw*c.w/100)+"px";e.style.opacity=c.o/100;});
+  };
+  const load=async()=>{
+    try{
+      const r=await fetch(WORKER+"/tvlogo");if(!r.ok)return;
+      cfg=(await r.json()).items||[];
+      const ids=new Set(cfg.map(c=>String(c.id)));
+      Object.keys(els).forEach(k=>{if(!ids.has(k)){els[k].remove();delete els[k];}});
+      cfg.forEach(c=>{
+        let e=els[c.id];
+        if(!e){e=document.createElement("img");e.alt="";e.draggable=false;e.style.cssText="position:absolute;height:auto;pointer-events:none;user-select:none";lg.appendChild(e);els[c.id]=e;}
+        const s=WORKER+"/tvlogo/img?i="+c.id+"&v="+c.h;if(e.getAttribute("src")!==s)e.src=s;
+      });
+      lay();
+    }catch(e){}
+  };
+  load();
+  const t=setInterval(()=>{if(!document.body.contains(o)){clearInterval(t);return;}load();},15000);
+  ["loadedmetadata","resize","playing"].forEach(ev=>v.addEventListener(ev,lay));
+  if(window.ResizeObserver)new ResizeObserver(lay).observe(w);
+  addEventListener("resize",lay);
+}
+function closeEfir(){try{screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock()}catch(e){}try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}tvHbStop();if(_pl){try{_pl.destroy();}catch(e){}_pl=null;}const o=document.getElementById("efp");if(o)o.remove();}
+function tsInfo(b){
+  let o=-1;for(let i=0;i<Math.min(b.length-376,1500);i++){if(b[i]===0x47&&b[i+188]===0x47&&b[i+376]===0x47){o=i;break;}}
+  if(o<0)return null;
+  let pmt=-1;
+  for(let i=o;i+188<=b.length;i+=188){
+    if(b[i]!==0x47||!(b[i+1]&0x40))continue;
+    const pid=((b[i+1]&0x1f)<<8)|b[i+2],afc=(b[i+3]>>4)&3;if(!(afc&1))continue;
+    let p=i+4;if(afc&2)p+=1+b[i+4];p+=b[p]+1;const tid=b[p];
+    if(pid===0&&tid===0){const sl=((b[p+1]&15)<<8)|b[p+2];for(let q=p+8;q+4<=p+3+sl-4;q+=4){if(((b[q]<<8)|b[q+1])!==0){pmt=((b[q+2]&31)<<8)|b[q+3];break;}}}
+    else if(pid===pmt&&tid===2){
+      const sl=((b[p+1]&15)<<8)|b[p+2],pil=((b[p+10]&15)<<8)|b[p+11],t=[];
+      for(let q=p+12+pil;q+5<=p+3+sl-4;){t.push(b[q]);q+=5+(((b[q+3]&15)<<8)|b[q+4]);}
+      return t;
+    }
+  }
+  return [];
+}
+async function peek(u,max,ms){
+  const r=await fetch(u);
+  if(!r.ok){let t="";try{t=(await r.text()).slice(0,60)}catch(_){}return {st:r.status,t};}
+  const rd=r.body.getReader(),ch=[];let n=0;const t0=Date.now();
+  while(n<max&&Date.now()-t0<ms){const x=await Promise.race([rd.read(),new Promise(rs=>setTimeout(()=>rs({timeout:1}),ms))]);if(x.timeout||x.done||!x.value)break;ch.push(x.value);n+=x.value.length;}
+  try{rd.cancel()}catch(_){}
+  const b=new Uint8Array(n);let q=0;for(const c of ch){b.set(c,q);q+=c.length;}
+  return {st:200,b};
+}
+const asTxt=b=>new TextDecoder().decode(b);
+function hevcOk(){try{const t='video/mp4; codecs="hvc1.1.6.L93.B0"';return !!(window.MediaSource&&MediaSource.isTypeSupported&&MediaSource.isTypeSupported(t))}catch(_){return false}}
+function cdc(ti,hls){
+  const nm={27:"H.264",36:"H.265 (HEVC)",2:"MPEG-2 video",16:"MPEG-4 video",15:"AAC",17:"AAC",3:"MP2/MP3",4:"MP2/MP3",129:"AC-3",135:"E-AC-3",6:"AC-3/boshqa"};
+  return {info:ti.map(x=>nm[x]||("0x"+x.toString(16))).join(" + "),bad:!ti.includes(27)&&((ti.includes(36)&&!(hls&&hevcOk()))||ti.includes(2))};
+}
+async function openEfir(id){
+  const e=EFIR[id]||TVC[id];if(!e)return;
+  closeEfir();
+  const o=document.createElement("div");o.id="efp";
+  o.style.cssText="position:fixed;inset:0;z-index:99999;background:#000;display:flex;flex-direction:column";
+  o.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;color:#fff;font:700 14px system-ui"><span>'+esc(e.h)+(e.a?' \u2014 '+esc(e.a):'')+'</span><button id="efx" style="background:#e5484d;color:#fff;border:0;border-radius:8px;padding:6px 14px;font:700 16px system-ui;cursor:pointer">\u00d7</button></div><video id="efv" controls autoplay playsinline style="flex:1;width:100%;min-height:0;background:#000"></video><div id="efm" style="position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;padding:0 28px;color:#fff;font:600 16px/1.5 system-ui;pointer-events:none;text-shadow:0 2px 8px #000"></div>';
+  document.body.appendChild(o);
+  const v=o.querySelector("#efv"),msg=o.querySelector("#efm"),src=WORKER+"/p?id="+encodeURIComponent(id);
+  if(String(id).indexOf("t_")===0){   /* faqat ONSPORTS TV: videoni o'rab, ustiga logotiplar qatlamini qo'yamiz */
+    const w=document.createElement("div");w.style.cssText="position:relative;flex:1;min-height:0;display:flex;background:#000";
+    v.parentNode.insertBefore(w,v);w.appendChild(v);
+    const lg=document.createElement("div");lg.style.cssText="position:absolute;inset:0;pointer-events:none;overflow:hidden";w.appendChild(lg);
+    {const x=o.querySelector("#efx"),hb=document.createElement("div"),bs="background:#2a3550;color:#fff;border:0;border-radius:8px;padding:6px 12px;font:700 16px system-ui;cursor:pointer";
+    hb.style.cssText="display:flex;gap:8px";
+    if(w.requestFullscreen){   /* to'liq ekranda ham logo ko'rinishi uchun: videoning o'zi emas, qatlam to'liq ekranga chiqadi */
+      v.setAttribute("controlsList","nofullscreen");
+      const fs=document.createElement("button");fs.textContent="\u26F6";fs.setAttribute("aria-label","To'liq ekran");fs.style.cssText=bs;
+      fs.onclick=()=>{if(document.fullscreenElement)document.exitFullscreen();else w.requestFullscreen();};
+      hb.append(fs);
+    }
+    /* telefon: burish tugmasi — bosilsa ekran yonga buriladi, yana bosilsa tik holatga qaytadi */
+    if(matchMedia("(pointer:coarse)").matches){
+      const base=o.style.cssText;let rot=false,fsOwn=false;
+      const rb=document.createElement("button");rb.textContent="\u27F3";rb.setAttribute("aria-label","Ekranni burish");rb.style.cssText=bs;
+      const fit=()=>{if(!o.isConnected){removeEventListener("resize",fit);removeEventListener("orientationchange",fit);return;}
+        const W=innerWidth,H=innerHeight;
+        if(rot&&H>W)o.style.cssText=base+";inset:auto;top:0;left:100%;width:"+H+"px;height:"+W+"px;transform-origin:0 0;transform:rotate(90deg)";   /* qulf ishlamasa (iPhone) oynani o'zimiz yonga aylantiramiz */
+        else o.style.cssText=base;};
+      rb.onclick=async()=>{
+        rot=!rot;
+        if(rot){
+          try{if(w.requestFullscreen&&!document.fullscreenElement){await w.requestFullscreen();fsOwn=true;}}catch(_){}
+          try{await screen.orientation.lock("landscape");}catch(_){}
+        }else{
+          try{screen.orientation.unlock();}catch(_){}
+          try{if(fsOwn&&document.fullscreenElement)await document.exitFullscreen();}catch(_){}
+          fsOwn=false;
+        }
+        fit();setTimeout(fit,300);
+      };
+      addEventListener("resize",fit);addEventListener("orientationchange",fit);
+      hb.append(rb);
+    }
+    x.replaceWith(hb);hb.append(x);}
+    tvLogos(o,w,v,lg);
+    /* faqat jonli rejim: standart boshqaruv (vaqt, surish chizig'i, pauza) olib tashlanadi; faqat ovoz va to'liq ekran qoladi */
+    v.removeAttribute("controls");v.controls=false;
+    v.addEventListener("contextmenu",e=>e.preventDefault());
+    v.addEventListener("pause",()=>{if(o.isConnected&&!v.ended)setTimeout(()=>{if(o.isConnected&&v.paused)v.play().catch(()=>{});},50);});
+    const cb=document.createElement("div");cb.style.cssText="position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:linear-gradient(transparent,rgba(0,0,0,.55));z-index:3;pointer-events:none";
+    const bd=document.createElement("span");bd.innerHTML='<i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ff3b3b;margin-right:7px"></i>JONLI';bd.style.cssText="color:#fff;font:800 13px system-ui;letter-spacing:1px";
+    const rt=document.createElement("div"),mb=document.createElement("button"),vr=document.createElement("input");
+    rt.style.cssText="display:flex;align-items:center;gap:10px;pointer-events:auto";
+    mb.style.cssText="background:none;border:0;color:#fff;font-size:22px;line-height:1;cursor:pointer;padding:2px 4px";mb.setAttribute("aria-label","Ovoz");
+    vr.type="range";vr.min=0;vr.max=1;vr.step=.05;vr.style.cssText="width:90px;accent-color:#2fd08a;cursor:pointer";
+    const sync=()=>{mb.textContent=(v.muted||v.volume===0)?"\uD83D\uDD07":"\uD83D\uDD0A";vr.value=v.muted?0:v.volume;};
+    mb.onclick=()=>{v.muted=!v.muted;if(!v.muted&&v.volume===0)v.volume=.7;};
+    vr.oninput=()=>{v.volume=+vr.value;v.muted=+vr.value===0;};
+    v.addEventListener("volumechange",sync);sync();
+    rt.append(mb,vr);cb.append(bd,rt);w.appendChild(cb);
+    /* ekranga bir bosilsa belgilar (sarlavha, ⛶, ×, JONLI, ovoz) yashirinadi, yana bosilsa qaytadi */
+    {const hd=o.firstElementChild;let hid=false;
+    w.addEventListener("click",ev=>{if(rt.contains(ev.target))return;hid=!hid;const op=hid?"0":"1";
+      cb.style.transition=hd.style.transition="opacity .25s";cb.style.opacity=op;hd.style.opacity=op;
+      hd.style.pointerEvents=hid?"none":"";rt.style.pointerEvents=hid?"none":"auto";});}
+    /* yozib olishdan himoya (to'liq to'sib bo'lmaydi, lekin to'siqlar): PiP/yuklab olish/translyatsiya o'chiriladi, PrintScreen bosilsa video yashiriladi, ustida siljuvchi ID belgisi turadi (yozib tarqatilsa kimdan chiqqani ma'lum bo'ladi) */
+    {v.disablePictureInPicture=true;v.disableRemotePlayback=true;v.setAttribute("controlsList","nofullscreen nodownload noremoteplayback");
+    const shield=()=>{v.style.visibility="hidden";try{navigator.clipboard.writeText(" ")}catch(_){}setTimeout(()=>{v.style.visibility="";},1500);};
+    const kd=ev=>{if(!o.isConnected){removeEventListener("keydown",kd);removeEventListener("keyup",kd);return;}
+      if(ev.key==="PrintScreen"||ev.code==="PrintScreen"||(ev.metaKey&&ev.shiftKey&&/^(s|3|4|5)$/i.test(ev.key)))shield();};
+    addEventListener("keydown",kd);addEventListener("keyup",kd);}
+  }
+  const DBG=/[?&]debug\b/.test(location.search);   /* adminga: saytni ?debug bilan ochsangiz texnik yozuvlar ko'rinadi */
+  let on=false,rtm=0,start,deg=0,dq=0,mrec=0;   /* deg: dekoder xatolari soni — oshgan sari sifat pasaytiriladi */
+  const spin=()=>{if(msg.dataset.sp!=="1"){msg.dataset.sp="1";msg.innerHTML='<div style="width:40px;height:40px;margin:0 auto;border:4px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:efsp 1s linear infinite"></div>';}};
+  const retry=()=>{if(rtm||DBG)return;rtm=setTimeout(()=>{rtm=0;if(o.isConnected&&!on&&start)start();},8000);};
+  const note=t=>{
+    if(DBG){msg.textContent=t||"";return;}
+    if(!t){msg.dataset.sp="";msg.textContent="";return;}
+    if(/^Efirga ulanmoqda/.test(t)){spin();return;}
+    try{console.log("[efir]",t)}catch(_){}
+    on=false;spin();retry();
+  };
+  /* KOMPYUTERLARDA «PIPELINE_ERROR_DECODE»: telefon uni apparat dekoderida o'qiydi, kompyuter brauzeri esa ba'zi oqimlarda (1080p/o'zgaruvchan sifat/boshi kalit kadrsiz) yiqiladi.
+     Yechim: sifatni 720p ga qulflaymiz, xato bo'lsa pog'onama-pog'ona pastga tushib (720→480→eng past) darrov qayta ulanamiz. */
+  const decErr=w=>{
+    if(!o.isConnected||dq)return;
+    dq=setTimeout(()=>{dq=0;},1200);
+    deg++;mrec=0;on=false;
+    try{console.log("[efir] dekoder xatosi:",w,"deg="+deg)}catch(_){}
+    if(_pl){try{_pl.destroy();}catch(_){}_pl=null;}
+    try{v.removeAttribute("src");v.load();}catch(_){}
+    if(DBG)msg.textContent="Dekoder xatosi ("+w+"). Past sifat bilan qayta ulanmoqda… #"+deg;else spin();
+    clearTimeout(rtm);
+    rtm=setTimeout(()=>{rtm=0;if(o.isConnected&&!on&&start)start();},deg<4?500:4000);
+  };
+  o.querySelector("#efx").onclick=closeEfir;
+  v.addEventListener("playing",()=>{on=true;note("");tvHbStart(id)});
+  v.addEventListener("error",()=>{const x=v.error;if(x&&x.code===3){decErr("video "+(x.message||"").slice(0,80));return;}note("Video xatosi: "+(x?x.code+" "+(x.message||""):""))});
+  note("Efirga ulanmoqda…");
+  let k=e.k,info="",lastErr="",pg="",cod="";
+  start=async()=>{
+  if(_pl){try{_pl.destroy();}catch(_){}_pl=null;}
+  try{
+    const r=await peek(src,150000,8000);
+    if(r.st!==200){note("Efir manbasi javob bermadi ("+r.st+"). "+(r.t||""));return;}
+    if(!r.b.length){note("Efir manbasi bo'sh javob berdi (4 soniyada hech narsa kelmadi).");return;}
+    if(asTxt(r.b.slice(0,7))==="#EXTM3U"){
+      k="hls";
+      let txt=asTxt(r.b),g=0;
+      const first=t=>t.split(/\r?\n/).map(x=>x.trim()).find(x=>x&&x[0]!=="#");
+      while(txt.includes("#EXT-X-STREAM-INF")&&g++<2){
+        const u=first(txt);if(!u)break;
+        const rr=await peek(u,200000,4000);
+        if(rr.st!==200){note("HLS ro'yxati javob bermadi ("+rr.st+"). "+(rr.t||""));return;}
+        txt=asTxt(rr.b);
+      }
+      const seg=first(txt);
+      if(!seg){note("HLS ro'yxatida video bo'lagi yo'q (kanal hozir efir bermayotgan bo'lishi mumkin).");return;}
+      const sr=await peek(seg,150000,5000);
+      if(sr.st!==200){note("Efir bo'lagi ochilmadi ("+sr.st+"). "+(sr.t||""));return;}
+      const ti=tsInfo(sr.b);
+      if(ti){const c=cdc(ti,true);info=c.info;if(c.bad){note("Bu kanalning video kodeki ("+info+") brauzerda ishlamaydi. H.264 formatidagi kanal kerak.");return;}}
+    }else{
+      const bb=r.b,ti=tsInfo(bb);
+      if(!ti){
+        const h=bb.slice(0,80),pr=[...h].filter(c=>c>=32&&c<127).length/h.length;
+        note(pr>.85?"Manba video o'rniga matn qaytardi: «"+asTxt(h).replace(/[^\x20-\x7e]/g," ").trim()+"»":"Noma'lum video formati (boshi: "+[...h.slice(0,6)].map(c=>c.toString(16).padStart(2,"0")).join(" ")+").");
+        return;
+      }
+      k="ts";
+      const c=cdc(ti);info=c.info;
+      if(c.bad){note("Bu kanalning video kodeki ("+info+") brauzerda ishlamaydi. H.264 formatidagi kanal kerak.");return;}
+    }
+    note("Efirga ulanmoqda… ["+k+(info?": "+info:"")+"]");
+    if(!o.isConnected)return;
+    if(k==="hls"){
+      try{await loadJsAny(["https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.17/hls.min.js","https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js","https://unpkg.com/hls.js@1.5.17/dist/hls.min.js"])}catch(_){}
+      if(typeof Hls==="undefined"||!Hls.isSupported()){v.src=src;}
+      else{
+        const h=new Hls({manifestLoadingTimeOut:20000,levelLoadingTimeOut:20000,fragLoadingTimeOut:60000,fragLoadingMaxRetry:4,capLevelToPlayerSize:false,backBufferLength:30});_pl=h;
+        const st={l:0,fl:0,fd:0,by:0};
+        const prog=()=>{pg="ro'yxat: "+(st.l?"✓":"…")+" · bo'lak: "+st.fd+"/"+st.fl+" yuklandi"+(st.by?" ("+(st.by/1048576).toFixed(1)+" MB)":"");if(!on)note("Efirga ulanmoqda… ["+k+(info?": "+info:"")+"] "+pg);};
+        h.on(Hls.Events.LEVEL_LOADED,()=>{st.l=1;prog()});
+        h.on(Hls.Events.FRAG_LOADING,()=>{st.fl++;prog()});
+        h.on(Hls.Events.FRAG_LOADED,(_,d)=>{st.fd++;st.by+=(d.frag&&d.frag.stats&&d.frag.stats.total)||0;prog()});
+        h.on(Hls.Events.BUFFER_CODECS,(_,t)=>{try{cod=Object.keys(t).map(n=>n+":"+(t[n].codec||t[n].levelCodec||"")).join(" ")}catch(_){}});
+        h.on(Hls.Events.MANIFEST_PARSED,(_,d)=>{   /* bir nechta sifat bo'lsa: H.264 va 720p dan oshmaydigan eng yaxshisini tanlab QULFLAYMIZ (avtomatik sakrash yo'q) */
+          try{const L=d.levels||[];if(L.length<2)return;
+            let c=L.map((l,i)=>{const cc=l.videoCodec||l.codecs||"";return {i,h:l.height||0,b:l.bitrate||0,a:!cc||/avc[13]/i.test(cc)};});
+            const av=c.filter(x=>x.a);if(av.length)c=av;
+            c.sort((x,y)=>(x.h-y.h)||(x.b-y.b));
+            const cap=deg===0?720:deg===1?480:0;
+            const ok=cap?c.filter(x=>x.h?x.h<=cap:x.b<=(cap===720?3.5e6:1.5e6)):[];
+            const pk=ok.length?ok[ok.length-1]:c[0];
+            h.startLevel=pk.i;h.currentLevel=pk.i;
+            try{console.log("[efir] sifat:",pk.h+"p",Math.round(pk.b/1000)+"kbps")}catch(_){}
+          }catch(_){}
+        });
+        h.loadSource(src);h.attachMedia(v);
+        h.on(Hls.Events.ERROR,(_,d)=>{lastErr=d.details+(d.response?" "+d.response.code:"")+(d.sourceBufferName?" buf="+d.sourceBufferName:"")+(d.error&&d.error.message?" "+String(d.error.message).slice(0,90):"");
+          if(d.fatal){
+            if(d.type===Hls.ErrorTypes.MEDIA_ERROR){if(mrec<2){mrec++;if(mrec===2)h.swapAudioCodec();h.recoverMediaError();return;}decErr("hls "+lastErr);return;}   /* bufferAppendError: avval o'zi tiklashga urinadi */
+            note("Efir ochilmadi ("+lastErr+")"+(info?" ["+info+"]":"")+(cod?" {"+cod+"}":"")+". Birozdan keyin qayta urinib ko'ring.");}});
+      }
+    }else{
+      await loadJsAny(["https://cdn.jsdelivr.net/npm/mpegts.js@1.7.3/dist/mpegts.js","https://unpkg.com/mpegts.js@1.7.3/dist/mpegts.js","https://cdnjs.cloudflare.com/ajax/libs/mpegts.js/1.7.3/mpegts.min.js"]);
+      if(typeof mpegts==="undefined"||!mpegts.isSupported()){note("Brauzer bu efir turini qo'llamaydi.");return;}
+      const p=mpegts.createPlayer({type:"mpegts",isLive:true,url:src},{enableWorker:true,autoCleanupSourceBuffer:true,autoCleanupMaxBackwardDuration:60,autoCleanupMinBackwardDuration:30,fixAudioTimestampGap:true});_pl=p;
+      p.on(mpegts.Events.ERROR,(t,d)=>{if(t===mpegts.ErrorTypes.MEDIA_ERROR)decErr("ts "+d);else note("Efir uzildi ("+d+").");});
+      p.attachMediaElement(v);p.load();
+    }
+    const pr=v.play();if(pr&&pr.catch)pr.catch(()=>{if(String(id).indexOf("t_")===0){v.muted=true;v.play().catch(()=>{});}});
+    setTimeout(()=>{if(o.isConnected&&v.readyState<2)note("Efir hali boshlanmadi ["+k+(info?": "+info:"")+"]"+(pg?" "+pg:"")+(cod?" {"+cod+"}":"")+(lastErr?" xato: "+lastErr:"")+". Bu kanalda hozir o'yin ketmayotgan bo'lishi yoki video/audio kodeki brauzerda qo'llanmasligi mumkin.");},45000);
+  }catch(er){note("Player yuklanmadi. Sahifani yangilab qayta urinib ko'ring.");}
+  };
+  start();
+}
+function closeMatch(){$("#mc").innerHTML="";curM=null;curN=null;clearInterval(mt);$("#mo").hidden=true;document.body.style.overflow="";setUrl(tabPath());}
 
+const SOFAQ={"uzb.1":"Uzbekistan Super League"};
+const SOFAID={"uefa.champions":7,"uefa.europa":679,"uefa.nations":10783,"eng.1":17,"esp.1":8,"ger.1":35,"ita.1":23,"fra.1":34,"por.1":238,"ned.1":37,"tur.1":52,"ksa.1":955,"uzb.1":772};
+async function sofaStand(slug){
+  const q=SOFAQ[slug];if(!q&&!SOFAID[slug])throw 0;
+  const S="https://api.sofascore.com/api/v1/",g=u=>jget0(WORKER+"/?url="+encodeURIComponent(S+u),15000);
+  let id=SOFAID[slug]||null;if(!id){try{id=JSON.parse(localStorage.getItem("sofaid")||"{}")[slug]}catch(e){}}
+  if(!id){
+    const r=await g("search/unique-tournaments?q="+encodeURIComponent(q));
+    const all=(r.results||[]).map(a=>a.entity||a);
+    const x=all.find(e=>/uzbekistan/i.test((e.category||{}).name||"")&&/super/i.test(e.name||""))||all.find(e=>/uzbekistan/i.test((e.category||{}).name||""));
+    if(!x)throw 0;id=x.id;
+    try{const o=JSON.parse(localStorage.getItem("sofaid")||"{}");o[slug]=id;localStorage.setItem("sofaid",JSON.stringify(o));}catch(e){}
+  }
+  if(!LLOGO[slug]){LLOGO[slug]="https://img.sofascore.com/api/v1/unique-tournament/"+id+"/image";paintTabs();}
+  const sn=await g(`unique-tournament/${id}/seasons`);const sid=((sn.seasons||[])[0]||{}).id;if(!sid)throw 0;
+  const st=await g(`unique-tournament/${id}/season/${sid}/standings/total`);
+  const gs=st.standings||[],rows=[];
+  gs.forEach((gr,gi)=>(gr.rows||[]).forEach(r=>rows.push({pos:r.position,n:(r.team||{}).shortName||(r.team||{}).name||"",
+    c:r.team&&r.team.id?"https://img.sofascore.com/api/v1/team/"+r.team.id+"/image":"",p:r.matches??0,
+    gd:(r.scoresFor??0)-(r.scoresAgainst??0),pts:r.points??0,gi,grp:gs.length>1?String(gr.name||""):""})));
+  return rows;
+}
 async function loadTable(slug){
-  const c=TB[slug];if(c&&Date.now()-c.t<6e5)return renderTable();
+  const c=TB[slug];paintTabs();if(c&&Date.now()-c.t<6e5)return renderTable();
   $("#tbl").innerHTML=`<div class="empty">${T("loading")}</div>`;
+  let rows=[];
   try{
     const d=await jget(`${ESPN2}${slug}/standings`);
-    const en=(((d.children||[])[0]||{}).standings||{}).entries||[];
+    const ch=d.children||[];
     const g=(e,n)=>{const s=(e.stats||[]).find(x=>x.name===n);return s?s.value:null;};
-    const rows=en.map((e,i)=>({pos:g(e,"rank")??i+1,n:(e.team||{}).shortDisplayName||(e.team||{}).displayName||"",
-      c:(((e.team||{}).logos||[])[0]||{}).href||"",p:g(e,"gamesPlayed")??0,gd:g(e,"pointDifferential")??0,pts:g(e,"points")??0}))
-      .sort((a,b)=>a.pos-b.pos);
-    TB[slug]={t:Date.now(),rows};
-  }catch(e){TB[slug]={t:Date.now()-5.5*6e4,rows:[]};}
+    ch.forEach((cd,ci)=>{((cd.standings||{}).entries||[]).forEach((e,i)=>rows.push({pos:g(e,"rank")??i+1,n:(e.team||{}).shortDisplayName||(e.team||{}).displayName||"",
+      c:(((e.team||{}).logos||[])[0]||{}).href||"",p:g(e,"gamesPlayed")??0,gd:g(e,"pointDifferential")??0,pts:g(e,"points")??0,
+      gi:ci,grp:ch.length>1?(cd.name||cd.abbreviation||""):""}));});
+    rows.sort((a,b)=>a.gi-b.gi||a.pos-b.pos);
+  }catch(e){rows=[];}
+  if(!rows.length){try{rows=await sofaStand(slug);}catch(e){rows=[];}}
+  TB[slug]=rows.length?{t:Date.now(),rows}:{t:Date.now()-5.5*6e4,rows:[]};
   renderTable();
 }
 function renderTable(){
-  $("#lgs").innerHTML=TABS.map(k=>`<button class="chip ${k===lg?"on":""}" data-l="${k}">${esc(LN(k))}</button>`).join("");
+  paintTabs();
   const c=TB[lg];if(!c)return;
-  $("#tbl").innerHTML=c.rows.length?`<div class="row h"><span>#</span><span>${T("team")}</span><span>${T("pl")}</span><span>+/-</span><span>${T("pts")}</span></div>`
-    +c.rows.map(r=>`<div class="row"><span>${esc(r.pos)}</span><div class="n">${img(r.c)}<span>${esc(tn(r.n))}</span></div><span>${esc(r.p)}</span><span>${esc(r.gd)}</span><b>${esc(r.pts)}</b></div>`).join("")
-    :`<div class="empty">${T("notable")}</div>`;
+  let h="",last=null;
+  if(c.rows.length){
+    h=`<div class="lgcap">${esc(LN(lg))}</div><div class="row h"><span>#</span><span>${T("team")}</span><span>${T("pl")}</span><span>+/-</span><span>${T("pts")}</span></div>`;
+    c.rows.forEach(r=>{
+      if(r.grp&&r.grp!==last){h+=`<div class="grp">${esc(r.grp)}</div>`;}last=r.grp;
+      h+=`<div class="row"><span>${esc(r.pos)}</span><div class="n">${img(r.c)}<span>${esc(tn(r.n))}</span></div><span>${esc(r.p)}</span><span>${esc(r.gd)}</span><b>${esc(r.pts)}</b></div>`;});
+  }else h=`<div class="empty">${T("notable")}</div>`;
+  $("#tbl").innerHTML=h;
 }
+const SEED=[{"id": "s1", "kind": "news", "seed": true, "src": "ONSPORTS.UZ", "title": "Xorvatiya tarixidagi eng og'ir mag'lubiyat: Angliyadan 0:7", "text": "Millatlar ligasi 3-turida Angliya Xorvatiyani Riekada 7:0 hisobida mag'lub etdi. Bu Xorvatiya terma jamoasi tarixidagi eng katta mag'lubiyat (oldingi antirekord — 2018-yilda Ispaniyadan 0:6). Keyn va Saka ikkitadan gol urdi, Bellingem 1 gol va 3 assist qildi.", "date": "2026-10-03T22:57:00+05:00", "link": "", "ord": 0}, {"id": "s2", "kind": "news", "seed": true, "src": "ONSPORTS.UZ", "title": "Bilich 0:7 haqida: «Mashg'ulotlarda hammasi yaxshi ko'rinardi, bunday natijani kutish qiyin edi»", "text": "Xorvatiya bosh murabbiyi Slaven Bilich Angliyadan yengilish haqida gapirdi. Bu jamoa tarixidagi eng katta mag'lubiyat bo'ldi.", "date": "2026-10-04T00:30:00+05:00", "link": "", "ord": 1}, {"id": "s3", "kind": "news", "seed": true, "src": "ONSPORTS.UZ", "title": "Rossiya Namibiyani 6:0 hisobida yengdi — ketma-ket 4-quruq g'alaba", "text": "Valeriy Karpin jamoasi Yekaterinburgda Namibiyani 6:0 hisobida mag'lub etdi. Avval Burkina-Faso (3:0), Trinidad va Tobago (3:0) va Eron (2:0) yutilgan edi — 4 o'yinda umumiy hisob 14:0.", "date": "2026-10-03T22:38:00+05:00", "link": "", "ord": 2}, {"id": "s4", "kind": "news", "seed": true, "src": "ONSPORTS.UZ", "title": "Skaloni Messining vidolashuv o'yini haqida: «Besh Monumental ham to'lib ketardi»", "text": "Argentina murabbiyi Lionel Skaloni Messining terma jamoadagi xayrlashuv o'yinini sharhladi: uning maydondagi borligi hissi betakror, bu unutilmas kun bo'ladi.", "date": "2026-10-04T10:00:00+05:00", "link": "", "ord": 3}, {"id": "s5", "kind": "news", "seed": true, "src": "ONSPORTS.UZ", "title": "«Roma» Dibala va Molinani Messining vidolashuv o'yiniga qo'yib yubormadi", "text": "Italiya klubi ikki argentinalik futbolchini terma jamoaga bermadi: «Lionelga nihoyatda hurmatimiz bor, qaror sport va logistika sabablariga ko'ra qabul qilindi». Lautaroning terma jamoadagi 42 goli faqat Messi (125) va Batistutadan kam.", "date": "2026-10-04T09:00:00+05:00", "link": "", "ord": 4}, {"id": "s6", "kind": "news", "seed": true, "src": "ONSPORTS.UZ", "title": "Karpin 6:0 haqida: «Ularning mudofaadan chiqishi quvontirdi»", "text": "Rossiya bosh murabbiyi ikkinchi bo'limda Namibiya charchaganini, o'zlari esa yangi kuchlarni kiritganini aytdi. Endi e'tibor 6-oktabrdagi Nigeriya bilan o'yinda.", "date": "2026-10-04T08:20:00+05:00", "link": "", "ord": 5}, {"id": "s7", "kind": "news", "seed": true, "src": "ONSPORTS.UZ", "title": "Bulykin: «Endi kim bilan o'ynash muhim emas, hatto Narniya bilan ham»", "text": "Rossiyaning sobiq hujumchisi Dmitriy Bulykin Namibiyaga 6:0 g'alabani sharhladi va Nigeriya bilan o'yin ancha qiyin bo'lishiga shubha yo'qligini aytdi.", "date": "2026-10-04T07:30:00+05:00", "link": "", "ord": 6}, {"id": "s8", "kind": "news", "seed": true, "src": "ONSPORTS.UZ", "title": "«Zenit» «Krasnodar» o'yini uchun chiptalarni o'zi sotib olishni taklif qildi", "text": "Sankt-Peterburg klubi mezbonlardan chipta kvotasini bir haftadan ko'p vaqt kuta olmayotganini, reglament uni kafolatlashini bildirdi.", "date": "2026-10-03T01:50:00+05:00", "link": "", "ord": 7}, {"id": "s9", "kind": "news", "seed": true, "src": "ONSPORTS.UZ", "title": "RPL klublarining do'stlik o'yinlari: «Zenit» — BATE, «Dinamo» — «Rodina»", "text": "4-oktabrda Rossiya klublari xalqaro tanaffusda do'stlik o'yinlari o'tkazadi: «Zenit» BATE bilan, «Dinamo» «Rodina» bilan, CSKA ham maydonga tushadi.", "date": "2026-10-04T11:00:00+05:00", "link": "", "ord": 8}, {"id": "s10", "kind": "news", "seed": true, "src": "ONSPORTS.UZ", "title": "Belgiya terma jamoasining sobiq futbolchisi Deshaxt ayollar futboli haqidagi gapi bilan bahs uyg'otdi", "text": "«Qarashga chiday olmayman» — degan fikr izoh va munozaralarga sabab bo'ldi.", "date": "2026-10-04T12:00:00+05:00", "link": "", "ord": 9}];
 
-async function loadNews(){
-  const src="https://t.me/s/onsportsuz";
-  const px=[u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u),u=>"https://corsproxy.io/?url="+encodeURIComponent(u),u=>"https://api.codetabs.com/v1/proxy?quest="+encodeURIComponent(u)];
-  for(const p of px){
-    try{
-      const r=await fetch(p(src));if(!r.ok)continue;
-      const doc=new DOMParser().parseFromString(await r.text(),"text/html");
-      const items=[...doc.querySelectorAll(".tgme_widget_message")].map(el=>{
-        const post=el.getAttribute("data-post");if(!post)return null;
-        const tx=el.querySelector(".tgme_widget_message_text");
-        const lines=tx?(tx.innerHTML.replace(/<br\s*\/?>/gi,"\n").replace(/<[^>]+>/g,"")).split("\n").map(s=>s.trim()).filter(Boolean):[];
-        const ph=el.querySelector(".tgme_widget_message_photo_wrap");
-        const mm=ph&&(ph.getAttribute("style")||"").match(/url\('([^']+)'\)/);
-        const t=el.querySelector("time");
-        const dec=s=>{const x=document.createElement("textarea");x.innerHTML=s;return x.value};
-        if(!lines.length&&!mm)return null;
-        return {title:dec(lines[0]||"").slice(0,140),text:dec(lines.slice(1).join(" ")).slice(0,220),img:mm?mm[1]:"",date:t?t.getAttribute("datetime"):"",link:"https://t.me/"+post};
-      }).filter(Boolean).reverse().slice(0,25);
-      if(items.length){news=items;try{localStorage.setItem("news",JSON.stringify(items))}catch(e){}renderNews();return;}
-    }catch(e){}
+/* rasmi yo'q xabarlar uchun: Worker maqola sahifasidan og:image ni olib beradi (brauzerda 6 soat saqlanadi) */
+let ogBusy=false;
+/* Rasmlar wsrv.nl orqali: aniq (retina 2x), WebP, hotlink-bloksiz. Ishlamasa — asl manzil. */
+const PX=(u,w)=>"https://wsrv.nl/?url="+encodeURIComponent(u)+"&w="+w+"&q=85&output=webp&we";
+function imgErr(i){if(!i.dataset.f){i.dataset.f=1;i.removeAttribute("srcset");i.src=i.dataset.o;}else i.remove();}
+const imgT=(u,w,at="")=>`<img src="${esc(PX(u,w))}" srcset="${esc(PX(u,w))} 1x, ${esc(PX(u,w*2))} 2x" data-o="${esc(u)}" referrerpolicy="no-referrer" alt="" decoding="async" ${at} onerror="imgErr(this)">`;
+/* Yangilikka mos rasm: sarlavhadagi jamoa/futbolchi nomi bo'yicha Wikipedia + Wikimedia Commons'dan (jpg, >=1000px) */
+const ENT=[
+[/messi/,"Lionel Messi"],[/skaloni/,"Lionel Scaloni"],[/dibala/,"Paulo Dybala"],[/lautaro/,"Lautaro Martínez"],[/karpin/,"Valery Karpin"],[/bilich/,"Slaven Bilić"],
+[/bellingem/,"Jude Bellingham"],[/\bkeyn/,"Harry Kane"],[/\bsaka\b/,"Bukayo Saka"],[/modrich/,"Luka Modrić"],[/ronaldu/,"Cristiano Ronaldo"],[/mbapp?e/,"Kylian Mbappé"],
+[/xaaland|xolland|haaland/,"Erling Haaland"],[/salax|salah/,"Mohamed Salah"],[/vinisius/,"Vinícius Júnior"],[/yamal/,"Lamine Yamal"],[/neymar/,"Neymar"],
+[/gvardiola/,"Pep Guardiola"],[/murinyo|mourinho/,"José Mourinho"],[/ancelotti/,"Carlo Ancelotti"],[/tuxel|tuchel/,"Thomas Tuchel"],[/arteta/,"Mikel Arteta"],[/bulykin/,"Dmitri Bulykin"],
+[/angliy/,"England national football team"],[/xorvatiy/,"Croatia national football team"],[/rossiya(?!\s*premer)/,"Russia national football team"],[/namibiy/,"Namibia national football team"],
+[/argentin/,"Argentina national football team"],[/burkina/,"Burkina Faso national football team"],[/nigeriy/,"Nigeria national football team"],[/braziliy/,"Brazil national football team"],
+[/fransiy/,"France national football team"],[/ispaniy/,"Spain national football team"],[/germaniy/,"Germany national football team"],[/italiy/,"Italy national football team"],
+[/portugaliy/,"Portugal national football team"],[/belgiy/,"Belgium national football team"],[/gollandiy|niderlandiy/,"Netherlands national football team"],
+[/o'zbekiston|ozbekiston/,"Uzbekistan national football team"],[/\beron/,"Iran national football team"],[/yaponiy/,"Japan national football team"],[/janubiy koreya/,"South Korea national football team"],
+[/\broma(?:ning|ni|ga|dan|da)?\b/,"A.S. Roma"],[/zenit/,"FC Zenit Saint Petersburg"],[/krasnodar/,"FC Krasnodar"],[/spartak/,"FC Spartak Moscow"],[/\bcska\b/,"PFC CSKA Moscow"],
+[/lokomotiv/,"FC Lokomotiv Moscow"],[/\bbate\b/,"FC BATE Borisov"],[/barselona/,"FC Barcelona"],[/real madrid|real\b/,"Real Madrid CF"],[/manchester\s*siti|man\.?\s*siti/,"Manchester City F.C."],
+[/yunayted|manchester\s*yu/,"Manchester United F.C."],[/liverpul/,"Liverpool F.C."],[/arsenal/,"Arsenal F.C."],[/chelsi/,"Chelsea F.C."],[/tottenxem/,"Tottenham Hotspur F.C."],
+[/bavariya/,"FC Bayern Munich"],[/yuventus/,"Juventus F.C."],[/\binter\b/,"Inter Milan"],[/\bmilan\b/,"A.C. Milan"],[/napoli/,"S.S.C. Napoli"],[/\bpsj\b/,"Paris Saint-Germain F.C."],
+[/borussiya/,"Borussia Dortmund"],[/premer-liga|premier liga/,"Premier League"],[/millatlar ligasi/,"UEFA Nations League"],[/chempionlar ligasi/,"UEFA Champions League"],
+[/jahon chempionati/,"2026 FIFA World Cup"],[/\brpl\b/,"Russian Premier League"]];
+const wkq=x=>{
+  const f=t=>{t=" "+String(t||"").toLowerCase().replace(/[ʻʼ’`]/g,"'")+" ";const r=[];
+    for(const [re,w] of ENT){const m=re.exec(t);if(m)r.push([m.index,w]);}return r.sort((a,b)=>a[0]-b[0]).map(a=>a[1]);};
+  return [...new Set([...f(x.title),...f(String(x.text||"").slice(0,220))])].slice(0,4);
+};
+async function jgetW(u,ms){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms||8000);
+  try{const r=await fetch(u,{signal:c.signal});return r.ok?await r.json():null}catch(e){return null}finally{clearTimeout(t)}}
+async function wkList(t,wc){
+  const e=wc[t];if(e&&Date.now()-e.t<2592e6)return e.l;
+  const l=[],gen=t[0]==="~";
+  if(!gen){
+    const d=await jgetW("https://en.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(t.replace(/ /g,"_")));
+    const o=d&&d.originalimage;
+    if(o&&o.width>=800&&!/\.svg/i.test(o.source))l.push(o.source);
   }
-  if(!news)$("#news").innerHTML=`<a class="tgcta" href="https://t.me/onsportsuz" target="_blank" rel="noopener"><b>${T("tgnews")}</b><span>${T("tgnewsd")}</span></a>`;
+  const d=await jgetW("https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrnamespace=6&gsrlimit=10&gsrsearch="
+    +encodeURIComponent((gen?t.slice(1):t)+" filetype:bitmap")+"&prop=imageinfo&iiprop=url|size|mime&iiurlwidth=1280");
+  const pg=d&&d.query&&Object.values(d.query.pages||{}).sort((a,b)=>a.index-b.index);
+  for(const g of pg||[]){const i=g.imageinfo&&g.imageinfo[0];
+    if(i&&/jpeg/.test(i.mime)&&i.width>=1000&&i.width>=i.height*1.15)l.push(i.thumburl||i.url);}
+  if(l.length)wc[t]={l,t:Date.now()};
+  return l;
+}
+async function enrichImgs(){
+  if(ogBusy||!news)return;
+  const need=news.filter(x=>x.kind==="news"&&!x.img);
+  if(!need.length)return;
+  let c={},wc={};try{c=JSON.parse(localStorage.getItem("og3")||"{}");wc=JSON.parse(localStorage.getItem("wk3")||"{}")}catch(e){}
+  const save=()=>{try{localStorage.setItem("og3",JSON.stringify(c));localStorage.setItem("wk3",JSON.stringify(wc))}catch(e){}};
+  const key=x=>x.link||x.id,now=Date.now();let got=0;
+  for(const x of need){const e=c[key(x)];if(e&&e.i&&now-e.t<6048e5){x.img=e.i;if(e.w)x.wk=1;got++;}}
+  ogBusy=true;
+  try{
+    /* 1) manbaning o'z rasmi (Worker /og) */
+    let miss=[...new Set(need.filter(x=>!x.img&&/^https:\/\/(www\.)?sports\.ru\//.test(x.link||"")).map(x=>x.link))];
+    if(miss.length){try{
+      const r=await fetch(WORKER+"/og?"+miss.slice(0,16).map(u=>"u="+encodeURIComponent(u)).join("&"));
+      if(r.ok){const m=(await r.json()).map||{};for(const x of need)if(!x.img&&m[x.link]){x.img=m[x.link];c[key(x)]={i:x.img,t:now};got++;}}
+    }catch(e){}}
+    if(got){save();renderNews();}
+    /* 2) mos rasm — jamoa/futbolchi bo'yicha Wikipedia/Commons */
+    const used=new Set(news.filter(x=>x.img).map(x=>x.img));
+    const q=need.filter(x=>!x.img).slice(0,24);let rt=0;
+    const run=async()=>{while(q.length){
+      const x=q.shift(),ts=wkq(x);ts.push("~football match");
+      let pick="";
+      for(const t of ts){const l=await wkList(t,wc);pick=l.find(u=>!used.has(u))||"";if(pick)break;}
+      if(pick){used.add(pick);x.img=pick;x.wk=1;c[key(x)]={i:pick,t:Date.now(),w:1};save();clearTimeout(rt);rt=setTimeout(renderNews,350);}
+    }};
+    await Promise.all([run(),run(),run()]);
+  }finally{ogBusy=false;}
+}
+let newsSig="",newsTry=0,NUPD=0;
+async function loadNews(){
+  const c=new AbortController(),t=setTimeout(()=>c.abort(),15000);
+  try{
+    const r=await fetch(WORKER+"/news",{signal:c.signal});if(!r.ok)throw new Error(r.status);
+    const d=await r.json();
+    const mk=a=>({id:a.id,kind:a.k,title:a.t,body:a.b,text:String(a.b||"").split(/\n{2,}/)[0].slice(0,180),src:"ONSPORTS.UZ",date:a.date,card:a.card});
+    const merged=[...(d.items||[]).map((x,i)=>({...x,kind:"news",ord:i})),...(d.arts||[]).map(mk)].sort((p,r)=>new Date(r.date)-new Date(p.date));
+    NUPD=d.t||0;
+    if(merged.length){
+      const sig=merged.map(x=>x.id).join();
+      news=merged;try{localStorage.setItem("news3",JSON.stringify(news))}catch(e){}
+      if(sig!==newsSig){newsSig=sig;renderNews();}enrichImgs();
+      newsTry=0;return;
+    }
+  }catch(e){}finally{clearTimeout(t);}
+  if(!news||!news.some(x=>x.kind==="news"&&!x.seed)){
+    if(newsTry++<8)setTimeout(loadNews,Math.min(newsTry*4000,20000));
+    else $("#news").innerHTML=`<div class="empty">Yangiliklar hozir yuklanmadi. Birozdan keyin qayta urinib ko'ring.</div>`;
+  }
+}
+async function loadTV(){
+  const box=$("#tvbox");
+  try{
+    const r=await fetch(WORKER+"/tv");if(!r.ok)throw 0;
+    const d=await r.json();
+    /* 4 ta kanal: ONSPORTS TV 1–4. Eski worker faqat bitta kanal (d.id) qaytarsa, u 1-o'ringa qo'yiladi */
+    const S=[1,2,3,4].map(n=>{const x=(d.slots||[]).find(z=>z.n===n)||(!d.slots&&n===1&&d.id?{n:1,id:d.id,k:d.k}:null);return x&&x.id?x:{n}});
+    TVC={};S.forEach(x=>{if(x.id)TVC[x.id]={k:x.k,h:"ONSPORTS.UZ TV "+x.n,a:""}});
+    box.innerHTML=`<h2 class="pt">ONSPORTS TV</h2><div class="tvgrid">`+S.map(x=>x.id
+      ?`<button class="tvcard" data-ef="${esc(x.id)}" aria-label="ONSPORTS.UZ TV ${x.n}"><span class="tvn">${x.n}</span><span><b>ONSPORTS.UZ TV ${x.n}</b><small><i></i>Jonli efir · ko'rish uchun bosing</small></span></button>`
+      :`<div class="tvcard off" aria-disabled="true"><span class="tvn">${x.n}</span><span><b>ONSPORTS.UZ TV ${x.n}</b><small>Hozircha efir yo'q</small></span></div>`).join("")+`</div>`;
+  }catch(e){box.innerHTML=`<div class="empty">Efir hozir yuklanmadi. Birozdan keyin qayta urinib ko'ring.</div>`}
+}
+function openNews(id){
+  const x=(news||[]).find(n=>n.id===id);if(!x)return;
+  curN=id;let h;
+  if(x.kind&&x.kind!=="news"){
+    const c=x.card,g=c?(c.goals||[]):[];
+    const gl=g.length?`<ul class="mg">${g.map(k=>`<li class="${k.s==="a"?"r":""}">⚽ ${esc(k.m)} ${esc(k.w)}${k.t==="own"?" (o'z darvozasiga)":k.t==="pen"?" (pen.)":""}</li>`).join("")}</ul>`:"";
+    const cd=c?`<div class="mcard"><div class="mrow"><b>${esc(un(c.h))}</b><strong>${esc(c.hs)} : ${esc(c.as)}</strong><b>${esc(un(c.a))}</b></div>${gl}</div>`:"";
+    const body=String(x.body||"").split(/\n{2,}/).map(p=>`<p>${esc(p)}</p>`).join("");
+    h=`<article class="art"><h2>${esc(x.title)}</h2><small class="ameta">${esc(KL[x.kind]||"")} · ${when(x.date)}</small>${cd}${body}<small class="anote">ONSPORTS.UZ · matn rasmiy o'yin ma'lumotlari asosida avtomatik tayyorlandi</small></article>`;
+  }else h=`<article class="art">${x.img?`${imgT(x.img,1100,'class="aimg"')}${x.wk?'<small class="ameta">Rasm: Wikipedia / Wikimedia Commons</small>':""}`:""}<h2>${esc(x.title)}</h2><small class="ameta">${when(x.date)}</small>${x.text?`<p>${esc(x.text)}</p>`:""}</article>`;
+  $("#mc").innerHTML=h;
+  $("#mo").hidden=false;document.body.style.overflow="hidden";
+  setUrl(newsPath(id));
 }
 function when(d){if(!d)return"";const k=x=>new Date(x).toLocaleDateString("sv",{timeZone:TZ});
   const day=k(d)===k(Date.now())?T("today"):k(d)===k(Date.now()-864e5)?T("yest"):dshort(d);return `${ago(d)} · ${day}, ${tm(d)}`;}
-const ncard=x=>`<a class="ncard" href="${esc(x.link)}" target="_blank" rel="noopener"><div class="nimg">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy" onerror="this.remove()">`:"<span>ONSPORTS.UZ</span>"}</div><div class="nbody"><h3>${esc(x.title)}</h3><small>${when(x.date)}</small></div></a>`;
+const KL={report:"📝 O'YIN HISOBOTI",preview:"🔮 TAHLIL",recap:"🌙 KUN XULOSASI"};
+const nph=x=>x.card?`<span class="bsc"><b>${esc(x.card.hs)} : ${esc(x.card.as)}</b><em>${esc(un(x.card.h))} — ${esc(un(x.card.a))}</em></span>`:`<span>${KL[x.kind]||"ONSPORTS.UZ"}</span>`;
+const sp=x=>"";
+const ncard=(x,i=0)=>`<a class="ncard" style="--i:${Math.min(i,12)}" href="#" data-n="${esc(x.id)}"><div class="nimg">${x.img?imgT(x.img,640,'loading="lazy"'):nph(x)}${sp(x)}</div><div class="nbody"><h3>${esc(x.title)}</h3><small>${when(x.date)}</small></div></a>`;
+const nhead=n=>`<div class="nhead"><h1 class="nt"><i class="dot"></i>${T("news")}</h1><span class="nup">${NUPD?"⟳ "+ago(NUPD):""}${n?` · ${n}`:""}</span></div>`;
+const skel=()=>nhead(0)+`<div class="nwrap"><div class="nhero sk"></div><div class="nside">${'<div class="ncard sk"><div class="nimg"></div><div class="nbody"><i></i><i></i></div></div>'.repeat(4)}</div></div>`;
 const IC={s:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
  m:'<svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>',
  u:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>'};
 let q="";
+const NFL=()=>lang==="ru"?[["*","Все"],["news","🔥 Горячее"],["report","📝 Отчёты"],["preview","🔮 Анонсы"]]:[["*","Hammasi"],["news","🔥 Shov-shuvli"],["report","📝 Hisobotlar"],["preview","🔮 Tahlil"]];
+const nfm=(x,f)=>f==="*"||(f==="report"?(x.kind==="report"||x.kind==="recap"):x.kind===f);
 function renderNews(){
-  const a=news||[];if(!a.length)return;
-  if(q){const r=a.filter(x=>((x.title||"")+" "+(x.text||"")).toLowerCase().includes(q));
+  const all=(news||[]).filter(x=>x.kind==="news");if(!all.length)return;
+  if(q){const r=all.filter(x=>((x.title||"")+" "+(x.text||"")).toLowerCase().includes(q));
     $("#news").innerHTML=`<div class="crumb">${T("home")} › <b>${T("searchT")}</b> <i>•</i> ${r.length}</div>`+(r.length?`<div class="ngrid">${r.map(ncard).join("")}</div>`:`<div class="empty">${T("nothing")}</div>`);return;}
-  const f=a[0];
-  let h=`<div class="crumb">${T("home")} › <b>${T("news")}</b> <i>•</i> ${a.length}</div><div class="nwrap"><a class="nhero" href="${esc(f.link)}" target="_blank" rel="noopener">${f.img?`<img src="${esc(f.img)}" alt="">`:""}<div class="ov"><h2>${esc(f.title)}</h2>${f.text?`<p>${esc(f.text)}</p>`:""}<small>${when(f.date)}</small></div></a>`
-    +`<div class="nside">${a.slice(1,5).map(ncard).join("")}</div></div>`;
-  if(a.length>5)h+=`<div class="more">${T("more")}</div><div class="ngrid">${a.slice(5).map(ncard).join("")}</div>`;
+  const a=all.filter(x=>nfm(x,nf));
+  if(nf==="news")a.sort((x,y)=>(x.ord||0)-(y.ord||0));
+  if(!a.length){$("#news").innerHTML=`<div class="empty">${lang==="ru"?"Пока нет материалов":"Hozircha maqola yo'q"}</div>`;return;}
+  const hi=a.slice(0,4).findIndex(x=>x.img),f=a[hi>0?hi:0],rest=a.filter(x=>x!==f);
+  let h=nhead(a.length)+`<div class="nwrap"><a class="nhero" href="#" data-n="${esc(f.id)}">${f.img?imgT(f.img,1280,'fetchpriority="high"'):""}<div class="ov"><div class="nbadges"><span class="hot">🔥 ${lang==="ru"?"Главное":"Kun xabari"}</span>${sp(f)}</div><h2>${esc(f.title)}</h2>${f.text?`<p>${esc(f.text)}</p>`:""}<small>${when(f.date)}</small></div></a>`
+    +`<div class="nside">${rest.slice(0,4).map((x,i)=>ncard(x,i+1)).join("")}</div></div>`;
+  if(rest.length>4)h+=`<div class="more">${T("more")}</div><div class="ngrid">${rest.slice(4).map((x,i)=>ncard(x,i)).join("")}</div>`;
   $("#news").innerHTML=h;
 }
 function setTheme(t){document.documentElement.dataset.theme=t;try{localStorage.setItem("theme",t)}catch(e){}$("#tb").innerHTML=t==="light"?IC.u:IC.m;}
@@ -587,26 +1448,127 @@ $("#lb").onclick=()=>{lang=lang==="uz"?"ru":"uz";try{localStorage.setItem("lang"
   M.forEach(m=>m.comp=LN(m.slug));cf="*";applyStatic();renderMatches();renderTable();renderNews();if(curM)paintModal();};
 applyStatic();
 document.addEventListener("click",e=>{
+  const efb=e.target.closest("[data-ef]");if(efb){e.preventDefault();const ei=efb.dataset.ef;
+    /* o'yin ONSPORTS TV ga ulangan bo'lsa — to'g'ridan-to'g'ri TV bo'limiga, jonli rejimga o'tamiz */
+    if(EFIR[ei]&&EFIR[ei].tv){if(curM||curN)closeMatch();showTab("tv");return;}
+    openEfir(ei);return;}
+  const tgb=e.target.closest("[data-tvg]");if(tgb){tvg=tgb.dataset.tvg;renderTV();return;}
+  const nfb=e.target.closest("[data-nf]");if(nfb){nf=nfb.dataset.nf;renderNews();return;}
+  const nw=e.target.closest("[data-n]");if(nw){e.preventDefault();openNews(nw.dataset.n);return;}
   const d=e.target.closest("[data-d]"),c=e.target.closest("[data-c]"),l=e.target.closest("[data-l]");
   const tb=e.target.closest("[data-tab]"),mm=e.target.closest("[data-m]");
+  const lgo=e.target.closest("a.logo");if(lgo){e.preventDefault();if(curM||curN)closeMatch();showTab("yangilik");return;}
   if(e.target.id==="mo"||e.target.closest(".mx")){closeMatch();return;}
+  const rt=e.target.closest("[data-retry]");
+  if(rt){const mm2=M.find(x=>x.id===rt.dataset.retry);if(mm2){const x=SX[mm2.id];if(x){x.n=0;x.ok=false;x.t=0;}delete SFC[mm2.id];loadExtra(mm2);getSum(mm2).then(d=>{if(d){SM[mm2.id]=d;if(applySum(mm2,d))renderMatches();}if(curM===mm2.id)paintModal();});}return;}
+  const mtb=e.target.closest("[data-mt]"),ftb=e.target.closest("[data-ft]");
+  if(mtb){mTab=mtb.dataset.mt;paintModal();if(curM)setUrl(matchPath(curM,mTab));return;}
+  if(ftb){mFT=ftb.dataset.ft;paintModal();return;}
   if(mm){openMatch(mm.dataset.m);return;}
   if(tb){e.preventDefault();showTab(tb.dataset.tab);return;}
-  if(d){day=+d.dataset.d;cf="*";renderMatches();}
+  if(d){day=d.dataset.d==="live"?"live":+d.dataset.d;cf="*";renderMatches();setUrl(tabPath("oyinlar"));}
   else if(c){cf=c.dataset.c;renderMatches();}
-  else if(l){lg=l.dataset.l;loadTable(lg);}
+  else if(l){lg=l.dataset.l;try{sessionStorage.setItem("lg",lg);}catch(e){}loadTable(lg);setUrl(tabPath("jadval"));}
 });
 document.addEventListener("keydown",e=>{
-  if(e.key==="Escape"&&curM)closeMatch();
+  if(e.key==="Escape"&&(curM||curN))closeMatch();
   else if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches(".m[data-m]")){e.preventDefault();openMatch(e.target.dataset.m);}
 });
+/* HAVOLALAR (onsports.uz/...): har bir sahifa/o'yin/xabar/jadval o'z manziliga ega.
+   /  /oyinlar  /oyinlar/kun/1  /oyin/401234  /xabar/ab12cd  /jadval/esp.1  /tv      (eski #oyinlar/... havolalar ham ishlaydi) */
+const TABN=["yangilik","oyinlar","jadval","tv"];
+/* o'qiladigan havola: nomni lotinchaga o'giramiz (arsenal-chelsi, kiril ham) */
+const CYR={"а":"a","б":"b","в":"v","г":"g","д":"d","е":"e","ё":"yo","ж":"j","з":"z","и":"i","й":"y","к":"k","л":"l","м":"m","н":"n","о":"o","п":"p","р":"r","с":"s","т":"t","у":"u","ф":"f","х":"x","ц":"ts","ч":"ch","ш":"sh","щ":"sh","ъ":"","ы":"i","ь":"","э":"e","ю":"yu","я":"ya","ў":"o","қ":"q","ғ":"g","ҳ":"h"};
+function slug(t,n){return String(t||"").toLowerCase().replace(/[\u0400-\u04ff]/g,c=>CYR[c]??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[ʻʼ`'’]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,n||60);}
+const MTU={st:"statistika",ev:"voqealar",h2h:"yuzma-yuz",fm:"forma"},MTR=Object.fromEntries(Object.entries(MTU).map(([k,v])=>[v,k]));
+function matchPath(id,t){const m=(M||[]).find(x=>x.id===id);return "/oyin/"+encodeURIComponent(id)+(m?"/"+slug(tn(m.h)+" "+tn(m.a)):"")+(m&&t&&MTU[t]?"/"+MTU[t]:"");}
+function newsPath(id){const x=(news||[]).find(n=>n.id===id);return "/xabar/"+encodeURIComponent(id)+(x&&x.title?"/"+slug(x.title,70):"");}
+const BASE=(()=>{if(!/\.github\.io$/.test(location.hostname))return"";const q=location.pathname.split("/")[1]||"";return q&&q!=="index.html"&&!["oyin","xabar"].concat(TABN).includes(q)?"/"+q:"";})();
+const dec=x=>{try{return decodeURIComponent(x)}catch(e){return x}};
+function curTab(){const t=document.querySelector(".tab:not([hidden])");return t?t.id:"yangilik";}
+function setUrl(path){try{const u=BASE+path+location.search;if(location.pathname+location.search+location.hash!==u)history.replaceState(history.state,"",u);}catch(e){}}
+function tabPath(t){t=t||curTab();if(t==="jadval")return "/jadval/"+encodeURIComponent(lg);
+  if(t==="oyinlar"&&String(day)!=="0")return "/oyinlar/kun/"+encodeURIComponent(day);return t==="yangilik"?"/":"/"+t;}
+function parsePath(){let pa=location.pathname;if(BASE&&pa.indexOf(BASE)===0)pa=pa.slice(BASE.length);
+  const p=pa.split("/").filter(Boolean).map(dec);if(!p.length)return null;
+  if(p[0]==="oyin"&&p[1])return{tab:"oyinlar",oyin:p[1],mt:MTR[p[3]]};
+  if(p[0]==="xabar"&&p[1])return{tab:"yangilik",xabar:p[1]};
+  if(!TABN.includes(p[0]))return null;
+  const o={tab:p[0]};if(p[0]==="oyinlar"&&p[1]==="kun"&&p[2]!==undefined)o.kun=p[2];if(p[0]==="jadval"&&p[1])o.liga=p[1];return o;}
+function parseHash(){const p=(location.hash||"").slice(1).split("/").map(dec);
+  if(!TABN.includes(p[0]))return null;const o={tab:p[0]};for(let i=1;i+1<p.length;i+=2)o[p[i]]=p[i+1];return o;}
+const parseRoute=()=>parsePath()||parseHash();
+let _pend=null,_pendT=null;
+function applyRoute(){
+  const r=parseRoute();
+  if(!r){if(curM||curN)closeMatch();showTab("yangilik");return;}
+  if(r.kun!==undefined)day=r.kun==="live"?"live":(["-1","0","1"].includes(r.kun)?+r.kun:0);
+  if(r.liga!==undefined&&r.tab==="jadval"&&TABS.indexOf(r.liga)>=0){lg=r.liga;try{sessionStorage.setItem("lg",lg);}catch(e){}}
+  if(!r.oyin&&!r.xabar&&(curM||curN))closeMatch();
+  showTab(r.tab);
+  if(r.tab==="oyinlar"){try{renderMatches();}catch(e){}}
+  if(r.tab==="jadval"){try{loadTable(lg);}catch(e){}}
+  /* o'yin / xabar oynasi: ma'lumot yuklanguncha (20 soniyagacha) kutiladi */
+  const want=r.oyin?{m:r.oyin,t:r.mt}:r.xabar?{n:r.xabar}:null;
+  clearInterval(_pendT);_pend=want;if(!want)return;
+  let tries=0;_pendT=setInterval(()=>{tries++;
+    if(want.m&&(M||[]).find(x=>x.id===want.m)){clearInterval(_pendT);if(curM!==want.m)openMatch(want.m,want.t);}
+    else if(want.n&&(news||[]).find(x=>x.id===want.n)){clearInterval(_pendT);if(curN!==want.n)openNews(want.n);}
+    else if(tries>40){clearInterval(_pendT);setUrl(tabPath(r.tab));}},500);
+}
+addEventListener("hashchange",()=>{if(parseHash())applyRoute();});
 function showTab(t){if(!document.querySelector(".tab#"+t))t="yangilik";document.querySelectorAll(".tab").forEach(x=>x.hidden=x.id!==t);
-  document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("on",x.dataset.tab===t));window.scrollTo(0,0);}
-showTab((location.hash||"").slice(1).replace(/^$/,"yangilik"));
-try{news=JSON.parse(localStorage.getItem("news")||"null");if(news)renderNews();}catch(e){}
-renderMatches();loadAll();loadTable(lg);loadNews();
-setInterval(()=>{const hasLive=M.some(isLive);if(hasLive||!window.__t||Date.now()-window.__t>3e5){window.__t=Date.now();loadAll();}},30000);
+  document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("on",x.dataset.tab===t));window.scrollTo(0,0);if(t==="tv")loadTV();
+  /* yangilanganda shu menyuda qolish uchun: manzildagi # va sessiyada saqlanadi (tarix yozuvi qo'shilmaydi) */
+  try{sessionStorage.setItem("tab",t);}catch(e){}
+  if(!(curM||curN))setUrl(tabPath(t));}
+(function(){try{const l=sessionStorage.getItem("lg");if(l&&TABS.indexOf(l)>=0)lg=l;}catch(e){}
+  applyRoute();})();
+try{news=JSON.parse(localStorage.getItem("news3")||"null");if(news){newsSig=news.map(x=>x.id).join();renderNews();enrichImgs();}}catch(e){}
+if(!news||!news.some(x=>x.kind==="news")){news=SEED.concat((news||[]).filter(x=>x.kind!=="news"));newsSig="";renderNews();enrichImgs();}
+loadNews();renderMatches();setTimeout(()=>{loadAll();loadTable(lg);},0);
+setInterval(()=>{
+  if(document.hidden)return;
+  const lv=M.filter(isLive);
+  window.__lb=window.__lb||{};
+  if(lv.length){[...new Set(lv.map(m=>m.slug))].forEach(sl=>{if(window.__lb[sl])return;window.__lb[sl]=1;loadLeague(sl).finally(()=>{window.__lb[sl]=0;});});}
+  if(!window.__t||Date.now()-window.__t>12e4){window.__t=Date.now();loadAll();}
+},3000);
 setInterval(loadNews,6e5);
+let lastLiveN=-1;setInterval(()=>{const n=M.filter(isLive).length;if(lastLiveN!==-1&&n!==lastLiveN&&!curM&&$("#oyinlar")&&!$("#oyinlar").hidden)renderMatches();lastLiveN=n;},30000);
+</script>
+<script>
+/* Orqaga tugmasi: saytdan to'g'ridan-to'g'ri chiqib ketmasdan, tasdiq so'raydi */
+(function(){
+  try{if(!history.state)history.replaceState({root:1},"")}catch(e){}
+  const X=document.createElement("div");X.className="xo";X.hidden=true;
+  X.innerHTML='<div class="xb" role="dialog" aria-modal="true"><h3></h3><p></p><div class="r"><button class="y" data-x="stay"></button><button data-x="leave"></button></div></div>';
+  document.body.appendChild(X);
+  const q=x=>X.querySelector(x),ru=()=>typeof lang!=="undefined"&&lang==="ru";
+  function txt(){const r=ru();q("h3").textContent=r?"Закрыть страницу?":"Sahifani yopasizmi?";
+    q("p").textContent=r?"Вы действительно хотите покинуть сайт?":"Rostan ham saytdan chiqmoqchimisiz?";
+    q(".y").textContent=r?"Нет, остаться":"Yo'q, qolaman";q("[data-x=leave]").textContent=r?"Да, выйти":"Ha, chiqaman";}
+  const guard=()=>{try{history.pushState({g:1},"",location.href)}catch(e){}};
+  let armed=false;
+  const arm=()=>{if(armed)return;armed=true;guard();};
+  ["pointerdown","keydown","touchstart"].forEach(t=>addEventListener(t,arm,{once:true,passive:true}));
+  addEventListener("popstate",e=>{
+    if(!armed||!(e.state&&e.state.root))return;
+    const mo=document.getElementById("mo");
+    guard();
+    if(mo&&!mo.hidden&&typeof closeMatch==="function"){closeMatch();return;}
+    txt();X.hidden=false;q(".y").focus();
+  });
+  X.addEventListener("click",e=>{
+    const b=e.target.closest("[data-x]");
+    if(b&&b.dataset.x==="leave"){
+      X.hidden=true;
+      try{if(window.Telegram&&Telegram.WebApp&&Telegram.WebApp.initData){Telegram.WebApp.close();return;}}catch(_){}
+      history.go(-2);setTimeout(()=>{try{window.close()}catch(_){}},500);
+    }else if(b||e.target===X)X.hidden=true;
+  });
+  addEventListener("keydown",e=>{if(e.key==="Escape"&&!X.hidden)X.hidden=true;});
+})();
 </script>
 </body>
 </html>
