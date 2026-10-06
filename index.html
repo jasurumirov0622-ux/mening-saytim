@@ -265,6 +265,16 @@ body{background:radial-gradient(900px 420px at 10% -8%,rgba(47,208,138,.13),tran
 .tvplay{width:64px;height:64px;border-radius:50%;border:0;background:var(--ac);color:#052015;font-size:26px;cursor:pointer;transition:transform .2s,box-shadow .2s}
 .tvplay:hover{transform:scale(1.06);box-shadow:0 8px 24px rgba(47,208,138,.4)}
 .tvhero small{display:block;color:var(--mu)}
+.tvgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:14px 16px}
+.tvcard{display:flex;align-items:center;gap:14px;width:100%;padding:20px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(135deg,rgba(47,208,138,.12),transparent),var(--card);color:var(--tx);font:inherit;text-align:left;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s}
+.tvcard:hover{transform:translateY(-2px);border-color:var(--ac);box-shadow:0 8px 24px rgba(47,208,138,.18)}
+.tvcard .tvn{flex:none;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:var(--ac);color:#052015;font:900 24px system-ui}
+.tvcard b{display:block;font-size:16px}
+.tvcard small{display:block;margin-top:2px;color:var(--mu)}
+.tvcard small i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#ff3b3b;margin-right:6px}
+.tvcard.off{opacity:.5;cursor:default}
+.tvcard.off:hover{transform:none;border-color:var(--line);box-shadow:none}
+.tvcard.off .tvn{background:var(--line);color:var(--mu)}
 .tvb{display:inline-flex;align-items:center;gap:8px;margin-left:auto;padding:9px 14px 9px 12px;border-radius:99px;font-weight:800;font-size:13px;letter-spacing:.3px;color:#fff;background:linear-gradient(135deg,#e5484d,#ff7a45);box-shadow:0 6px 18px rgba(229,72,77,.35);transition:transform .2s,box-shadow .2s}
 .tvb svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .tvb .lv{width:8px;height:8px;border-radius:50%;background:#fff;animation:lvp 1.4s infinite}
@@ -1376,10 +1386,13 @@ async function loadTV(){
   try{
     const r=await fetch(WORKER+"/tv");if(!r.ok)throw 0;
     const d=await r.json();
-    if(!d.id){box.innerHTML=`<h2 class="pt">ONSPORTS TV</h2><div class="empty">Hozircha jonli efir yo'q. Birozdan keyin qaytib ko'ring.</div>`;return;}
-    TVC={};TVC[d.id]={k:d.k,h:"ONSPORTS TV",a:""};
-    box.innerHTML=`<h2 class="pt">ONSPORTS TV</h2><div class="tvhero"><button class="tvplay" data-ef="${esc(d.id)}" aria-label="Ko'rish">▶</button><div><b>Jonli efir</b><small>Ko'rish uchun bosing</small></div></div>`;
-    openEfir(d.id);
+    /* 4 ta kanal: ONSPORTS TV 1–4. Eski worker faqat bitta kanal (d.id) qaytarsa, u 1-o'ringa qo'yiladi */
+    const S=[1,2,3,4].map(n=>{const x=(d.slots||[]).find(z=>z.n===n)||(!d.slots&&n===1&&d.id?{n:1,id:d.id,k:d.k}:null);return x&&x.id?x:{n}});
+    if(!S.some(x=>x.id)){box.innerHTML=`<h2 class="pt">ONSPORTS TV</h2><div class="empty">Hozircha jonli efir yo'q. Birozdan keyin qaytib ko'ring.</div>`;return;}
+    TVC={};S.forEach(x=>{if(x.id)TVC[x.id]={k:x.k,h:"ONSPORTS TV "+x.n,a:""}});
+    box.innerHTML=`<h2 class="pt">ONSPORTS TV</h2><div class="tvgrid">`+S.map(x=>x.id
+      ?`<button class="tvcard" data-ef="${esc(x.id)}" aria-label="ONSPORTS TV ${x.n}"><span class="tvn">${x.n}</span><span><b>ONSPORTS TV ${x.n}</b><small><i></i>Jonli efir · ko'rish uchun bosing</small></span></button>`
+      :`<div class="tvcard off" aria-disabled="true"><span class="tvn">${x.n}</span><span><b>ONSPORTS TV ${x.n}</b><small>Hozircha efir yo'q</small></span></div>`).join("")+`</div>`;
   }catch(e){box.innerHTML=`<div class="empty">Efir hozir yuklanmadi. Birozdan keyin qayta urinib ko'ring.</div>`}
 }
 function openNews(id){
