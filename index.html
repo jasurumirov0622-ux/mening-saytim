@@ -1388,7 +1388,6 @@ async function loadTV(){
     const d=await r.json();
     /* 4 ta kanal: ONSPORTS TV 1–4. Eski worker faqat bitta kanal (d.id) qaytarsa, u 1-o'ringa qo'yiladi */
     const S=[1,2,3,4].map(n=>{const x=(d.slots||[]).find(z=>z.n===n)||(!d.slots&&n===1&&d.id?{n:1,id:d.id,k:d.k}:null);return x&&x.id?x:{n}});
-    if(!S.some(x=>x.id)){box.innerHTML=`<h2 class="pt">ONSPORTS TV</h2><div class="empty">Hozircha jonli efir yo'q. Birozdan keyin qaytib ko'ring.</div>`;return;}
     TVC={};S.forEach(x=>{if(x.id)TVC[x.id]={k:x.k,h:"ONSPORTS TV "+x.n,a:""}});
     box.innerHTML=`<h2 class="pt">ONSPORTS TV</h2><div class="tvgrid">`+S.map(x=>x.id
       ?`<button class="tvcard" data-ef="${esc(x.id)}" aria-label="ONSPORTS TV ${x.n}"><span class="tvn">${x.n}</span><span><b>ONSPORTS TV ${x.n}</b><small><i></i>Jonli efir · ko'rish uchun bosing</small></span></button>`
