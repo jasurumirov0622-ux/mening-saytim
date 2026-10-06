@@ -991,7 +991,7 @@ function tvHbStart(id){if(_hbOn||String(id).indexOf("t_")!==0)return;_hbOn=true;
 function tvHbStop(){if(!_hbOn)return;_hbOn=false;clearInterval(_hbT);tvPing(true);}
 addEventListener("pagehide",tvHbStop);
 /* TV efirdagi logotiplar: bot orqali joylashtiriladi; joylashuv Telegram efiri (onsports.py) bilan bir xil */
-function tvLogos(o,w,v,lg){
+function tvLogos(o,w,v,lg,slot){
   const els={};let cfg=[];
   const lay=()=>{
     const W=w.clientWidth,H=w.clientHeight;
@@ -1002,7 +1002,7 @@ function tvLogos(o,w,v,lg){
   const load=async()=>{
     try{
       const r=await fetch(WORKER+"/tvlogo");if(!r.ok)return;
-      cfg=(await r.json()).items||[];
+      cfg=((await r.json()).items||[]).filter(c=>!c.c||c.c===slot); /* c=0 — hammasida, c=1–4 — faqat shu kanalda */
       const ids=new Set(cfg.map(c=>String(c.id)));
       Object.keys(els).forEach(k=>{if(!ids.has(k)){els[k].remove();delete els[k];}});
       cfg.forEach(c=>{
@@ -1054,6 +1054,7 @@ function cdc(ti,hls){
 }
 async function openEfir(id){
   const e=EFIR[id]||TVC[id];if(!e)return;
+  const SLOT=e.s||0; /* qaysi ONSPORTS.UZ TV (1–4) — logotiplar kanalga qarab tanlanadi */
   closeEfir();
   const o=document.createElement("div");o.id="efp";
   o.style.cssText="position:fixed;inset:0;z-index:99999;background:#000;display:flex;flex-direction:column";
@@ -1096,7 +1097,7 @@ async function openEfir(id){
       hb.append(rb);
     }
     x.replaceWith(hb);hb.append(x);}
-    tvLogos(o,w,v,lg);
+    tvLogos(o,w,v,lg,SLOT);
     /* faqat jonli rejim: standart boshqaruv (vaqt, surish chizig'i, pauza) olib tashlanadi; faqat ovoz va to'liq ekran qoladi */
     v.removeAttribute("controls");v.controls=false;
     v.addEventListener("contextmenu",e=>e.preventDefault());
@@ -1388,7 +1389,7 @@ async function loadTV(){
     const d=await r.json();
     /* 4 ta kanal: ONSPORTS TV 1–4. Eski worker faqat bitta kanal (d.id) qaytarsa, u 1-o'ringa qo'yiladi */
     const S=[1,2,3,4].map(n=>{const x=(d.slots||[]).find(z=>z.n===n)||(!d.slots&&n===1&&d.id?{n:1,id:d.id,k:d.k}:null);return x&&x.id?x:{n}});
-    TVC={};S.forEach(x=>{if(x.id)TVC[x.id]={k:x.k,h:"ONSPORTS.UZ TV "+x.n,a:""}});
+    TVC={};S.forEach(x=>{if(x.id)TVC[x.id]={k:x.k,h:"ONSPORTS.UZ TV "+x.n,a:"",s:x.n}});
     box.innerHTML=`<h2 class="pt">ONSPORTS.UZ TELEKANALLAR</h2><div class="tvgrid">`+S.map(x=>x.id
       ?`<button class="tvcard" data-ef="${esc(x.id)}" aria-label="ONSPORTS.UZ TV ${x.n}"><span class="tvn">${x.n}</span><span><b>ONSPORTS.UZ TV ${x.n}</b><small><i></i>Jonli efir</small></span></button>`
       :`<div class="tvcard off" aria-disabled="true"><span class="tvn">${x.n}</span><span><b>ONSPORTS.UZ TV ${x.n}</b><small>Hozircha efir yo'q</small></span></div>`).join("")+`</div>`;
