@@ -1,8 +1,0 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "uz.onsports.twa",
-        "sha256_cert_fingerprints": ["D4:86:89:6A:9F:4E:28:FF:B3:7E:0E:EF:3D:88:39:13:A5:45:E1:FE:4E:C8:E1:06:CB:55:FC:E5:0E:17:B9:24"]
-      }
-    }]
