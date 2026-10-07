@@ -1411,6 +1411,14 @@ async function loadNews(){
     else $("#news").innerHTML=`<div class="empty">Yangiliklar hozir yuklanmadi. Birozdan keyin qayta urinib ko'ring.</div>`;
   }
 }
+/* o'yin ONSPORTS.UZ TV n ga ulangan: TV bo'limiga o'tib, shu kanalning jonli efirini ochadi (alohida efir emas) */
+async function goTV(n){
+  if(curM||curN)closeMatch();
+  showTab("tv");
+  try{await loadTV();}catch(e){}
+  const id=Object.keys(TVC).find(k=>TVC[k].s===n);
+  if(id)openEfir(id);
+}
 async function loadTV(){
   const box=$("#tvbox");
   try{
@@ -1480,7 +1488,7 @@ applyStatic();
 document.addEventListener("click",e=>{
   const efb=e.target.closest("[data-ef]");if(efb){e.preventDefault();const ei=efb.dataset.ef;
     /* o'yin ONSPORTS TV ga ulangan bo'lsa — to'g'ridan-to'g'ri TV bo'limiga, jonli rejimga o'tamiz */
-    if(EFIR[ei]&&EFIR[ei].tv){if(curM||curN)closeMatch();showTab("tv");return;}
+    if(EFIR[ei]&&EFIR[ei].tv){goTV(EFIR[ei].tv);return;}
     openEfir(ei);return;}
   const tgb=e.target.closest("[data-tvg]");if(tgb){tvg=tgb.dataset.tvg;renderTV();return;}
   const nfb=e.target.closest("[data-nf]");if(nfb){nf=nfb.dataset.nf;renderNews();return;}
