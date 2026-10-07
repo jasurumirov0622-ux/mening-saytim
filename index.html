@@ -10,6 +10,7 @@
 <link rel="apple-touch-icon" href="/favicon.png">
 <link rel="preconnect" href="https://bold-band-499d.jasurumirov0622.workers.dev" crossorigin>
 <meta name="theme-color" content="#0b1220">
+<link rel="manifest" href="/manifest.json">
 <title>ONSPORTS.UZ — futbol natijalari va yangiliklar</title>
 <meta name="description" content="ONSPORTS.UZ: jonli futbol natijalari, o'yinlar jadvali, liga turnir jadvallari va yangiliklar o'zbek tilida.">
 <script>try{if(localStorage.getItem("theme")==="light")document.documentElement.dataset.theme="light"}catch(e){}</script>
@@ -1613,6 +1614,10 @@ let lastLiveN=-1;setInterval(()=>{const n=M.filter(isLive).length;if(lastLiveN!=
   });
   addEventListener("keydown",e=>{if(e.key==="Escape"&&!X.hidden)X.hidden=true;});
 })();
+</script>
+<script>
+/* PWA / APK: service worker (network-first — sayt yangilanishlari darrov ko'rinadi) */
+if("serviceWorker" in navigator){window.addEventListener("load",function(){try{navigator.serviceWorker.register("/sw.js").catch(function(){})}catch(e){}})}
 </script>
 </body>
 </html>
