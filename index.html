@@ -441,6 +441,9 @@ const LN=s=>lang==="ru"?(NAMER[s]||NAME[s]||s):(NAME[s]||s);
 const WDS={uz:["Yak","Dush","Sesh","Chor","Pay","Juma","Shan"],ru:["Вс","Пн","Вт","Ср","Чт","Пт","Сб"]},MOS={uz:["yan","fev","mar","apr","may","iyn","iyl","avg","sen","okt","noy","dek"],ru:["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"]};
 let M=[],TB={},news=null,curN=null,nf="*",TVC={},TVL=null,tvg="*",day=0,cf="*",lg="eng.1",failed=0;
 const $=s=>document.querySelector(s);
+/* Oldingi tashrifdagi o'yinlar va jadvallar darrov ko'rsatiladi — «Yuklanmoqda» kutilmaydi; yangisi fonda keladi */
+try{const c=JSON.parse(localStorage.getItem("mcache1")||"null");if(c&&Date.now()-c.t<12e5&&Array.isArray(c.m)&&c.m.length)M=c.m;}catch(e){}
+try{const c=JSON.parse(localStorage.getItem("tcache1")||"null");if(c&&typeof c==="object")Object.keys(c).forEach(k=>{if(c[k]&&Array.isArray(c[k].rows)&&c[k].rows.length)TB[k]={t:0,rows:c[k].rows,sig:c[k].sig};});}catch(e){}
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const img=u=>u?`<img src="${esc(u)}" alt="" loading="lazy" onerror="this.remove()">`:"";
 const tm=u=>new Date(u).toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit",timeZone:TZ});
@@ -454,12 +457,18 @@ function ago(d){if(!d)return"";const m=Math.max(1,Math.round((Date.now()-new Dat
   return m<60?`${m} ${T("agoM")}`:m<1440?`${Math.round(m/60)} ${T("agoH")}`:`${Math.round(m/1440)} ${T("agoD")}`;}
 async function jget0(url,ms=12000){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
   try{const r=await fetch(url,{signal:c.signal});if(!r.ok)throw new Error(r.status);return await r.json();}finally{clearTimeout(t);}}
-/* ESPN to'g'ridan-to'g'ri ochilmasa (tarmoq, reklama bloklovchi) yoki 3.5 soniyada javob bermasa — shu so'rov worker orqali ham yuboriladi; qaysi biri birinchi kelsa, o'sha olinadi */
-async function jget(url,ms=12000){
+/* ESPN to'g'ridan-to'g'ri olinadi. Faqat u ochilmasa yoki PX_DELAY ichida javob bermasa — shu so'rov worker orqali ham yuboriladi (qaysi biri birinchi kelsa, o'sha olinadi). Oldin worker so'rovi har safar ortiqcha yuborilar edi */
+const PX_DELAY=2500;
+function jget(url,ms=12000){
   if(!/^https:\/\/site(\.web)?\.api\.espn\.com\//.test(url))return jget0(url,ms);
-  const px=()=>jget0(WORKER+"/?url="+encodeURIComponent(url),ms);
-  try{return await Promise.any([jget0(url,ms).catch(()=>px()),new Promise(r=>setTimeout(r,3500)).then(px)]);}
-  catch(e){throw (e&&e.errors&&e.errors[0])||e;}
+  return new Promise((res,rej)=>{
+    let done=false,px=false,dErr=null,pErr=null,t=null;
+    const ok=v=>{if(done)return;done=true;clearTimeout(t);res(v);};
+    const chk=()=>{if(!done&&dErr&&(!px||pErr)){done=true;clearTimeout(t);rej(pErr||dErr);}};
+    const goPx=()=>{if(done||px)return;px=true;jget0(WORKER+"/?url="+encodeURIComponent(url),ms).then(ok,e=>{pErr=e;chk();});};
+    t=setTimeout(goPx,PX_DELAY);
+    jget0(url,ms).then(ok,e=>{dErr=e;goPx();chk();});
+  });
 }
 const num=v=>{const n=parseInt(v);return isNaN(n)?null:n};
 
@@ -494,6 +503,11 @@ function parseEvents(d,slug){
   return out;
 }
 let lastErr="";
+const LIVE_MS=1000,TBL_MS=5000;   /* jonli o'yinlar har 1 soniyada, jadval har 5 soniyada yangilanadi (kerak bo'lsa shu yerda o'zgartiring) */
+let _svM=0;function saveM(){clearTimeout(_svM);_svM=setTimeout(()=>{try{localStorage.setItem("mcache1",JSON.stringify({t:Date.now(),m:M.map(x=>Object.assign({},x,{det:[]}))}));}catch(e){}},1500);}
+function saveT(){try{const o={};Object.keys(TB).forEach(k=>{if(TB[k].rows&&TB[k].rows.length)o[k]={rows:TB[k].rows,sig:TB[k].sig};});localStorage.setItem("tcache1",JSON.stringify(o));}catch(e){}}
+/* DOM faqat matn o'zgarganda yangilanadi (har soniyada qayta chizilib miltillamasligi uchun) */
+const PUT=sel=>{const el=$(sel);return {set innerHTML(h){if(el.__h===h)return;el.__h=h;el.innerHTML=h;}};};
 const ESPN_B=["https://site.api.espn.com/apis/site/v2/sports/soccer/","https://site.web.api.espn.com/apis/site/v2/sports/soccer/"];
 async function loadLeague(slug){
   let evs=null;
@@ -507,7 +521,7 @@ async function loadLeague(slug){
     if(ok.length){const seen=new Map();ok.forEach(r=>parseEvents(r.value,slug).forEach(m=>seen.set(m.id,m)));evs=[...seen.values()];}
   }
   if(evs!==null)evs.forEach(n=>{const o=SU[n.id];if(o&&Date.now()-o.t<120000&&((o.hs??0)+(o.as??0))>=((n.hs??0)+(n.as??0))&&(n.st==="TIMED"||n.st==="IN_PLAY")){n.hs=o.hs;n.as=o.as;n.st=o.st;if(o.clk)n.clk=o.clk;}});
-  if(evs===null)failed++;else M=M.filter(m=>m.slug!==slug&&!(m.sofa&&evs.length)).concat(evs);
+  if(evs===null){failed++;window.__lf=(window.__lf||0)+1;}else{window.__lf=0;M=M.filter(m=>m.slug!==slug&&!(m.sofa&&evs.length)).concat(evs);saveM();}
   renderMatches();if(curM)paintModal();
 }
 /* ESPN ishlamasa: o'yinlar Sofascore'dan (worker proxy orqali) olinadi */
@@ -579,17 +593,17 @@ function sortMs(ms){return ms.slice().sort((a,b)=>ord(a)-ord(b)||(a.utc<b.utc?-1
 function dayMs(d){if(d==="live")return M.filter(isLive);const k=new Date(Date.now()+d*864e5).toLocaleDateString("sv",{timeZone:TZ});return M.filter(m=>dkey(m.utc)===k);}
 
 function renderMatches(){
-  $("#days").innerHTML=[["-1",T("yest")],["0",T("today")],["1",T("tom")]].map(([k,v])=>`<button class="chip ${k==String(day)?"on":""}" data-d="${k}">${v}</button>`).join("")+`<button class="chip lvc ${day==="live"?"on":""}" data-d="live"><span class="ld"></span>${T("tabLive")}<i>${M.filter(isLive).length}</i></button>`;
+  PUT("#days").innerHTML=[["-1",T("yest")],["0",T("today")],["1",T("tom")]].map(([k,v])=>`<button class="chip ${k==String(day)?"on":""}" data-d="${k}">${v}</button>`).join("")+`<button class="chip lvc ${day==="live"?"on":""}" data-d="live"><span class="ld"></span>${T("tabLive")}<i>${M.filter(isLive).length}</i></button>`;
   const all=sortMs(dayMs(day)),comps=[...new Set(all.map(m=>m.comp))];
   if(cf!=="*"&&!comps.includes(cf))cf="*";
-  $("#comps").innerHTML=all.length?`<button class="chip ${cf==="*"?"on":""}" data-c="*">${T("all")}<i>${all.length}</i></button>`
+  PUT("#comps").innerHTML=all.length?`<button class="chip ${cf==="*"?"on":""}" data-c="*">${T("all")}<i>${all.length}</i></button>`
     +comps.map(c=>`<button class="chip ${c===cf?"on":""}" data-c="${esc(c)}">${esc(c)}<i>${all.filter(m=>m.comp===c).length}</i></button>`).join(""):"";
   if(!all.length){
-    if(!M.length&&failed<LEAGUES.length){$("#out").innerHTML=`<div class="empty">${T("loading")}</div>`;return;}
+    if(!M.length&&failed<LEAGUES.length){PUT("#out").innerHTML=`<div class="empty">${T("loading")}</div>`;return;}
     const nw=new Date().toISOString(),up=sortMs(M.filter(m=>m.utc>nw&&m.st==="TIMED")).sort((a,b)=>a.utc<b.utc?-1:1).slice(0,10);
-    $("#out").innerHTML=`<div class="empty">${day==="live"?T("nolive"):T("nogames")}</div>`+(up.length?`<h3 class="sec">${T("soon")}</h3>`+cards(up,true):"");
+    PUT("#out").innerHTML=`<div class="empty">${day==="live"?T("nolive"):T("nogames")}</div>`+(up.length?`<h3 class="sec">${T("soon")}</h3>`+cards(up,true):"");
     return;}
-  $("#out").innerHTML=cards(cf==="*"?all:all.filter(m=>m.comp===cf),false);
+  PUT("#out").innerHTML=cards(cf==="*"?all:all.filter(m=>m.comp===cf),false);
 }
 
 
@@ -1258,9 +1272,14 @@ async function sofaStand(slug){
     gd:(r.scoresFor??0)-(r.scoresAgainst??0),pts:r.points??0,gi,grp:gs.length>1?String(gr.name||""):""})));
   return rows;
 }
+const _tbBusy={};
 async function loadTable(slug){
-  const c=TB[slug];paintTabs();if(c&&Date.now()-c.t<6e5)return renderTable();
-  $("#tbl").innerHTML=`<div class="empty">${T("loading")}</div>`;
+  const c=TB[slug],has=!!(c&&c.rows&&c.rows.length);
+  paintTabs();
+  if(has)renderTable();                                   /* keshdagi jadval darrov ko'rsatiladi */
+  if(c&&Date.now()-c.t<TBL_MS)return;
+  if(!has)$("#tbl").innerHTML=`<div class="empty">${T("loading")}</div>`;
+  if(_tbBusy[slug])return;_tbBusy[slug]=1;
   let rows=[];
   try{
     const d=await jget(`${ESPN2}${slug}/standings`);
@@ -1272,8 +1291,15 @@ async function loadTable(slug){
     rows.sort((a,b)=>a.gi-b.gi||a.pos-b.pos);
   }catch(e){rows=[];}
   if(!rows.length){try{rows=await sofaStand(slug);}catch(e){rows=[];}}
-  TB[slug]=rows.length?{t:Date.now(),rows}:{t:Date.now()-5.5*6e4,rows:[]};
-  renderTable();
+  _tbBusy[slug]=0;
+  if(rows.length){
+    const sig=JSON.stringify(rows),same=has&&c.sig===sig;
+    TB[slug]={t:Date.now(),rows,sig};
+    if(!same){saveT();renderTable();}
+  }else{
+    TB[slug]={t:Date.now()-TBL_MS+3000,rows:has?c.rows:[],sig:has?c.sig:""};   /* xato: eski jadval saqlanadi, 3 soniyadan keyin qayta uriniladi */
+    if(!has)renderTable();
+  }
 }
 function renderTable(){
   paintTabs();
@@ -1531,13 +1557,19 @@ function showTab(t){if(!document.querySelector(".tab#"+t))t="yangilik";document.
 try{news=JSON.parse(localStorage.getItem("news3")||"null");if(news){newsSig=news.map(x=>x.id).join();renderNews();enrichImgs();}}catch(e){}
 if(!news||!news.some(x=>x.kind==="news")){news=SEED.concat((news||[]).filter(x=>x.kind!=="news"));newsSig="";renderNews();enrichImgs();}
 loadNews();renderMatches();setTimeout(()=>{loadAll();loadTable(lg);},0);
+let _tk=0,_sk=0;
 setInterval(()=>{
   if(document.hidden)return;
+  _tk++;
+  const el=$("#oyinlar"),onM=curM||(el&&!el.hidden);
+  if(!onM&&_tk%10)return;                                                              /* boshqa bo'limda — 10 soniyada bir marta */
+  if(window.__lf>0&&++_sk<Math.min(10,Math.pow(2,window.__lf)))return;_sk=0;            /* ESPN xato bersa vaqtincha sekinlashadi */
   const lv=M.filter(isLive);
   window.__lb=window.__lb||{};
   if(lv.length){[...new Set(lv.map(m=>m.slug))].forEach(sl=>{if(window.__lb[sl])return;window.__lb[sl]=1;loadLeague(sl).finally(()=>{window.__lb[sl]=0;});});}
-  if(!window.__t||Date.now()-window.__t>12e4){window.__t=Date.now();loadAll();}
-},3000);
+  if(!window.__t||Date.now()-window.__t>6e4){window.__t=Date.now();loadAll();}      /* qolgan ligalar — daqiqada bir marta */
+},LIVE_MS);
+setInterval(()=>{if(document.hidden)return;const el=$("#jadval");if(el&&!el.hidden)loadTable(lg);},TBL_MS);
 setInterval(loadNews,6e5);
 let lastLiveN=-1;setInterval(()=>{const n=M.filter(isLive).length;if(lastLiveN!==-1&&n!==lastLiveN&&!curM&&$("#oyinlar")&&!$("#oyinlar").hidden)renderMatches();lastLiveN=n;},30000);
 </script>
