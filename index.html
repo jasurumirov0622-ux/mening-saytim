@@ -2,6 +2,9 @@
 <html lang="uz">
 <head>
 <meta charset="utf-8">
+<script>/* APK: "Ha, chiqaman" dan keyin tarix 1 ta yozuvga tushadi, shunda window.close() ilovani yopadi */
+try{if(sessionStorage.getItem("onsx")){sessionStorage.removeItem("onsx");window.__exitTry=1;window.close();}}catch(e){}
+</script>
 <script>/* 404.html dan kelgan chiroyli havolani (onsports.uz/oyin/123) tiklaydi */
 (function(l){if(l.search[1]==='/'){var d=l.search.slice(1).split('&').map(function(x){return x.replace(/~and~/g,'&')}).join('?');history.replaceState(null,null,l.pathname.slice(0,-1)+d+l.hash)}}(window.location))
 </script>
@@ -1094,7 +1097,7 @@ async function openEfir(id){
     /* telefon: burish tugmasi — bosilsa ekran yonga buriladi, yana bosilsa tik holatga qaytadi */
     if(matchMedia("(pointer:coarse)").matches){
       const base=o.style.cssText;let rot=false,fsOwn=false;
-      const rb=document.createElement("button");rb.textContent="\u27F3";rb.setAttribute("aria-label","Ekranni burish");rb.style.cssText=bs;
+      const rb=document.createElement("button");rb.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block" aria-hidden="true"><rect x="8" y="10" width="8" height="12" rx="1.5"/><path d="M5 8a8 8 0 0 1 14 0"/><path d="M19 4v4h-4"/></svg>';rb.setAttribute("aria-label","Ekranni burish");rb.style.cssText=bs;
       const fit=()=>{if(!o.isConnected){removeEventListener("resize",fit);removeEventListener("orientationchange",fit);return;}
         const W=innerWidth,H=innerHeight;
         if(rot&&H>W)o.style.cssText=base+";inset:auto;top:0;left:100%;width:"+H+"px;height:"+W+"px;transform-origin:0 0;transform:rotate(90deg)";   /* qulf ishlamasa (iPhone) oynani o'zimiz yonga aylantiramiz */
@@ -1114,7 +1117,7 @@ async function openEfir(id){
       addEventListener("resize",fit);addEventListener("orientationchange",fit);
       hb.append(rb);
     }
-    x.replaceWith(hb);hb.append(x);}
+    o._hb=hb;}
     tvLogos(o,w,v,lg,SLOT);
     /* faqat jonli rejim: standart boshqaruv (vaqt, surish chizig'i, pauza) olib tashlanadi; faqat ovoz va to'liq ekran qoladi */
     v.removeAttribute("controls");v.controls=false;
@@ -1125,17 +1128,21 @@ async function openEfir(id){
     const rt=document.createElement("div"),mb=document.createElement("button"),vr=document.createElement("input");
     rt.style.cssText="display:flex;align-items:center;gap:10px;pointer-events:auto";
     mb.style.cssText="background:none;border:0;color:#fff;font-size:22px;line-height:1;cursor:pointer;padding:2px 4px";mb.setAttribute("aria-label","Ovoz");
-    vr.type="range";vr.min=0;vr.max=1;vr.step=.05;vr.style.cssText="width:90px;accent-color:#2fd08a;cursor:pointer";
+    vr.type="range";vr.min=0;vr.max=1;vr.step=.05;vr.style.cssText="width:70px;accent-color:#2fd08a;cursor:pointer";
     const sync=()=>{mb.textContent=(v.muted||v.volume===0)?"\uD83D\uDD07":"\uD83D\uDD0A";vr.value=v.muted?0:v.volume;};
     mb.onclick=()=>{v.muted=!v.muted;if(!v.muted&&v.volume===0)v.volume=.7;};
     vr.oninput=()=>{v.volume=+vr.value;v.muted=+vr.value===0;};
     v.addEventListener("volumechange",sync);sync();
-    rt.append(mb,vr);cb.append(bd,rt);w.appendChild(cb);
+    rt.append(mb,vr);
+    const lf=document.createElement("div");lf.style.cssText="display:flex;align-items:center;gap:10px;pointer-events:none";
+    const hbx=o._hb;lf.append(bd);
+    if(hbx){hbx.style.cssText="display:flex;gap:6px;pointer-events:auto";hbx.querySelectorAll("button").forEach(b=>{b.style.padding="4px 9px";b.style.fontSize="15px";});lf.append(hbx);}
+    cb.append(lf,rt);w.appendChild(cb);
     /* ekranga bir bosilsa belgilar (sarlavha, ⛶, ×, JONLI, ovoz) yashirinadi, yana bosilsa qaytadi */
     {const hd=o.firstElementChild;let hid=false;
-    w.addEventListener("click",ev=>{if(rt.contains(ev.target))return;hid=!hid;const op=hid?"0":"1";
+    w.addEventListener("click",ev=>{if(rt.contains(ev.target)||(hbx&&hbx.contains(ev.target)))return;hid=!hid;const op=hid?"0":"1";
       cb.style.transition=hd.style.transition="opacity .25s";cb.style.opacity=op;hd.style.opacity=op;
-      hd.style.pointerEvents=hid?"none":"";rt.style.pointerEvents=hid?"none":"auto";});}
+      hd.style.pointerEvents=hid?"none":"";rt.style.pointerEvents=hid?"none":"auto";if(hbx)hbx.style.pointerEvents=hid?"none":"auto";});}
     /* yozib olishdan himoya (to'liq to'sib bo'lmaydi, lekin to'siqlar): PiP/yuklab olish/translyatsiya o'chiriladi, PrintScreen bosilsa video yashiriladi, ustida siljuvchi ID belgisi turadi (yozib tarqatilsa kimdan chiqqani ma'lum bo'ladi) */
     {v.disablePictureInPicture=true;v.disableRemotePlayback=true;v.setAttribute("controlsList","nofullscreen nodownload noremoteplayback");
     const shield=()=>{v.style.visibility="hidden";try{navigator.clipboard.writeText(" ")}catch(_){}setTimeout(()=>{v.style.visibility="";},1500);};
@@ -1597,8 +1604,12 @@ let lastLiveN=-1;setInterval(()=>{const n=M.filter(isLive).length;if(lastLiveN!=
   let armed=false;
   const arm=()=>{if(armed)return;armed=true;guard();};
   ["pointerdown","keydown","touchstart"].forEach(t=>addEventListener(t,arm,{once:true,passive:true}));
+  let leaving=false;
+  if(window.__exitTry){setTimeout(()=>{const t=document.createElement("div");t.textContent=ru()?"Для выхода нажмите «Назад» ещё раз":"Chiqish uchun «Orqaga» tugmasini yana bir marta bosing";
+    t.style.cssText="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#131c30;color:#eef2fa;border:1px solid #22304d;border-radius:12px;padding:10px 16px;font:600 14px system-ui;z-index:100000;text-align:center;max-width:90%";
+    document.body.appendChild(t);setTimeout(()=>t.remove(),3500);},700);}
   addEventListener("popstate",e=>{
-    if(!armed||!(e.state&&e.state.root))return;
+    if(leaving||!armed||!(e.state&&e.state.root))return;
     const mo=document.getElementById("mo");
     guard();
     if(mo&&!mo.hidden&&typeof closeMatch==="function"){closeMatch();return;}
@@ -1609,6 +1620,14 @@ let lastLiveN=-1;setInterval(()=>{const n=M.filter(isLive).length;if(lastLiveN!=
     if(b&&b.dataset.x==="leave"){
       X.hidden=true;
       try{if(window.Telegram&&Telegram.WebApp&&Telegram.WebApp.initData){Telegram.WebApp.close();return;}}catch(_){}
+      const sa=matchMedia("(display-mode: standalone)").matches||navigator.standalone||document.referrer.indexOf("android-app://")===0;
+      if(sa){   /* APK/PWA: tarixni 1 ta yozuvga tushirib, oynani yopamiz */
+        leaving=true;let done=false;
+        try{sessionStorage.setItem("onsx","1")}catch(_){}
+        const go=()=>{if(done)return;done=true;location.replace("/")};
+        addEventListener("popstate",go,{once:true});setTimeout(go,500);
+        history.go(-1);return;
+      }
       history.go(-2);setTimeout(()=>{try{window.close()}catch(_){}},500);
     }else if(b||e.target===X)X.hidden=true;
   });
