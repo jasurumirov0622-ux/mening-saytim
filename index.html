@@ -392,9 +392,31 @@ html.app .c.live small{color:var(--onp)}
 html.app .m.lv::before{display:none}
 html.app .nhero{border-radius:24px}
 html.app .tgcta b{color:var(--ac)}
+html.app #sp{position:fixed;inset:0;z-index:100001;background:#c6ff3d;color:#0a0a0a;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .4s}
+html.app #sp.out{opacity:0;pointer-events:none}
+html.app #sp .rg{position:absolute;left:50%;top:38%;border:1.5px solid #0a0a0a;border-radius:50%;transform:translate(-50%,-50%);opacity:.3;animation:spr 2.4s ease-out infinite}
+html.app #sp .rg:nth-child(2){animation-delay:.6s}
+html.app #sp .rg:nth-child(3){animation-delay:1.2s}
+html.app #sp img.lg{position:absolute;left:50%;top:38%;width:170px;height:170px;transform:translate(-50%,-50%)}
+html.app #sp .tt{position:absolute;left:0;right:0;top:calc(38% + 110px);text-align:center}
+html.app #sp .tt b{display:block;font-size:22px;font-weight:800;letter-spacing:3px}
+html.app #sp .tt span{display:block;margin-top:8px;font-size:14px;opacity:.75}
+html.app #sp .dt{position:absolute;bottom:max(36px,env(safe-area-inset-bottom));left:0;right:0;display:flex;gap:8px;justify-content:center}
+html.app #sp .dt i{width:8px;height:8px;border-radius:50%;background:#0a0a0a;opacity:.25;animation:spd 1.2s infinite}
+html.app #sp .dt i:nth-child(2){animation-delay:.2s}
+html.app #sp .dt i:nth-child(3){animation-delay:.4s}
+@keyframes spr{0%{width:150px;height:150px;opacity:.45}100%{width:340px;height:340px;opacity:0}}
+@keyframes spd{0%,100%{opacity:.25}50%{opacity:1}}
+@media(prefers-reduced-motion:reduce){html.app #sp .rg,html.app #sp .dt i{animation:none}}
 </style>
 </head>
 <body>
+<script>/* ilova ochilish ekrani (har sessiyada 1 marta) */
+try{if(document.documentElement.classList.contains("app")&&!sessionStorage.getItem("onssp")){sessionStorage.setItem("onssp","1");
+document.body.insertAdjacentHTML("afterbegin",'<div id="sp"><i class="rg" style="width:150px;height:150px"></i><i class="rg" style="width:150px;height:150px"></i><i class="rg" style="width:150px;height:150px"></i><img class="lg" src="/icon-512.png" alt=""><div class="tt"><b>ONSPORTS.UZ</b><span>Natijalar · TV · Yangiliklar</span></div><div class="dt"><i></i><i></i><i></i></div></div>');
+var _t0=Date.now(),_h=function(){var e=document.getElementById("sp");if(!e)return;e.classList.add("out");setTimeout(function(){e.remove()},500)};
+addEventListener("load",function(){setTimeout(_h,Math.max(0,1100-(Date.now()-_t0)))});setTimeout(_h,5000)}}catch(e){}
+</script>
 <header><div class="bar">
   <a class="logo" href="/"><span>ONSPORTS</span>.UZ</a>
   <nav><a href="#yangilik" data-tab="yangilik" class="on"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg><span data-i="home">Asosiy</span></a><a href="#oyinlar" data-tab="oyinlar"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5l3.6 2.6-1.4 4.2H9.8L8.4 10.1z"/></svg><span data-i="games">O'yinlar</span></a><a href="#jadval" data-tab="jadval"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 10h16M10 10v10"/></svg><span data-i="tab">Jadval</span></a><a class="tgb" href="https://t.me/onsportsuz" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 4L3 11l6 2.2L11 20l3-4.5 4.5 3.3z"/><path d="M9 13.2L21 4"/></svg><span>Telegram</span></a></nav>
