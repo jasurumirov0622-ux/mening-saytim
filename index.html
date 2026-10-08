@@ -354,7 +354,9 @@ html.app{--bg:#0a0a0a;--card:#18181b;--line:#27272a;--tx:#f4f4f5;--mu:#a1a1aa;--
 html.app[data-theme="light"]{--bg:#f4f4f5;--card:#ffffff;--line:#e4e4e7;--tx:#0a0a0a;--mu:#71717a;--ac:#4d8a00;--live:#e5383b}
 html.app body{padding-bottom:96px}
 html.app footer{display:none}
-html.app header{background:var(--bg)}
+html.app header{background:var(--bg)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;filter:none!important;transform:none!important}
+html.app .bar nav a:not(.on):hover{background:none;color:var(--mu);transform:none;box-shadow:none}
+html.app .bar nav a.on:hover{background:var(--pill);color:var(--onp);transform:none;box-shadow:none}
 html.app .bar{width:100%;max-width:1068px;margin:0 auto;height:auto;flex-wrap:nowrap;padding:10px 14px 4px;border:0;border-radius:0;background:none}
 html.app .logo{font-size:18px;font-weight:700;letter-spacing:-.2px;text-transform:lowercase}
 html.app .logo::before{content:"\25CF";color:var(--ac);margin-right:7px;font-size:13px}
