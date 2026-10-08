@@ -397,10 +397,13 @@ html.app #sp.out{opacity:0;pointer-events:none}
 html.app #sp .rg{position:absolute;left:50%;top:38%;border:1.5px solid #0a0a0a;border-radius:50%;transform:translate(-50%,-50%);opacity:.3;animation:spr 2.4s ease-out infinite}
 html.app #sp .rg:nth-child(2){animation-delay:.6s}
 html.app #sp .rg:nth-child(3){animation-delay:1.2s}
-html.app #sp img.lg{position:absolute;left:50%;top:38%;width:170px;height:170px;transform:translate(-50%,-50%)}
-html.app #sp .tt{position:absolute;left:0;right:0;top:calc(38% + 110px);text-align:center}
+html.app #sp img.lg{position:absolute;left:50%;top:38%;width:132px;height:132px;transform:translate(-50%,-50%)}
+html.app #sp .tt{position:absolute;left:0;right:0;top:calc(38% + 108px);text-align:center}
 html.app #sp .tt b{display:block;font-size:22px;font-weight:800;letter-spacing:3px}
 html.app #sp .tt span{display:block;margin-top:8px;font-size:14px;opacity:.75}
+html.app #sp .pb{display:block;width:130px;height:4px;margin:18px auto 0;border-radius:99px;background:rgba(10,10,10,.15);overflow:hidden}
+html.app #sp .pb u{display:block;height:100%;width:0;background:#0a0a0a;border-radius:99px;animation:spb 5s linear forwards}
+@keyframes spb{to{width:100%}}
 html.app #sp .dt{position:absolute;bottom:max(36px,env(safe-area-inset-bottom));left:0;right:0;display:flex;gap:8px;justify-content:center}
 html.app #sp .dt i{width:8px;height:8px;border-radius:50%;background:#0a0a0a;opacity:.25;animation:spd 1.2s infinite}
 html.app #sp .dt i:nth-child(2){animation-delay:.2s}
@@ -413,9 +416,9 @@ html.app #sp .dt i:nth-child(3){animation-delay:.4s}
 <body>
 <script>/* ilova ochilish ekrani (har sessiyada 1 marta) */
 try{if(document.documentElement.classList.contains("app")&&!sessionStorage.getItem("onssp")){sessionStorage.setItem("onssp","1");
-document.body.insertAdjacentHTML("afterbegin",'<div id="sp"><i class="rg" style="width:150px;height:150px"></i><i class="rg" style="width:150px;height:150px"></i><i class="rg" style="width:150px;height:150px"></i><img class="lg" src="/icon-512.png" alt=""><div class="tt"><b>ONSPORTS.UZ</b><span>Natijalar · TV · Yangiliklar</span></div><div class="dt"><i></i><i></i><i></i></div></div>');
+document.body.insertAdjacentHTML("afterbegin",'<div id="sp"><i class="rg" style="width:150px;height:150px"></i><i class="rg" style="width:150px;height:150px"></i><i class="rg" style="width:150px;height:150px"></i><img class="lg" src="/splash-logo.png" alt=""><div class="tt"><b>ONSPORTS.UZ</b><span>Natijalar · TV · Yangiliklar</span><em class="pb"><u></u></em></div><div class="dt"><i></i><i></i><i></i></div></div>');
 var _t0=Date.now(),_h=function(){var e=document.getElementById("sp");if(!e)return;e.classList.add("out");setTimeout(function(){e.remove()},500)};
-addEventListener("load",function(){setTimeout(_h,Math.max(0,1100-(Date.now()-_t0)))});setTimeout(_h,5000)}}catch(e){}
+addEventListener("load",function(){setTimeout(_h,Math.max(0,5000-(Date.now()-_t0)))});setTimeout(_h,8000)}}catch(e){}
 </script>
 <header><div class="bar">
   <a class="logo" href="/"><span>ONSPORTS</span>.UZ</a>
