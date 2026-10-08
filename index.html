@@ -20,6 +20,8 @@ try{if(sessionStorage.getItem("onsx")){sessionStorage.removeItem("onsx");window.
 <script>/* ilova rejimi: APK, o'rnatilgan PWA yoki ?app=1 (sinash uchun) */
 try{var A=matchMedia("(display-mode: standalone)").matches||navigator.standalone||document.referrer.indexOf("android-app://")===0||/[?&]app=1/.test(location.search)||sessionStorage.getItem("onsapp")==="1";
 if(A){sessionStorage.setItem("onsapp","1");document.documentElement.classList.add("app")}}catch(e){}</script>
+<script>/* Telegram mini app: menyu tugmasi (#tgWebApp...) orqali ochilganda yoki shu sessiyada avval ochilgan bo'lsa. Alohida dizayn (html.tg), TV bo'limi yo'q */
+try{if(/tgWebApp/.test(location.hash)||sessionStorage.getItem("onstg")==="1"){sessionStorage.setItem("onstg","1");window.__TG=1;var _d=document.documentElement;_d.classList.add("tg");_d.classList.remove("app");sessionStorage.removeItem("onsapp")}}catch(e){}</script>
 <style>
 :root{--bg:#0b1220;--card:#131c30;--line:#22304d;--tx:#eef2fa;--mu:#8a98b5;--ac:#2fd08a;--live:#ff5a5f}
 *{box-sizing:border-box}
@@ -424,7 +426,14 @@ header{top:var(--adh,0px)!important}
 @media(prefers-reduced-motion:reduce){.adtop .ob *{animation:none!important}.adtop .ob .ob-sl{transform:none!important}}
 </style>
 <script>/* Telegram ichida (menyu tugmasi orqali) ochilganda: Telegram skriptini yuklab, oynani to'liq balandlikka yoyadi. Oddiy brauzerda hech narsa yuklanmaydi */
-if(/tgWebApp/.test(location.hash)){document.write('<script src="https://telegram.org/js/telegram-web-app.js"><\/script>');addEventListener("DOMContentLoaded",function(){try{var w=window.Telegram&&Telegram.WebApp;if(w){w.ready();w.expand();}}catch(e){}});}
+if(window.__TG||/tgWebApp/.test(location.hash)){document.write('<script src="https://telegram.org/js/telegram-web-app.js"><\/script>');addEventListener("DOMContentLoaded",function(){try{var w=window.Telegram&&Telegram.WebApp;if(w){w.ready();w.expand();
+var r=document.documentElement;
+function th(){try{var p=w.themeParams||{},s=r.style,m={"--bg":p.secondary_bg_color,"--card":p.section_bg_color||p.bg_color,"--tx":p.text_color,"--mu":p.hint_color,"--ac":p.button_color||p.link_color,"--onp":p.button_text_color,"--line":p.section_separator_color};
+if(w.colorScheme==="light")r.dataset.theme="light";else r.removeAttribute("data-theme");
+for(var k in m){if(m[k])s.setProperty(k,m[k]);else s.removeProperty(k);}
+try{w.setHeaderColor("secondary_bg_color");w.setBackgroundColor("secondary_bg_color");}catch(e){}
+}catch(e){}}
+th();w.onEvent("themeChanged",th);}}catch(e){}});}
 </script>
 
 <style id="appskin">
@@ -490,6 +499,61 @@ html.app #sp .dt i:nth-child(3){animation-delay:.4s}
 @keyframes spd{0%,100%{opacity:.25}50%{opacity:1}}
 @media(prefers-reduced-motion:reduce){html.app #sp .rg,html.app #sp .dt i{animation:none}}
 </style>
+<style id="tgskin">
+/* TELEGRAM MINI APP DIZAYNI — sayt (to'q ko'k/yashil) va APK (qora/lime, suzuvchi pastki menyu) dan butunlay boshqacha:
+   Telegram mavzu ranglari, tepada segment-menyu, tekis guruhlangan ro'yxatlar, pastdan chiqadigan o'yin oynasi */
+html.tg{--bg:#181818;--card:#212121;--line:#303032;--tx:#fff;--mu:#8d8e93;--ac:#2aabee;--onp:#fff;--live:#ff453a;--fill:color-mix(in srgb,var(--tx) 9%,transparent)}
+html.tg[data-theme="light"]{--bg:#efeff4;--card:#fff;--line:#e3e3e8;--tx:#000;--mu:#8a8a8e;--ac:#2481cc;--onp:#fff;--live:#ff3b30}
+html.tg body{padding-bottom:max(18px,env(safe-area-inset-bottom));font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Roboto","Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+html.tg footer,html.tg .tgcta,html.tg .tvb,html.tg #tv,html.tg .bar nav a.tgb,html.tg #tb{display:none!important}
+html.tg header{position:sticky;top:0;z-index:8;background:var(--bg)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border:0!important;padding:0}
+html.tg .bar{width:100%;max-width:760px;margin:0 auto;padding:10px 14px 8px;height:auto;border:0;border-radius:0;background:none;flex-wrap:wrap;gap:8px}
+html.tg .logo{font-size:17px;font-weight:800;letter-spacing:.3px;color:var(--ac)}
+html.tg .logo span{color:var(--tx)}
+html.tg .tools{margin-left:auto;padding:0;border:0;gap:6px;background:none}
+html.tg .ib{width:34px;height:34px;border:0;border-radius:50%;background:var(--fill)}
+html.tg .ib.lb{width:auto;padding:0 12px;border-radius:99px}
+html.tg #sq{width:100px}
+html.tg .bar nav{order:3;flex:0 0 100%;width:100%;margin:0;padding:2px;gap:0;justify-content:stretch;background:var(--fill);border:0;border-radius:10px;position:static}
+html.tg .bar nav a{flex:1;justify-content:center;padding:7px 4px;border-radius:8px;background:none!important;box-shadow:none!important;transform:none!important;color:var(--mu)!important;font-size:13px;font-weight:600;transition:none}
+html.tg .bar nav a svg{display:none}
+html.tg .bar nav a.on{background:var(--card)!important;color:var(--tx)!important;box-shadow:0 1px 4px rgba(0,0,0,.22)!important}
+html.tg .page{max-width:760px;padding:2px 0 20px}
+html.tg .pt{margin:10px 16px 2px;font-size:22px;font-weight:700;letter-spacing:-.2px}
+html.tg .pt small{display:none}
+html.tg .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:8px 14px}
+html.tg .chips::-webkit-scrollbar{display:none}
+html.tg .chip{flex:none;border:0;background:var(--fill);color:var(--tx);padding:6px 13px;border-radius:8px;font-size:13px;font-weight:500}
+html.tg .chip.on{background:var(--ac);color:var(--onp);font-weight:600}
+html.tg .chip.lvc{color:var(--live)}
+html.tg .chip.lvc.on{background:var(--live);color:#fff}
+html.tg .lg,html.tg .card{border:0;border-radius:12px;background:var(--card);margin:8px 14px}
+html.tg .lgh{background:none;padding:11px 14px 6px;font-size:13px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.3px}
+html.tg .lgh+.m{border-top:0}
+html.tg .m{padding:11px 14px;border-top:1px solid var(--line);gap:6px;grid-template-columns:1fr 64px 1fr}
+html.tg .m.lv::before{display:none}
+html.tg .c{background:none;border:0;border-radius:0;padding:2px 0;font-size:18px;font-weight:700}
+html.tg .c.live{background:none;color:var(--live)}
+html.tg .c.live small{color:var(--live)}
+html.tg .nwrap{display:block;padding:6px 14px 0}
+html.tg .nhero{border-radius:12px;min-height:230px;margin-bottom:10px}
+html.tg .nside,html.tg .ngrid{display:block;margin:0 14px;padding:0;background:var(--card);border-radius:12px;overflow:hidden}
+html.tg .nwrap .nside{margin:0}
+html.tg .ncard{flex-direction:row;align-items:center;gap:0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:none;box-shadow:none!important;transform:none!important}
+html.tg .ncard:last-child{border-bottom:0}
+html.tg .ncard .nimg{width:88px;aspect-ratio:1;flex:none;margin:10px 0 10px 12px;border-radius:10px;overflow:hidden}
+html.tg .ncard .nbody{padding:10px 12px;justify-content:center;min-width:0}
+html.tg .ncard .nbody h3{font-size:14.5px;font-weight:600;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+html.tg .more{margin:18px 16px 8px;font-size:12px;letter-spacing:.5px}
+html.tg .adtop{position:static;width:calc(100% - 28px);margin:4px auto 0}
+html.tg .adtop .ob{border-radius:12px}
+html.tg .mo{align-items:flex-start;padding:0;background:rgba(0,0,0,.45);backdrop-filter:none}
+html.tg .mb{margin:auto 0 0;max-width:none;border:0;border-radius:16px 16px 0 0;padding:16px 14px max(20px,env(safe-area-inset-bottom))}
+html.tg .mt{background:var(--fill);border:0;border-radius:10px;padding:2px;gap:0}
+html.tg .mt button{color:var(--mu);border-radius:8px;font-weight:600}
+html.tg .mt button.on{background:var(--card);color:var(--tx);box-shadow:0 1px 4px rgba(0,0,0,.22)}
+html.tg .efbtn{border-radius:10px}
+</style>
 </head>
 <body>
 <script>/* ilova ochilish ekrani (har sessiyada 1 marta) */
@@ -523,6 +587,7 @@ function adIc(k,sz,bg,cls){return '<span class="ob-ic ob-'+(cls||"")+'" style="w
 function adChip(k,c){return '<a class="ob-ch '+(c||"")+'" href="'+AD_LINK[k]+'" target="_blank" rel="noopener">'+adIc(k,26)+'<span><b>'+AD_NAME[k]+'</b><s>'+AD_HANDLE[k]+'</s></span></a>';}
 function adCta(href,ic,txt,st){return '<a class="ob-cta" href="'+href+'" target="_blank" rel="noopener" style="'+(st||"")+'">'+(ic||"")+txt+'</a>';}
 function adSlide(bg,ac,bd,hl,em,sb,rw,vis){return '<div class="ob-sl" style="--ac:'+ac+'"><div class="ob-bg" style="background:'+bg+'"></div><div class="ob-bd"><i>'+AD_ICON.ok+'</i>'+bd+'</div><div class="ob-hl">'+hl+' <em>'+em+'</em></div><div class="ob-sb">'+sb+'</div><div class="ob-rw">'+rw+'</div><div class="ob-vis">'+vis+'</div></div>';}
+function adSl(){var s=adSlides();return window.__TG?s.slice(0,-1):s}
 function adSlides(){
  var G='<span class="ob-bg" style="position:absolute;border-radius:50%;pointer-events:none;';
  return [
@@ -574,7 +639,7 @@ function adSticky(b){
   if(!sm&&y>140){sm=true;b.classList.add("sm");}else if(sm&&y<40){sm=false;b.classList.remove("sm");}},{passive:true});
 }
 function adCarousel(b){
- var h='<div class="ob">'+adSlides().join("")+'<div class="ob-dots">'+adSlides().map(function(){return "<i></i>";}).join("")+'</div><div class="ob-pg"></div></div>';
+ var h='<div class="ob">'+adSl().join("")+'<div class="ob-dots">'+adSl().map(function(){return "<i></i>";}).join("")+'</div><div class="ob-pg"></div></div>';
  b.innerHTML=h;b.hidden=false;adSticky(b);
  var el=b.querySelector(".ob"),sl=el.querySelectorAll(".ob-sl"),dots=el.querySelectorAll(".ob-dots i"),bar=el.querySelector(".ob-pg"),n=-1,tm=null;
  el.style.setProperty("--adms",AD_MS+"ms");
@@ -954,7 +1019,7 @@ function paintModal(){
   if(!up){tabs.push(["st",T("stt")],["ev",T("tabEv")]);}
   else tabs.push(["h2h",T("tabH2")],["fm",T("tabFm")]);
   const cur=tabs.some(t=>t[0]===mTab)?mTab:tabs[0][0];
-  if(EFIR[m.id]&&m.st!=="FINISHED")h+=`<a class="efbtn" href="#" data-ef="${esc(m.id)}"><span class="ld"></span>${T("efwatch")}</a>`;
+  if(window.__TG&&EFIR[m.id]&&EFIR[m.id].tv){}else if(EFIR[m.id]&&m.st!=="FINISHED")h+=`<a class="efbtn" href="#" data-ef="${esc(m.id)}"><span class="ld"></span>${T("efwatch")}</a>`;
   else if(isLive(m))h+=`<a class="efbtn" href="${esc(efUrl(m))}" target="_blank" rel="noopener noreferrer"><span class="ld"></span>${T("efwatch")}</a>`;
   h+=`<div class="mt" role="tablist">${tabs.map(t=>`<button role="tab" data-mt="${t[0]}" class="${t[0]===cur?"on":""}">${esc(t[1])}</button>`).join("")}</div><div class="mp">`;
   if(cur==="ev"){
@@ -1664,6 +1729,7 @@ async function loadNews(){
 }
 /* o'yin ONSPORTS.UZ TV n ga ulangan: TV bo'limiga o'tib, shu kanalning jonli efirini ochadi (alohida efir emas) */
 async function goTV(n){
+  if(window.__TG)return;
   if(curM||curN)closeMatch();
   showTab("tv");
   try{await loadTV();}catch(e){}
@@ -1671,6 +1737,7 @@ async function goTV(n){
   if(id)openEfir(id);
 }
 async function loadTV(){
+  if(window.__TG)return;
   const box=$("#tvbox");
   try{
     const r=await fetch(WORKER+"/tv");if(!r.ok)throw 0;
@@ -1739,7 +1806,7 @@ applyStatic();
 document.addEventListener("click",e=>{
   const efb=e.target.closest("[data-ef]");if(efb){e.preventDefault();const ei=efb.dataset.ef;
     /* o'yin ONSPORTS TV ga ulangan bo'lsa — to'g'ridan-to'g'ri TV bo'limiga, jonli rejimga o'tamiz */
-    if(EFIR[ei]&&EFIR[ei].tv){goTV(EFIR[ei].tv);return;}
+    if(EFIR[ei]&&EFIR[ei].tv){if(!window.__TG)goTV(EFIR[ei].tv);return;}
     openEfir(ei);return;}
   const tgb=e.target.closest("[data-tvg]");if(tgb){tvg=tgb.dataset.tvg;renderTV();return;}
   const nfb=e.target.closest("[data-nf]");if(nfb){nf=nfb.dataset.nf;renderNews();return;}
@@ -1765,7 +1832,7 @@ document.addEventListener("keydown",e=>{
 });
 /* HAVOLALAR (onsports.uz/...): har bir sahifa/o'yin/xabar/jadval o'z manziliga ega.
    /  /oyinlar  /oyinlar/kun/1  /oyin/401234  /xabar/ab12cd  /jadval/esp.1  /tv      (eski #oyinlar/... havolalar ham ishlaydi) */
-const TABN=["yangilik","oyinlar","jadval","tv"];
+const TABN=window.__TG?["yangilik","oyinlar","jadval"]:["yangilik","oyinlar","jadval","tv"];
 /* o'qiladigan havola: nomni lotinchaga o'giramiz (arsenal-chelsi, kiril ham) */
 const CYR={"а":"a","б":"b","в":"v","г":"g","д":"d","е":"e","ё":"yo","ж":"j","з":"z","и":"i","й":"y","к":"k","л":"l","м":"m","н":"n","о":"o","п":"p","р":"r","с":"s","т":"t","у":"u","ф":"f","х":"x","ц":"ts","ч":"ch","ш":"sh","щ":"sh","ъ":"","ы":"i","ь":"","э":"e","ю":"yu","я":"ya","ў":"o","қ":"q","ғ":"g","ҳ":"h"};
 function slug(t,n){return String(t||"").toLowerCase().replace(/[\u0400-\u04ff]/g,c=>CYR[c]??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[ʻʼ`'’]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,n||60);}
@@ -1806,7 +1873,7 @@ function applyRoute(){
     else if(tries>40){clearInterval(_pendT);setUrl(tabPath(r.tab));}},500);
 }
 addEventListener("hashchange",()=>{if(parseHash())applyRoute();});
-function showTab(t){if(!document.querySelector(".tab#"+t))t="yangilik";document.querySelectorAll(".tab").forEach(x=>x.hidden=x.id!==t);
+function showTab(t){if(window.__TG&&t==="tv")t="yangilik";if(!document.querySelector(".tab#"+t))t="yangilik";document.querySelectorAll(".tab").forEach(x=>x.hidden=x.id!==t);
   document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("on",x.dataset.tab===t));window.scrollTo(0,0);if(t==="tv")loadTV();
   /* yangilanganda shu menyuda qolish uchun: manzildagi # va sessiyada saqlanadi (tarix yozuvi qo'shilmaydi) */
   try{sessionStorage.setItem("tab",t);}catch(e){}
