@@ -291,7 +291,10 @@ body{background:radial-gradient(900px 420px at 10% -8%,rgba(47,208,138,.13),tran
 .tvcard.c2{--c:#22c55e}.tvcard.c3{--c:#f97316}.tvcard.c4{--c:#a855f7}
 .tvcard:hover{border-color:var(--c);box-shadow:0 10px 28px color-mix(in srgb,var(--c) 30%,transparent)}
 .tvst{position:relative;display:grid;place-items:center;height:128px;background:color-mix(in srgb,var(--c) 20%,var(--card));border-bottom:1px solid var(--line)}
-.tvcard .tvn{width:76px;height:76px;box-shadow:0 0 0 3px rgba(255,255,255,.28),0 8px 22px rgba(0,0,0,.35)}
+.tvpitch{position:absolute;inset:0;width:100%;height:100%}
+.tvpitch *{fill:none;stroke:#fff;stroke-opacity:.16;stroke-width:2}
+.tvbdg{position:relative;z-index:1;padding:8px 20px;border-radius:12px;border:1.5px solid var(--c);background:color-mix(in srgb,var(--card) 80%,transparent);color:var(--tx);font:800 26px/1 system-ui;letter-spacing:1px}
+.tvcard.off .tvbdg{border-color:var(--mu);color:var(--mu)}
 .tvlive{position:absolute;top:10px;left:10px;display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;background:#e5484d;color:#fff;font:800 11px/1 system-ui;letter-spacing:.8px}
 .tvlive i{width:6px;height:6px;border-radius:50%;background:#fff;animation:tvdot 1.3s infinite}
 @keyframes tvdot{50%{opacity:.25}}
@@ -305,7 +308,7 @@ body{background:radial-gradient(900px 420px at 10% -8%,rgba(47,208,138,.13),tran
 .tvcard.off .tvlive{background:var(--mu)}
 .tvcard.off .tvlive i{animation:none;opacity:.6}
 .tvcard.off .tvpl{display:none}
-@media(max-width:520px){.tvgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 12px}.tvst{height:104px}.tvcard .tvn{width:60px;height:60px}.tvin{padding:10px 11px 12px}.tvin b{font-size:13px;white-space:normal}.tvsub{margin-left:12px}}
+@media(max-width:520px){.tvgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 12px}.tvst{height:104px}.tvbdg{font-size:20px;padding:6px 14px}.tvin{padding:10px 11px 12px}.tvin b{font-size:13px;white-space:normal}.tvsub{margin-left:12px}}
 .tvb{display:inline-flex;align-items:center;gap:8px;margin-left:auto;padding:9px 14px 9px 12px;border-radius:99px;font-weight:800;font-size:13px;letter-spacing:.3px;color:#fff;background:linear-gradient(135deg,#e5484d,#ff7a45);box-shadow:0 6px 18px rgba(229,72,77,.35);transition:transform .2s,box-shadow .2s}
 .tvb svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .tvb .lv{width:8px;height:8px;border-radius:50%;background:#fff;animation:lvp 1.4s infinite}
@@ -1795,8 +1798,8 @@ async function loadTV(){
     const PL='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5z"/></svg>';
     const nOn=S.filter(x=>x.id).length;
     box.innerHTML=`<h2 class="pt">ONSPORTS.UZ TELEKANALLAR</h2><p class="tvsub">${nOn?`Hozir ${nOn} ta kanal jonli efirda`:"Hozircha jonli efir yo'q"}</p><div class="tvgrid">`+S.map(x=>x.id
-      ?`<button class="tvcard c${(x.n-1)%4+1}" data-ef="${esc(x.id)}" aria-label="ONSPORTS.UZ TV ${x.n} — jonli efirni ko'rish"><span class="tvst"><span class="tvn t${(x.n-1)%4+1}" aria-hidden="true"></span><span class="tvlive"><i></i>JONLI</span><span class="tvpl">${PL}</span></span><span class="tvin"><b>ONSPORTS.UZ TV ${x.n}</b><small>Efirni ko'rish</small></span></button>`
-      :`<div class="tvcard off c${(x.n-1)%4+1}" aria-disabled="true"><span class="tvst"><span class="tvn t${(x.n-1)%4+1}" aria-hidden="true"></span><span class="tvlive">OFLAYN</span></span><span class="tvin"><b>ONSPORTS.UZ TV ${x.n}</b><small>Hozircha efir yo'q</small></span></div>`).join("")+`</div>`;
+      ?`<button class="tvcard c${(x.n-1)%4+1}" data-ef="${esc(x.id)}" aria-label="ONSPORTS.UZ TV ${x.n} — jonli efirni ko'rish"><span class="tvst"><svg class="tvpitch" viewBox="0 0 200 128" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect x="10" y="10" width="180" height="108" rx="4"/><line x1="100" y1="10" x2="100" y2="118"/><circle cx="100" cy="64" r="24"/><rect x="10" y="38" width="26" height="52"/><rect x="164" y="38" width="26" height="52"/></svg><span class="tvbdg">TV ${x.n}</span><span class="tvlive"><i></i>JONLI</span><span class="tvpl">${PL}</span></span><span class="tvin"><b>ONSPORTS.UZ TV ${x.n}</b><small>Efirni ko'rish</small></span></button>`
+      :`<div class="tvcard off c${(x.n-1)%4+1}" aria-disabled="true"><span class="tvst"><svg class="tvpitch" viewBox="0 0 200 128" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect x="10" y="10" width="180" height="108" rx="4"/><line x1="100" y1="10" x2="100" y2="118"/><circle cx="100" cy="64" r="24"/><rect x="10" y="38" width="26" height="52"/><rect x="164" y="38" width="26" height="52"/></svg><span class="tvbdg">TV ${x.n}</span><span class="tvlive">OFLAYN</span></span><span class="tvin"><b>ONSPORTS.UZ TV ${x.n}</b><small>Hozircha efir yo'q</small></span></div>`).join("")+`</div>`;
   }catch(e){box.innerHTML=`<div class="empty">Efir hozir yuklanmadi. Birozdan keyin qayta urinib ko'ring.</div>`}
 }
 function openNews(id){
