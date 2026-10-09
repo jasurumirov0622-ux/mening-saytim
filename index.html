@@ -304,6 +304,12 @@ body{background:radial-gradient(900px 420px at 10% -8%,rgba(47,208,138,.13),tran
 .tvin{display:block;padding:12px 14px 14px}
 .tvin b{font-size:15px}
 .tvin small{margin-top:3px;font-size:13px}
+.tvin small{overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.tvnow{color:var(--tx)!important}
+.tvnow em{font-style:normal;font-weight:800;font-size:11px;letter-spacing:.5px;color:var(--c);margin-right:4px;text-transform:uppercase}
+.tvbar{display:block;height:3px;border-radius:2px;background:var(--line);margin:7px 0 6px;overflow:hidden}
+.tvbar u{display:block;height:100%;background:var(--c);border-radius:2px}
+.tvnext{font-size:12px!important}
 .tvcard.off .tvst{background:color-mix(in srgb,var(--mu) 14%,var(--card))}
 .tvcard.off .tvlive{background:var(--mu)}
 .tvcard.off .tvlive i{animation:none;opacity:.6}
@@ -1796,9 +1802,15 @@ async function loadTV(){
     const S=[1,2,3,4].map(n=>{const x=(d.slots||[]).find(z=>z.n===n)||(!d.slots&&n===1&&d.id?{n:1,id:d.id,k:d.k}:null);return x&&x.id?x:{n}});
     TVC={};S.forEach(x=>{if(x.id)TVC[x.id]={k:x.k,h:"ONSPORTS.UZ TV "+x.n,a:"",s:x.n}});
     const PL='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5z"/></svg>';
+    /* dastur jadvali (EPG): worker pg:[[boshlanish_ms,tugash_ms,nom],...] yuboradi; hozirgi va keyingi dastur brauzer soati bo'yicha tanlanadi */
+    const hm=ms=>new Date(ms).toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit",timeZone:"Asia/Tashkent"});
+    const tvProg=x=>{const t=Date.now(),l=(x.pg||[]).filter(z=>z[1]>t),cu=l.find(z=>z[0]<=t),nx=l.find(z=>z[0]>t);
+      if(!cu&&!nx)return`<small>Efirni ko'rish</small>`;
+      const pc=cu?Math.max(2,Math.min(100,Math.round((t-cu[0])/(cu[1]-cu[0])*100))):0;
+      return(cu?`<small class="tvnow"><em>Hozir</em> ${esc(cu[2])}</small><span class="tvbar"><u style="width:${pc}%"></u></span>`:`<small>Efirni ko'rish</small>`)+(nx?`<small class="tvnext">Keyin ${hm(nx[0])} · ${esc(nx[2])}</small>`:"");};
     const nOn=S.filter(x=>x.id).length;
     box.innerHTML=`<h2 class="pt">ONSPORTS.UZ TELEKANALLAR</h2><p class="tvsub">${nOn?`Hozir ${nOn} ta kanal jonli efirda`:"Hozircha jonli efir yo'q"}</p><div class="tvgrid">`+S.map(x=>x.id
-      ?`<button class="tvcard c${(x.n-1)%4+1}" data-ef="${esc(x.id)}" aria-label="ONSPORTS.UZ TV ${x.n} — jonli efirni ko'rish"><span class="tvst"><svg class="tvpitch" viewBox="0 0 200 128" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect x="10" y="10" width="180" height="108" rx="4"/><line x1="100" y1="10" x2="100" y2="118"/><circle cx="100" cy="64" r="24"/><rect x="10" y="38" width="26" height="52"/><rect x="164" y="38" width="26" height="52"/></svg><span class="tvbdg">TV ${x.n}</span><span class="tvlive"><i></i>JONLI</span><span class="tvpl">${PL}</span></span><span class="tvin"><b>ONSPORTS.UZ TV ${x.n}</b><small>Efirni ko'rish</small></span></button>`
+      ?`<button class="tvcard c${(x.n-1)%4+1}" data-ef="${esc(x.id)}" aria-label="ONSPORTS.UZ TV ${x.n} — jonli efirni ko'rish"><span class="tvst"><svg class="tvpitch" viewBox="0 0 200 128" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect x="10" y="10" width="180" height="108" rx="4"/><line x1="100" y1="10" x2="100" y2="118"/><circle cx="100" cy="64" r="24"/><rect x="10" y="38" width="26" height="52"/><rect x="164" y="38" width="26" height="52"/></svg><span class="tvbdg">TV ${x.n}</span><span class="tvlive"><i></i>JONLI</span><span class="tvpl">${PL}</span></span><span class="tvin"><b>ONSPORTS.UZ TV ${x.n}</b>${tvProg(x)}</span></button>`
       :`<div class="tvcard off c${(x.n-1)%4+1}" aria-disabled="true"><span class="tvst"><svg class="tvpitch" viewBox="0 0 200 128" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect x="10" y="10" width="180" height="108" rx="4"/><line x1="100" y1="10" x2="100" y2="118"/><circle cx="100" cy="64" r="24"/><rect x="10" y="38" width="26" height="52"/><rect x="164" y="38" width="26" height="52"/></svg><span class="tvbdg">TV ${x.n}</span><span class="tvlive">OFLAYN</span></span><span class="tvin"><b>ONSPORTS.UZ TV ${x.n}</b><small>Hozircha efir yo'q</small></span></div>`).join("")+`</div>`;
   }catch(e){box.innerHTML=`<div class="empty">Efir hozir yuklanmadi. Birozdan keyin qayta urinib ko'ring.</div>`}
 }
