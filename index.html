@@ -310,6 +310,13 @@ body{background:radial-gradient(900px 420px at 10% -8%,rgba(47,208,138,.13),tran
 .tvbar{display:block;height:3px;border-radius:2px;background:var(--line);margin:7px 0 6px;overflow:hidden}
 .tvbar u{display:block;height:100%;background:var(--c);border-radius:2px}
 .tvnext{font-size:12px!important}
+.tvsch{display:block;margin-top:8px}
+.tvrow{display:flex;gap:10px;align-items:baseline;padding:5px 0;border-top:1px solid var(--line);font-size:12.5px;color:var(--mu)}
+.tvrow time{font-weight:800;min-width:42px;font-variant-numeric:tabular-nums}
+.tvrow span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tvrow.now{color:var(--tx)}
+.tvrow.now time{color:var(--c)}
+.tvrow.now span::before{content:"HOZIR ";font-size:10px;font-weight:800;letter-spacing:.5px;color:var(--c)}
 .tvmatch{position:absolute;left:10px;right:58px;bottom:10px;z-index:1;padding:5px 9px;border-radius:8px;background:rgba(8,12,22,.62);color:#fff;font:700 12px/1.2 system-ui;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tvcard.off .tvst{background:color-mix(in srgb,var(--mu) 14%,var(--card))}
 .tvcard.off .tvlive{background:var(--mu)}
@@ -1793,32 +1800,39 @@ async function goTV(n){
   const id=Object.keys(TVC).find(k=>TVC[k].s===n);
   if(id)openEfir(id);
 }
+let TVD=null;
+/* TV bo'limi: har bir kanalning dastur jadvali (EPG) aniq vaqti bilan ko'rsatiladi; sahifa ochiq tursa o'zi yangilanib turadi */
+function tvRender(){
+  const box=$("#tvbox");if(!box||!TVD)return;
+  const d=TVD;
+  /* 4 ta kanal: ONSPORTS TV 1–4. Eski worker faqat bitta kanal (d.id) qaytarsa, u 1-o'ringa qo'yiladi */
+  const S=[1,2,3,4].map(n=>{const x=(d.slots||[]).find(z=>z.n===n)||(!d.slots&&n===1&&d.id?{n:1,id:d.id,k:d.k}:null);return x&&x.id?x:{n}});
+  TVC={};S.forEach(x=>{if(x.id)TVC[x.id]={k:x.k,h:"ONSPORTS.UZ TV "+x.n,a:"",s:x.n}});
+  const PL='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5z"/></svg>';
+  const PITCH='<svg class="tvpitch" viewBox="0 0 200 128" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect x="10" y="10" width="180" height="108" rx="4"/><line x1="100" y1="10" x2="100" y2="118"/><circle cx="100" cy="64" r="24"/><rect x="10" y="38" width="26" height="52"/><rect x="164" y="38" width="26" height="52"/></svg>';
+  const hm=ms=>new Date(ms).toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit",timeZone:"Asia/Tashkent"});
+  /* worker pg:[[boshlanish_ms,tugash_ms,nom],...] yuboradi; hozirgi dastur va keyingilari brauzer soati bo'yicha tanlanadi */
+  const sch=x=>{const t=Date.now(),l=(x.pg||[]).filter(z=>z[1]>t).slice(0,5);
+    if(!l.length)return`<small>Efirni ko'rish</small>`;
+    return`<span class="tvsch">`+l.map(z=>`<span class="tvrow${z[0]<=t?" now":""}"><time>${hm(z[0])}</time><span>${esc(z[2])}</span></span>`).join("")+`</span>`;};
+  const nOn=S.filter(x=>x.id).length;
+  const html=`<h2 class="pt">ONSPORTS.UZ TELEKANALLAR</h2><p class="tvsub">${nOn?`Hozir ${nOn} ta kanal jonli efirda`:"Hozircha jonli efir yo'q"}</p><div class="tvgrid">`+S.map(x=>x.id
+    ?`<button class="tvcard c${(x.n-1)%4+1}" data-ef="${esc(x.id)}" aria-label="ONSPORTS.UZ TV ${x.n} — jonli efirni ko'rish"><span class="tvst">${PITCH}<span class="tvbdg">TV ${x.n}</span><span class="tvlive"><i></i>JONLI</span><span class="tvpl">${PL}</span></span><span class="tvin"><b>ONSPORTS.UZ TV ${x.n}</b>${sch(x)}</span></button>`
+    :`<div class="tvcard off c${(x.n-1)%4+1}" aria-disabled="true"><span class="tvst">${PITCH}<span class="tvbdg">TV ${x.n}</span><span class="tvlive">OFLAYN</span></span><span class="tvin"><b>ONSPORTS.UZ TV ${x.n}</b><small>Hozircha efir yo'q</small></span></div>`).join("")+`</div>`;
+  if(box.dataset.h!==html){box.innerHTML=html;box.dataset.h=html}
+}
 async function loadTV(){
   if(window.__TG)return;
   const box=$("#tvbox");
   try{
     const r=await fetch(WORKER+"/tv");if(!r.ok)throw 0;
-    const d=await r.json();
-    /* 4 ta kanal: ONSPORTS TV 1–4. Eski worker faqat bitta kanal (d.id) qaytarsa, u 1-o'ringa qo'yiladi */
-    const S=[1,2,3,4].map(n=>{const x=(d.slots||[]).find(z=>z.n===n)||(!d.slots&&n===1&&d.id?{n:1,id:d.id,k:d.k}:null);return x&&x.id?x:{n}});
-    TVC={};S.forEach(x=>{if(x.id)TVC[x.id]={k:x.k,h:"ONSPORTS.UZ TV "+x.n,a:"",s:x.n}});
-    const PL='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5z"/></svg>';
-    /* dastur jadvali (EPG): worker pg:[[boshlanish_ms,tugash_ms,nom],...] yuboradi; hozirgi va keyingi dastur brauzer soati bo'yicha tanlanadi */
-    const hm=ms=>new Date(ms).toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit",timeZone:"Asia/Tashkent"});
-    try{if(!Object.keys(EFIR||{}).length)await loadEfir();}catch(e){}
-    /* o'yin shu TV kanalga ulangan bo'lsa (bot orqali) — jamoalar nomi; bo'lmasa EPG dagi hozirgi dastur nomi */
-    const mt=x=>{const e=Object.values(EFIR||{}).find(z=>z&&z.tv===x.n&&z.h);return e?e.h+(e.a?" \u2014 "+e.a:""):""};
-    const cap=x=>{const m=mt(x);if(m)return m;const t=Date.now(),cu=(x.pg||[]).find(z=>z[0]<=t&&z[1]>t);return cu?cu[2]:""};
-    const tvProg=x=>{const t=Date.now(),l=(x.pg||[]).filter(z=>z[1]>t),cu=l.find(z=>z[0]<=t),nx=l.find(z=>z[0]>t),sk=!mt(x);
-      if(!cu&&!nx)return`<small>Efirni ko'rish</small>`;
-      const pc=cu?Math.max(2,Math.min(100,Math.round((t-cu[0])/(cu[1]-cu[0])*100))):0;
-      return(cu?(sk?"":`<small class="tvnow"><em>Hozir</em> ${esc(cu[2])}</small>`)+`<span class="tvbar"><u style="width:${pc}%"></u></span>`:`<small>Efirni ko'rish</small>`)+(nx?`<small class="tvnext">Keyin ${hm(nx[0])} \u00b7 ${esc(nx[2])}</small>`:"");};
-    const nOn=S.filter(x=>x.id).length;
-    box.innerHTML=`<h2 class="pt">ONSPORTS.UZ TELEKANALLAR</h2><p class="tvsub">${nOn?`Hozir ${nOn} ta kanal jonli efirda`:"Hozircha jonli efir yo'q"}</p><div class="tvgrid">`+S.map(x=>x.id
-      ?`<button class="tvcard c${(x.n-1)%4+1}" data-ef="${esc(x.id)}" aria-label="ONSPORTS.UZ TV ${x.n} — jonli efirni ko'rish"><span class="tvst"><svg class="tvpitch" viewBox="0 0 200 128" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect x="10" y="10" width="180" height="108" rx="4"/><line x1="100" y1="10" x2="100" y2="118"/><circle cx="100" cy="64" r="24"/><rect x="10" y="38" width="26" height="52"/><rect x="164" y="38" width="26" height="52"/></svg><span class="tvbdg">TV ${x.n}</span><span class="tvlive"><i></i>JONLI</span><span class="tvpl">${PL}</span>${cap(x)?`<span class="tvmatch">${esc(cap(x))}</span>`:""}</span><span class="tvin"><b>ONSPORTS.UZ TV ${x.n}</b>${tvProg(x)}</span></button>`
-      :`<div class="tvcard off c${(x.n-1)%4+1}" aria-disabled="true"><span class="tvst"><svg class="tvpitch" viewBox="0 0 200 128" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect x="10" y="10" width="180" height="108" rx="4"/><line x1="100" y1="10" x2="100" y2="118"/><circle cx="100" cy="64" r="24"/><rect x="10" y="38" width="26" height="52"/><rect x="164" y="38" width="26" height="52"/></svg><span class="tvbdg">TV ${x.n}</span><span class="tvlive">OFLAYN</span></span><span class="tvin"><b>ONSPORTS.UZ TV ${x.n}</b><small>Hozircha efir yo'q</small></span></div>`).join("")+`</div>`;
-  }catch(e){box.innerHTML=`<div class="empty">Efir hozir yuklanmadi. Birozdan keyin qayta urinib ko'ring.</div>`}
+    TVD=await r.json();tvRender();
+  }catch(e){if(!TVD&&box)box.innerHTML=`<div class="empty">Efir hozir yuklanmadi. Birozdan keyin qayta urinib ko'ring.</div>`}
 }
+/* 24/7: TV bo'limi ochiq turganda jadval har 30 soniyada soatga moslanadi, ma'lumot har 3 daqiqada qayta olinadi */
+const tvOpen=()=>{const b=$("#tvbox");return !document.hidden&&b&&b.offsetParent};
+setInterval(()=>{if(tvOpen())tvRender()},30000);
+setInterval(()=>{if(tvOpen())loadTV()},180000);
 function openNews(id){
   const x=(news||[]).find(n=>n.id===id);if(!x)return;
   curN=id;let h;
