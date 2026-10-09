@@ -435,6 +435,18 @@ header{top:0!important}
 @container (max-width:460px){.adtop .ob .ob-sl{padding:0 52px 0 14px}.adtop .ob .ob-col{padding-right:0}.adtop .ob .ob-vis{display:none}.adtop .ob .ob-hl{font-size:19px}.adtop .ob .ob-ch{display:none!important}.adtop .ob .ob-lo{display:none}.adtop .ob .ob-sh{display:inline}.adtop .ob .ob-app{height:38px;padding:0 16px 0 8px;border-radius:99px}.adtop .ob .ob-sb{display:none}}
 @media(max-width:640px){.adtop .ob{height:140px;border-radius:14px}.adtop.sm .ob{height:60px}}
 @media(prefers-reduced-motion:reduce){.adtop .ob *{animation:none!important}.adtop .ob .ob-sl{transform:none!important}}
+
+/* ===== Kompyuterda to'liq ekran: o'rtadagi tor ustun (1068px) olib tashlandi, sayt butun kenglikdan foydalanadi ===== */
+@media(min-width:900px){
+ .bar,.adtop{max-width:2200px}
+ .page{max-width:2200px}
+ .nhead,.nwrap,.more,.ngrid,.crumb{max-width:2200px}
+ .nhero{min-height:clamp(420px,30vw,600px)}
+ .tab.narrow{max-width:none}
+ #jadval.narrow{max-width:1100px}
+ #out{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));align-items:start}
+ #out>.empty{grid-column:1/-1}
+}
 </style>
 <script>/* Telegram ichida (menyu tugmasi orqali) ochilganda: Telegram skriptini yuklab, oynani to'liq balandlikka yoyadi. Oddiy brauzerda hech narsa yuklanmaydi */
 if(window.__TG||/tgWebApp/.test(location.hash)){document.write('<script src="https://telegram.org/js/telegram-web-app.js"><\/script>');addEventListener("DOMContentLoaded",function(){try{var w=window.Telegram&&Telegram.WebApp;if(w){w.ready();w.expand();
