@@ -298,6 +298,7 @@ body{background:radial-gradient(900px 420px at 10% -8%,rgba(47,208,138,.13),tran
 .tvlive{position:absolute;top:10px;left:10px;display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;background:#e5484d;color:#fff;font:800 11px/1 system-ui;letter-spacing:.8px}
 .tvlive i{width:6px;height:6px;border-radius:50%;background:#fff;animation:tvdot 1.3s infinite}
 @keyframes tvdot{50%{opacity:.25}}
+.tvq{display:block;width:calc(100% - 32px);margin:10px 16px 0;padding:11px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--tx);font:inherit}
 .tvlg{position:relative;z-index:1;max-width:60%;max-height:78px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
 .tvpl{position:absolute;right:10px;bottom:10px;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#0b1220;transition:transform .2s}
 .tvpl svg{width:18px;height:18px;fill:currentColor;margin-left:2px}
@@ -1817,10 +1818,14 @@ function tvRender(){
     if(!l.length)return`<small>Efirni ko'rish</small>`;
     return`<span class="tvsch">`+l.map(z=>`<span class="tvrow${z[0]<=t?" now":""}"><time>${hm(z[0])}</time><span>${esc(z[2])}</span></span>`).join("")+`</span>`;};
   const ini=n=>esc(String(n||"TV").replace(/[^\p{L}\p{N} ]/gu,"").trim().split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase()||"TV");
-  const card=(x,i)=>`<button class="tvcard c${i%4+1}" data-ef="${esc(x.id)}" aria-label="${esc(x.name)} — jonli efirni ko'rish"><span class="tvst">${PITCH}${x.logo?`<img class="tvlg" src="${esc(x.logo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.outerHTML='<span class=&quot;tvbdg&quot;>${ini(x.name)}</span>'">`:`<span class="tvbdg">${ini(x.name)}</span>`}<span class="tvlive"><i></i>JONLI</span><span class="tvpl">${PL}</span></span><span class="tvin"><b>${esc(x.name)}</b>${sch(x)}</span></button>`;
-  const html=`<h2 class="pt">TELEKANALLAR</h2><p class="tvsub">${L.length?`Sport kanallari: ${L.length} ta`:"Hozircha kanal yo'q"}</p>`+(L.length?`<div class="tvgrid">${L.map(card).join("")}</div>`:`<div class="empty">Hozircha kanallar qo'shilmagan.</div>`);
+  const card=(x,i)=>`<button class="tvcard c${i%4+1}" data-n="${esc(String(x.name||"").toLowerCase())}" data-ef="${esc(x.id)}" aria-label="${esc(x.name)} — jonli efirni ko'rish"><span class="tvst">${PITCH}${x.logo?`<img class="tvlg" src="${esc(x.logo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.outerHTML='<span class=&quot;tvbdg&quot;>${ini(x.name)}</span>'">`:`<span class="tvbdg">${ini(x.name)}</span>`}<span class="tvlive"><i></i>JONLI</span><span class="tvpl">${PL}</span></span><span class="tvin"><b>${esc(x.name)}</b>${sch(x)}</span></button>`;
+  const html=`<h2 class="pt">TELEKANALLAR</h2><p class="tvsub">${L.length?`Sport kanallari: ${L.length} ta`:"Hozircha kanal yo'q"}</p>`+(L.length>8?`<input id="tvq" class="tvq" type="search" placeholder="Kanal qidirish…" autocomplete="off" value="${esc(tvq)}">`:"")+(L.length?`<div class="tvgrid">${L.map(card).join("")}</div>`:`<div class="empty">Hozircha kanallar qo'shilmagan.</div>`);
   if(box.dataset.h!==html){box.innerHTML=html;box.dataset.h=html}
+  tvFilter();
 }
+let tvq="";
+function tvFilter(){const q=tvq.trim().toLowerCase();document.querySelectorAll("#tvbox .tvcard").forEach(c=>{c.style.display=q&&!(c.dataset.n||"").includes(q)?"none":""});}
+document.addEventListener("input",e=>{if(e.target&&e.target.id==="tvq"){tvq=e.target.value;tvFilter();}});
 async function loadTV(){
   if(window.__TG)return;
   const box=$("#tvbox");
