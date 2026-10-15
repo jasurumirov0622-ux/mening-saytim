@@ -1826,7 +1826,7 @@ function tvRender(){
   const box=$("#tvbox");if(!box||!TVD)return;
   const d=TVD;
   /* M3U dagi sport kanallari: worker d.channels=[{id,name,logo,g}] qaytaradi; nom va logotip asl holida ko'rsatiladi */
-  const L=(d.channels||[]).filter(x=>x&&x.id&&(!x.g||/sport|спорт/i.test(x.g)));
+  const L=(d.channels||[]).filter(x=>x&&x.id);   /* ro'yxatni worker (TV_PICK) belgilaydi; guruh bo'yicha qayta filtr yo'q */
   TVC={};L.forEach(x=>{TVC[x.id]={k:x.k,h:x.name||"TV",a:"",s:0,o:1}});
   const PL='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5z"/></svg>';
   const PITCH='<svg class="tvpitch" viewBox="0 0 200 128" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect x="10" y="10" width="180" height="108" rx="4"/><line x1="100" y1="10" x2="100" y2="118"/><circle cx="100" cy="64" r="24"/><rect x="10" y="38" width="26" height="52"/><rect x="164" y="38" width="26" height="52"/></svg>';
