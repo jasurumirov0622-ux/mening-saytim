@@ -298,6 +298,7 @@ body{background:radial-gradient(900px 420px at 10% -8%,rgba(47,208,138,.13),tran
 .tvlive{position:absolute;top:10px;left:10px;display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;background:#e5484d;color:#fff;font:800 11px/1 system-ui;letter-spacing:.8px}
 .tvlive i{width:6px;height:6px;border-radius:50%;background:#fff;animation:tvdot 1.3s infinite}
 @keyframes tvdot{50%{opacity:.25}}
+.tvlg{position:relative;z-index:1;max-width:60%;max-height:78px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
 .tvpl{position:absolute;right:10px;bottom:10px;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#0b1220;transition:transform .2s}
 .tvpl svg{width:18px;height:18px;fill:currentColor;margin-left:2px}
 .tvcard:hover .tvpl{transform:scale(1.12)}
@@ -1490,7 +1491,7 @@ async function openEfir(id){
       hb.append(rb);
     }
     o._hb=hb;}
-    tvLogos(o,w,v,lg,SLOT);
+    if(!e.o)tvLogos(o,w,v,lg,SLOT);   /* M3U dagi asl kanallarda sayt logotipi qo'yilmaydi */
     /* faqat jonli rejim: standart boshqaruv (vaqt, surish chizig'i, pauza) olib tashlanadi; faqat ovoz va to'liq ekran qoladi */
     v.removeAttribute("controls");v.controls=false;
     v.addEventListener("contextmenu",e=>e.preventDefault());
@@ -1805,9 +1806,9 @@ let TVD=null;
 function tvRender(){
   const box=$("#tvbox");if(!box||!TVD)return;
   const d=TVD;
-  /* 4 ta kanal: ONSPORTS TV 1–4. Eski worker faqat bitta kanal (d.id) qaytarsa, u 1-o'ringa qo'yiladi */
-  const S=[1,2,3,4].map(n=>{const x=(d.slots||[]).find(z=>z.n===n)||(!d.slots&&n===1&&d.id?{n:1,id:d.id,k:d.k}:null);return x&&x.id?x:{n}});
-  TVC={};S.forEach(x=>{if(x.id)TVC[x.id]={k:x.k,h:"ONSPORTS.UZ TV "+x.n,a:"",s:x.n}});
+  /* M3U dagi sport kanallari: worker d.channels=[{id,name,logo,g}] qaytaradi; nom va logotip asl holida ko'rsatiladi */
+  const L=(d.channels||[]).filter(x=>x&&x.id&&(!x.g||/sport|спорт/i.test(x.g)));
+  TVC={};L.forEach(x=>{TVC[x.id]={k:x.k,h:x.name||"TV",a:"",s:0,o:1}});
   const PL='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5z"/></svg>';
   const PITCH='<svg class="tvpitch" viewBox="0 0 200 128" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect x="10" y="10" width="180" height="108" rx="4"/><line x1="100" y1="10" x2="100" y2="118"/><circle cx="100" cy="64" r="24"/><rect x="10" y="38" width="26" height="52"/><rect x="164" y="38" width="26" height="52"/></svg>';
   const hm=ms=>new Date(ms).toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit",timeZone:"Asia/Tashkent"});
@@ -1815,10 +1816,9 @@ function tvRender(){
   const sch=x=>{const t=Date.now(),l=(x.pg||[]).filter(z=>z[1]>t).slice(0,5);
     if(!l.length)return`<small>Efirni ko'rish</small>`;
     return`<span class="tvsch">`+l.map(z=>`<span class="tvrow${z[0]<=t?" now":""}"><time>${hm(z[0])}</time><span>${esc(z[2])}</span></span>`).join("")+`</span>`;};
-  const nOn=S.filter(x=>x.id).length;
-  const html=`<h2 class="pt">ONSPORTS.UZ TELEKANALLAR</h2><p class="tvsub">${nOn?`Hozir ${nOn} ta kanal jonli efirda`:"Hozircha jonli efir yo'q"}</p><div class="tvgrid">`+S.map(x=>x.id
-    ?`<button class="tvcard c${(x.n-1)%4+1}" data-ef="${esc(x.id)}" aria-label="ONSPORTS.UZ TV ${x.n} — jonli efirni ko'rish"><span class="tvst">${PITCH}<span class="tvbdg">TV ${x.n}</span><span class="tvlive"><i></i>JONLI</span><span class="tvpl">${PL}</span></span><span class="tvin"><b>ONSPORTS.UZ TV ${x.n}</b>${sch(x)}</span></button>`
-    :`<div class="tvcard off c${(x.n-1)%4+1}" aria-disabled="true"><span class="tvst">${PITCH}<span class="tvbdg">TV ${x.n}</span><span class="tvlive">OFLAYN</span></span><span class="tvin"><b>ONSPORTS.UZ TV ${x.n}</b><small>Hozircha efir yo'q</small></span></div>`).join("")+`</div>`;
+  const ini=n=>esc(String(n||"TV").replace(/[^\p{L}\p{N} ]/gu,"").trim().split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase()||"TV");
+  const card=(x,i)=>`<button class="tvcard c${i%4+1}" data-ef="${esc(x.id)}" aria-label="${esc(x.name)} — jonli efirni ko'rish"><span class="tvst">${PITCH}${x.logo?`<img class="tvlg" src="${esc(x.logo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.outerHTML='<span class=&quot;tvbdg&quot;>${ini(x.name)}</span>'">`:`<span class="tvbdg">${ini(x.name)}</span>`}<span class="tvlive"><i></i>JONLI</span><span class="tvpl">${PL}</span></span><span class="tvin"><b>${esc(x.name)}</b>${sch(x)}</span></button>`;
+  const html=`<h2 class="pt">TELEKANALLAR</h2><p class="tvsub">${L.length?`Sport kanallari: ${L.length} ta`:"Hozircha kanal yo'q"}</p>`+(L.length?`<div class="tvgrid">${L.map(card).join("")}</div>`:`<div class="empty">Hozircha kanallar qo'shilmagan.</div>`);
   if(box.dataset.h!==html){box.innerHTML=html;box.dataset.h=html}
 }
 async function loadTV(){
