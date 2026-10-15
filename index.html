@@ -330,7 +330,7 @@ body{background:radial-gradient(900px 420px at 10% -8%,rgba(47,208,138,.13),tran
 .tvlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:10px;margin:14px 16px}
 .tvit{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--tx);font:inherit;text-align:left;cursor:pointer;transition:border-color .2s,transform .2s}
 .tvit:hover{border-color:var(--ac);transform:translateY(-1px)}
-.tvlogo{flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:11px;background:#fff;overflow:hidden}
+.tvlogo{flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:11px;background:#10192b;overflow:hidden}
 .tvlogo img{width:100%;height:100%;object-fit:contain;padding:5px;box-sizing:border-box}
 .tvlogo.ini{background:color-mix(in srgb,var(--ac) 14%,var(--card));color:var(--ac);font:800 15px system-ui}
 .tvtx{min-width:0;flex:1}
@@ -1838,7 +1838,7 @@ function tvRender(){
   const ini=n=>esc(String(n||"TV").replace(/[^\p{L}\p{N} ]/gu,"").trim().split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase()||"TV");
   /* kanalning asl logotipi (M3U tvg-logo); http bo'lsa https ga o'tkaziladi (sayt https da, aks holda brauzer bloklaydi); yuklanmasa bosh harflar */
   const lg=u=>String(u||"").replace(/^http:\/\//i,"https://");
-  const now=x=>{const t=Date.now(),z=(x.pg||[]).find(q=>q[0]<=t&&q[1]>t);return z?`<i></i><time>${hm(z[0])}</time><span>${esc(z[2])}</span>`:`<i></i><span>Jonli efir</span>`};
+  const now=x=>{const t=Date.now(),z=(x.pg||[]).find(q=>q[1]>t);if(z)return`<i></i><time>${hm(z[0])}</time><span>${esc(z[2])}</span>`;const m=(x.mt||[])[0];return`<i></i><span>${m?esc(m):"Jonli efir"}</span>`};
   const card=x=>`<button class="tvit" data-n="${esc(String(x.name||"").toLowerCase())}" data-ef="${esc(x.id)}" aria-label="${esc(x.name)} — jonli efirni ko'rish"><span class="tvlogo${x.logo?"":" ini"}">${x.logo?`<img src="${esc(lg(x.logo))}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="var p=this.parentNode;p.className='tvlogo ini';p.textContent='${ini(x.name)}'">`:ini(x.name)}</span><span class="tvtx"><b>${esc(x.name)}</b><small>${now(x)}</small></span><span class="tvgo">${PL}</span></button>`;
   const html=`<h2 class="pt">TELEKANALLAR</h2><p class="tvsub">${L.length?`Sport kanallari: ${L.length} ta`:"Hozircha kanal yo'q"}</p>`+(L.length>8?`<input id="tvq" class="tvq" type="search" placeholder="Kanal qidirish…" autocomplete="off" value="${esc(tvq)}">`:"")+(L.length?`<div class="tvlist">${L.map(card).join("")}</div>`:`<div class="empty">Hozircha kanallar qo'shilmagan.</div>`);
   if(box.dataset.h!==html){box.innerHTML=html;box.dataset.h=html}
