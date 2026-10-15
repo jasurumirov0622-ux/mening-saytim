@@ -19,7 +19,7 @@ try{if(sessionStorage.getItem("onsx")){sessionStorage.removeItem("onsx");window.
 <script>try{if(localStorage.getItem("theme")==="light")document.documentElement.dataset.theme="light"}catch(e){}</script>
 <script>/* ilova rejimi: APK, o'rnatilgan PWA yoki ?app=1 (sinash uchun) */
 try{var A=matchMedia("(display-mode: standalone)").matches||navigator.standalone||document.referrer.indexOf("android-app://")===0||/[?&]app=1/.test(location.search)||sessionStorage.getItem("onsapp")==="1";
-if(A){sessionStorage.setItem("onsapp","1");document.documentElement.classList.add("app")}}catch(e){}</script>
+if(A){sessionStorage.setItem("onsapp","1");document.documentElement.classList.add("app");var vm=document.querySelector('meta[name="viewport"]');if(vm)vm.setAttribute("content","width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")}}catch(e){}</script>
 <script>/* Telegram mini app: menyu tugmasi (#tgWebApp...) orqali ochilganda yoki shu sessiyada avval ochilgan bo'lsa. Alohida dizayn (html.tg), TV bo'limi yo'q */
 try{if(/tgWebApp/.test(location.hash)||sessionStorage.getItem("onstg")==="1"){sessionStorage.setItem("onstg","1");window.__TG=1;var _d=document.documentElement;_d.classList.add("tg");_d.classList.remove("app");sessionStorage.removeItem("onsapp")}}catch(e){}</script>
 <style>
@@ -519,6 +519,7 @@ th();w.onEvent("themeChanged",th);}}catch(e){}});}
 </script>
 
 <style id="appskin">
+html.app{touch-action:pan-x pan-y;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 html.app{--bg:#0a0a0a;--card:#18181b;--line:#27272a;--tx:#f4f4f5;--mu:#a1a1aa;--ac:#c6ff3d;--live:#ff5a5f;--pill:#c6ff3d;--onp:#0a0a0a}
 html.app[data-theme="light"]{--bg:#f4f4f5;--card:#ffffff;--line:#e4e4e7;--tx:#0a0a0a;--mu:#71717a;--ac:#4d8a00;--live:#e5383b}
 html.app body{padding-bottom:96px}
@@ -580,6 +581,49 @@ html.app #sp .dt i:nth-child(3){animation-delay:.4s}
 @keyframes spr{0%{width:150px;height:150px;opacity:.45}100%{width:340px;height:340px;opacity:0}}
 @keyframes spd{0%,100%{opacity:.25}50%{opacity:1}}
 @media(prefers-reduced-motion:reduce){html.app #sp .rg,html.app #sp .dt i{animation:none}}
+/* === APK: kreativ dizayn (faqat html.app) — yirik jonli o'yin kartasi, bilet ko'rinishidagi o'yinlar, dastur chizig'i bor TV kartalari === */
+.tvpb,.tvpt,.tvlv{display:none}
+html.app .pt{position:relative}
+html.app .pt::after{content:"";position:absolute;right:-2px;top:-8px;width:84px;height:54px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 84 54' fill='none' stroke='%238a8a93' stroke-width='1.5'%3E%3Crect x='2' y='2' width='80' height='50' rx='3'/%3E%3Cline x1='42' y1='2' x2='42' y2='52'/%3E%3Ccircle cx='42' cy='27' r='10'/%3E%3Crect x='2' y='16' width='12' height='22'/%3E%3Crect x='70' y='16' width='12' height='22'/%3E%3C/svg%3E") no-repeat center/contain;opacity:.35;pointer-events:none}
+html.app .lg{border-radius:24px}
+html.app .m{grid-template-columns:1fr 88px 1fr;padding:12px 14px}
+html.app .m .c{position:relative;border-radius:0;border-left:1.5px dashed var(--line);border-right:1.5px dashed var(--line);padding:4px 6px}
+html.app .m .c::before,html.app .m .c::after{content:"";position:absolute;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:var(--bg)}
+html.app .m .c::before{top:-18px}
+html.app .m .c::after{bottom:-18px}
+html.app .m .c.live{border:0;border-radius:16px}
+html.app .m .c.live::before,html.app .m .c.live::after{display:none}
+html.app .lhero{margin:10px 16px;background:var(--pill);color:var(--onp);border-radius:26px;padding:14px 16px 12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+html.app .lhp{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:800;letter-spacing:.8px}
+html.app .lhp span{display:flex;align-items:center;gap:6px}
+html.app .lhp i{width:8px;height:8px;border-radius:50%;background:var(--onp);animation:lvp 1.4s infinite}
+html.app .lhs{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+html.app .lhc{position:relative;width:48px;height:48px;border-radius:50%;background:var(--onp);color:var(--pill);display:grid;place-items:center;overflow:hidden;font:800 12px system-ui}
+html.app .lhc img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:9px;box-sizing:border-box;background:var(--onp)}
+html.app .lhn{font-size:46px;font-weight:800;letter-spacing:-1.5px;line-height:1;font-variant-numeric:tabular-nums}
+html.app .lht{display:flex;justify-content:space-between;gap:10px;font-size:13px;font-weight:700;margin-top:8px}
+html.app .lht span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html.app .lhb{height:4px;border-radius:2px;background:rgba(10,10,10,.18);margin-top:12px;overflow:hidden}
+html.app .lhb i{display:block;height:100%;background:var(--onp);border-radius:2px}
+html.app .tvlist{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 12px}
+html.app .tvit{position:relative;display:grid;grid-template-columns:34px minmax(0,1fr);column-gap:9px;row-gap:0;align-items:center;padding:12px;border:0;border-radius:22px}
+html.app .tvit:first-child{grid-column:1/-1;padding:14px}
+html.app .tvtx{display:contents}
+html.app .tvlogo{width:34px;height:34px;border-radius:10px}
+html.app .tvtx b{font-size:13px;padding-right:46px}
+html.app .tvtx small{grid-column:1/-1;margin-top:9px;font-size:12px}
+html.app .tvit:first-child .tvtx b{font-size:15px}
+html.app .tvit:first-child .tvtx small{font-size:15px;font-weight:600;color:var(--tx);margin-top:11px}
+html.app .tvtx small span{white-space:normal}
+html.app .tvpb{display:block;grid-column:1/-1;height:3px;border-radius:2px;background:var(--line);margin-top:9px;overflow:hidden}
+html.app .tvpb i{display:block;height:100%;background:var(--ac);border-radius:2px;margin:0;width:auto}
+html.app .tvpt{display:flex;grid-column:1/-1;justify-content:space-between;font-size:11px;color:var(--mu);margin-top:4px;font-variant-numeric:tabular-nums}
+html.app .tvgo{position:absolute;right:12px;bottom:12px;width:30px;height:30px;border:0;background:var(--pill);color:var(--onp)}
+html.app .tvit:hover .tvgo{background:var(--pill);color:var(--onp)}
+html.app .tvit:first-child .tvgo{bottom:30px}
+html.app .tvlv{display:flex;align-items:center;gap:4px;position:absolute;top:12px;right:12px;background:var(--live);color:#fff;font-size:9px;font-weight:800;letter-spacing:.6px;border-radius:99px;padding:3px 8px}
+html.app .tvlv i{width:5px;height:5px;border-radius:50%;background:#fff;animation:lvp 1.4s infinite}
+
 </style>
 <style id="tgskin">
 /* TELEGRAM MINI APP — "Stadion kechasi": Telegram mavzu rangi + gradient, futbol maydoni naqshli sarlavha, tepada tag-chiziqli menyu,
@@ -988,6 +1032,15 @@ const ord=m=>(m.uz?-1:0)*100+LEAGUES.findIndex(l=>l[0]===m.slug);
 function sortMs(ms){return ms.slice().sort((a,b)=>ord(a)-ord(b)||(a.utc<b.utc?-1:1));}
 function dayMs(d){if(d==="live")return M.filter(isLive);const k=new Date(Date.now()+d*864e5).toLocaleDateString("sv",{timeZone:TZ});return M.filter(m=>dkey(m.utc)===k);}
 
+/* APK: eng yuqorida hozir ketayotgan o'yin yirik yashil kartada */
+function lHero(ms){
+  if(!document.documentElement.classList.contains("app"))return"";
+  const m=ms.find(isLive);if(!m)return"";
+  const n=parseInt(String(m.clk||""),10),pa=m.st==="PAUSED",bar=pa||isFinite(n);
+  const w=pa?50:isFinite(n)?Math.max(0,Math.min(100,Math.round(n/90*100))):0;
+  const ini=x=>esc(String(tn(x)||"").replace(/[^\p{L}\p{N}]/gu,"").slice(0,3).toUpperCase());
+  return `<div class="lhero" data-m="${esc(m.id)}" tabindex="0" role="button"><div class="lhp"><span><i></i>${lang==="ru"?"ПРЯМОЙ ЭФИР":"JONLI"}</span><b>${subOf(m)}</b></div><div class="lhs"><span class="lhc">${ini(m.h)}${img(m.hc)}</span><span class="lhn">${m.hs??0} – ${m.as??0}</span><span class="lhc">${ini(m.a)}${img(m.ac)}</span></div><div class="lht"><span>${esc(tn(m.h))}</span><span>${esc(tn(m.a))}</span></div>${bar?`<div class="lhb"><i style="width:${w}%"></i></div>`:""}</div>`;
+}
 function renderMatches(){
   PUT("#days").innerHTML=[["-1",T("yest")],["0",T("today")],["1",T("tom")]].map(([k,v])=>`<button class="chip ${k==String(day)?"on":""}" data-d="${k}">${v}</button>`).join("")+`<button class="chip lvc ${day==="live"?"on":""}" data-d="live"><span class="ld"></span>${T("tabLive")}<i>${M.filter(isLive).length}</i></button>`;
   const all=sortMs(dayMs(day)),comps=[...new Set(all.map(m=>m.comp))];
@@ -999,7 +1052,8 @@ function renderMatches(){
     const nw=new Date().toISOString(),up=sortMs(M.filter(m=>m.utc>nw&&m.st==="TIMED")).sort((a,b)=>a.utc<b.utc?-1:1).slice(0,10);
     PUT("#out").innerHTML=`<div class="empty">${day==="live"?T("nolive"):T("nogames")}</div>`+(up.length?`<h3 class="sec">${T("soon")}</h3>`+cards(up,true):"");
     return;}
-  PUT("#out").innerHTML=cards(cf==="*"?all:all.filter(m=>m.comp===cf),false);
+  const shown=cf==="*"?all:all.filter(m=>m.comp===cf);
+  PUT("#out").innerHTML=lHero(shown)+cards(shown,false);
 }
 
 
@@ -1432,7 +1486,7 @@ function tvLogos(o,w,v,lg,slot){
   if(window.ResizeObserver)new ResizeObserver(lay).observe(w);
   addEventListener("resize",lay);
 }
-function closeEfir(){try{screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock()}catch(e){}try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}tvHbStop();if(_pl){try{_pl.destroy();}catch(e){}_pl=null;}const o=document.getElementById("efp");if(o)o.remove();}
+function closeEfir(){try{screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock()}catch(e){}try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}tvHbStop();if(_pl){try{_pl.destroy();}catch(e){}_pl=null;}const o=document.getElementById("efp");if(o){window._efT=Date.now();o.remove();}}
 function tsInfo(b){
   let o=-1;for(let i=0;i<Math.min(b.length-376,1500);i++){if(b[i]===0x47&&b[i+188]===0x47&&b[i+376]===0x47){o=i;break;}}
   if(o<0)return null;
@@ -1515,14 +1569,14 @@ async function openEfir(id){
   const v=o.querySelector("#efv"),msg=o.querySelector("#efm"),src=WORKER+"/p?id="+encodeURIComponent(id);
   if(String(id).indexOf("t_")===0){   /* faqat ONSPORTS TV: videoni o'rab, ustiga logotiplar qatlamini qo'yamiz */
     const w=document.createElement("div");w.style.cssText="position:relative;flex:1;min-height:0;display:flex;background:#000";
-    v.parentNode.insertBefore(w,v);w.appendChild(v);
+    v.parentNode.insertBefore(w,v);w.appendChild(v);w.appendChild(msg);o._w=w;
     const lg=document.createElement("div");lg.style.cssText="position:absolute;inset:0;pointer-events:none;overflow:hidden";w.appendChild(lg);
     {const x=o.querySelector("#efx"),hb=document.createElement("div"),bs="background:#2a3550;color:#fff;border:0;border-radius:8px;padding:6px 12px;font:700 16px system-ui;cursor:pointer";
     hb.style.cssText="display:flex;gap:8px";
     if(w.requestFullscreen){   /* to'liq ekranda ham logo ko'rinishi uchun: videoning o'zi emas, qatlam to'liq ekranga chiqadi */
       v.setAttribute("controlsList","nofullscreen");
       const fs=document.createElement("button");fs.textContent="\u26F6";fs.setAttribute("aria-label","To'liq ekran");fs.style.cssText=bs;
-      fs.onclick=()=>{if(document.fullscreenElement)document.exitFullscreen();else w.requestFullscreen();};
+      fs.onclick=()=>{o._ign=true;setTimeout(()=>{o._ign=false},900);if(document.fullscreenElement)document.exitFullscreen();else w.requestFullscreen();};
       hb.append(fs);
     }
     /* telefon: burish tugmasi — bosilsa ekran yonga buriladi, yana bosilsa tik holatga qaytadi */
@@ -1534,6 +1588,7 @@ async function openEfir(id){
         if(rot&&H>W)o.style.cssText=base+";inset:auto;top:0;left:100%;width:"+H+"px;height:"+W+"px;transform-origin:0 0;transform:rotate(90deg)";   /* qulf ishlamasa (iPhone) oynani o'zimiz yonga aylantiramiz */
         else o.style.cssText=base;};
       rb.onclick=async()=>{
+        o._ign=true;setTimeout(()=>{o._ign=false},900);
         rot=!rot;o._rot=rot;if(o._pgd)o._pgd();
         if(rot){
           try{if(w.requestFullscreen&&!document.fullscreenElement){await w.requestFullscreen();fsOwn=true;}}catch(_){}
@@ -1547,6 +1602,12 @@ async function openEfir(id){
       };
       addEventListener("resize",fit);addEventListener("orientationchange",fit);
       hb.append(rb);
+      if(document.documentElement.classList.contains("app")){   /* APK: kanal bosilishi bilan avtomatik yonga burilib to'liq ekran */
+        o._auto=1;
+        const onFs=()=>{if(!o.isConnected){document.removeEventListener("fullscreenchange",onFs);return;}if(!document.fullscreenElement&&!o._ign)closeEfir();};   /* orqaga tugmasi to'liq ekrandan chiqaradi — shu bilan efir ham yopilib, TV bo'limiga qaytamiz */
+        document.addEventListener("fullscreenchange",onFs);
+        rb.onclick();
+      }
     }
     o._hb=hb;}
     if(!e.o)tvLogos(o,w,v,lg,SLOT);   /* M3U dagi asl kanallarda sayt logotipi qo'yilmaydi */
@@ -1611,7 +1672,7 @@ async function openEfir(id){
   const TX=tvTx(),wn=document.createElement("div");
   wn.style.cssText="display:none;position:absolute;left:0;right:0;top:calc(50% + 62px);z-index:4;margin:0 auto;width:min(300px,86%);box-sizing:border-box;background:#2b1a27;border:1px solid #3d2234;border-radius:12px;padding:12px 14px;text-align:center;color:#eef2fa;font:500 14px/1.35 system-ui";
   wn.innerHTML='<div style="font-size:15px">'+TX.wt+'</div><div style="font-size:12px;color:#8a98b5;margin-top:3px">'+TX.ws+'</div><button type="button" style="margin-top:10px;width:100%;background:#e5484d;color:#fff;border:0;border-radius:8px;padding:8px 12px;font:500 14px system-ui;cursor:pointer">'+TX.rt+'</button>';
-  o.appendChild(wn);
+  (o._w||o).appendChild(wn);
   let wt=0;
   const warnHide=()=>{clearTimeout(wt);wt=0;wn.style.display="none";};
   const warnArm=()=>{clearTimeout(wt);wt=setTimeout(()=>{wt=0;if(o.isConnected&&!on&&!DBG)wn.style.display="block";},5000);};
@@ -1891,7 +1952,8 @@ function tvRender(){
   /* kanalning asl logotipi (M3U tvg-logo); http bo'lsa https ga o'tkaziladi (sayt https da, aks holda brauzer bloklaydi); yuklanmasa bosh harflar */
   const lg=u=>String(u||"").replace(/^http:\/\//i,"https://");
   const now=x=>{const t=Date.now(),z=(x.pg||[]).find(q=>q[1]>t);if(z)return`<i></i><time>${hm(z[0])}</time><span>${esc(z[2])}</span>`;const m=(x.mt||[])[0];return`<i></i><span>${m?esc(m):"Jonli efir"}</span>`};
-  const card=x=>`<button class="tvit" data-n="${esc(String(x.name||"").toLowerCase())}" data-ef="${esc(x.id)}" aria-label="${esc(x.name)} — jonli efirni ko'rish"><span class="tvlogo${x.logo?"":" ini"}">${x.logo?`<img src="${esc(lg(x.logo))}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="var p=this.parentNode;p.className='tvlogo ini';p.textContent='${ini(x.name)}'">`:ini(x.name)}</span><span class="tvtx"><b>${esc(x.name)}</b><small>${now(x)}</small></span><span class="tvgo">${PL}</span></button>`;
+  const prg=x=>{const t=Date.now(),z=(x.pg||[]).find(q=>q[0]<=t&&q[1]>t);if(!z)return"";const p=Math.max(0,Math.min(100,(t-z[0])/(z[1]-z[0])*100));return`<span class="tvpb"><i style="width:${p.toFixed(1)}%"></i></span><span class="tvpt"><time>${hm(z[0])}</time><time>${hm(z[1])}</time></span>`;};
+  const card=x=>`<button class="tvit" data-n="${esc(String(x.name||"").toLowerCase())}" data-ef="${esc(x.id)}" aria-label="${esc(x.name)} — jonli efirni ko'rish"><span class="tvlogo${x.logo?"":" ini"}">${x.logo?`<img src="${esc(lg(x.logo))}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="var p=this.parentNode;p.className='tvlogo ini';p.textContent='${ini(x.name)}'">`:ini(x.name)}</span><span class="tvtx"><b>${esc(x.name)}</b><small>${now(x)}</small>${prg(x)}</span><span class="tvgo">${PL}</span><span class="tvlv"><i></i>JONLI</span></button>`;
   const html=`<h2 class="pt">TELEKANALLAR</h2><p class="tvsub">${L.length?`Sport kanallari: ${L.length} ta`:"Hozircha kanal yo'q"}</p>`+(L.length>8?`<input id="tvq" class="tvq" type="search" placeholder="Kanal qidirish…" autocomplete="off" value="${esc(tvq)}">`:"")+(L.length?`<div class="tvlist">${L.map(card).join("")}</div>`:`<div class="empty">Hozircha kanallar qo'shilmagan.</div>`);
   if(box.dataset.h!==html){box.innerHTML=html;box.dataset.h=html}
   tvFilter();
@@ -1991,7 +2053,7 @@ document.addEventListener("click",e=>{
 });
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape"&&(curM||curN))closeMatch();
-  else if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches(".m[data-m]")){e.preventDefault();openMatch(e.target.dataset.m);}
+  else if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches(".m[data-m],.lhero[data-m]")){e.preventDefault();openMatch(e.target.dataset.m);}
 });
 /* HAVOLALAR (onsports.uz/...): har bir sahifa/o'yin/xabar/jadval o'z manziliga ega.
    /  /oyinlar  /oyinlar/kun/1  /oyin/401234  /xabar/ab12cd  /jadval/esp.1  /tv      (eski #oyinlar/... havolalar ham ishlaydi) */
@@ -2085,6 +2147,8 @@ let lastLiveN=-1;setInterval(()=>{const n=M.filter(isLive).length;if(lastLiveN!=
     if(leaving||!armed||!(e.state&&e.state.root))return;
     const mo=document.getElementById("mo");
     guard();
+    const ef=document.getElementById("efp");
+    if(ef||Date.now()-(window._efT||0)<800){if(ef&&typeof closeEfir==="function")closeEfir();return;}   /* efir oynasi ochiq bo'lsa (yoki hozirgina yopilgan bo'lsa) orqaga = TV bo'limiga qaytish */
     if(mo&&!mo.hidden&&typeof closeMatch==="function"){closeMatch();return;}
     txt();X.hidden=false;q(".y").focus();
   });
@@ -2105,6 +2169,45 @@ let lastLiveN=-1;setInterval(()=>{const n=M.filter(isLive).length;if(lastLiveN!=
     }else if(b||e.target===X)X.hidden=true;
   });
   addEventListener("keydown",e=>{if(e.key==="Escape"&&!X.hidden)X.hidden=true;});
+})();
+</script>
+<script>
+/* APK / o'rnatilgan ilova: internet bo'lmasa sayt ochilmaydi (keshdan eski sahifa ko'rinmaydi); barmoq bilan yaqinlashtirish o'chirilgan */
+(function(){
+  try{
+    var d=document.documentElement;if(!d.classList.contains("app"))return;
+    ["gesturestart","gesturechange","gestureend"].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault()},{passive:false})});
+    document.addEventListener("touchmove",function(e){if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false});
+    var ru=function(){return typeof lang!=="undefined"&&lang==="ru"};
+    var el=document.createElement("div");el.id="nonet";
+    el.style.cssText="display:none;position:fixed;inset:0;z-index:2147483000;background:#0a0a0a;color:#f4f4f5;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;font:500 15px/1.4 system-ui,sans-serif";
+    document.body.appendChild(el);
+    var shown=false,busy=false,iv=0;
+    var paint=function(){
+      el.innerHTML='<div style="font:500 20px/1 system-ui;letter-spacing:2px;margin-bottom:26px">ONSPORTS<span style="color:#c6ff3d">.UZ</span></div>'
+       +'<svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#c6ff3d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8.8a15 15 0 0 1 4.2-2.6M22 8.8a15 15 0 0 0-9.4-4.7"/><path d="M5 12.5a10 10 0 0 1 3.5-2.2M19 12.5a10 10 0 0 0-5.6-2.9"/><path d="M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19.5" r=".8" fill="#c6ff3d"/><path d="M3 3l18 18"/></svg>'
+       +'<div style="font:500 18px system-ui;margin-top:16px">'+(ru()?"Нет интернета":"Internet yo'q")+'</div>'
+       +'<div style="font:400 14px/1.4 system-ui;color:#a1a1aa;margin-top:6px;max-width:280px">'+(ru()?"Подключитесь к интернету, чтобы открыть сайт.":"Saytga kirish uchun internetga ulaning.")+'</div>'
+       +'<button type="button" style="margin-top:22px;background:#c6ff3d;color:#0a0a0a;border:0;border-radius:99px;padding:12px 28px;font:500 15px system-ui;cursor:pointer">'+(ru()?"Повторить":"Qayta urinish")+'</button>';
+      el.querySelector("button").onclick=check;
+    };
+    var show=function(){if(shown)return;shown=true;paint();el.style.display="flex";document.body.style.overflow="hidden";iv=setInterval(check,15000);};
+    var hide=function(){if(!shown)return;shown=false;el.style.display="none";document.body.style.overflow="";clearInterval(iv);location.reload();};   /* internet qaytdi — sahifa yangidan ochiladi */
+    var probe=function(){return new Promise(function(res){
+      var c=window.AbortController?new AbortController():null,t=setTimeout(function(){if(c)c.abort();res(false)},8000);
+      fetch((typeof WORKER!=="undefined"?WORKER:"")+"/tvlogo?_="+Date.now(),{cache:"no-store",mode:"no-cors",signal:c?c.signal:undefined}).then(function(){clearTimeout(t);res(true)},function(){clearTimeout(t);res(false)});
+    });};
+    function check(){
+      if(busy)return;busy=true;
+      var done=function(ok){busy=false;if(ok)hide();else show();};
+      if(navigator.onLine===false){done(false);return;}
+      probe().then(done);
+    }
+    addEventListener("offline",function(){show()});
+    addEventListener("online",check);
+    document.addEventListener("visibilitychange",function(){if(!document.hidden)check()});
+    check();
+  }catch(e){}
 })();
 </script>
 <script>
