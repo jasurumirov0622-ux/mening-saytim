@@ -325,6 +325,24 @@ body{background:radial-gradient(900px 420px at 10% -8%,rgba(47,208,138,.13),tran
 .tvcard.off .tvlive i{animation:none;opacity:.6}
 .tvcard.off .tvpl{display:none}
 @media(max-width:520px){.tvgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 12px}.tvst{height:104px}.tvbdg{font-size:20px;padding:6px 14px}.tvin{padding:10px 11px 12px}.tvin b{font-size:13px;white-space:normal}.tvsub{margin-left:12px}}
+
+/* === TV bo'limi: A dizayn — ixcham ro'yxat, kanalning asl logotipi bilan === */
+.tvlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:10px;margin:14px 16px}
+.tvit{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--tx);font:inherit;text-align:left;cursor:pointer;transition:border-color .2s,transform .2s}
+.tvit:hover{border-color:var(--ac);transform:translateY(-1px)}
+.tvlogo{flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:11px;background:#fff;overflow:hidden}
+.tvlogo img{width:100%;height:100%;object-fit:contain;padding:5px;box-sizing:border-box}
+.tvlogo.ini{background:color-mix(in srgb,var(--ac) 14%,var(--card));color:var(--ac);font:800 15px system-ui}
+.tvtx{min-width:0;flex:1}
+.tvtx b{display:block;font-size:14.5px;font-weight:700;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tvtx small{display:flex;align-items:center;gap:6px;margin-top:3px;font-size:12.5px;color:var(--mu);min-width:0}
+.tvtx small span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tvtx small i{flex:none;width:6px;height:6px;border-radius:50%;background:var(--live)}
+.tvtx small time{flex:none;font-weight:700;color:var(--tx);font-variant-numeric:tabular-nums}
+.tvgo{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--ac);color:var(--ac);transition:background .2s,color .2s}
+.tvgo svg{width:15px;height:15px;fill:currentColor;margin-left:2px}
+.tvit:hover .tvgo{background:var(--ac);color:#052015}
+@media(max-width:520px){.tvlist{grid-template-columns:1fr;margin:12px}}
 .tvb{display:inline-flex;align-items:center;gap:8px;margin-left:auto;padding:9px 14px 9px 12px;border-radius:99px;font-weight:800;font-size:13px;letter-spacing:.3px;color:#fff;background:linear-gradient(135deg,#e5484d,#ff7a45);box-shadow:0 6px 18px rgba(229,72,77,.35);transition:transform .2s,box-shadow .2s}
 .tvb svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .tvb .lv{width:8px;height:8px;border-radius:50%;background:#fff;animation:lvp 1.4s infinite}
@@ -1818,13 +1836,16 @@ function tvRender(){
     if(!l.length)return`<small>Efirni ko'rish</small>`;
     return`<span class="tvsch">`+l.map(z=>`<span class="tvrow${z[0]<=t?" now":""}"><time>${hm(z[0])}</time><span>${esc(z[2])}</span></span>`).join("")+`</span>`;};
   const ini=n=>esc(String(n||"TV").replace(/[^\p{L}\p{N} ]/gu,"").trim().split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase()||"TV");
-  const card=(x,i)=>`<button class="tvcard c${i%4+1}" data-n="${esc(String(x.name||"").toLowerCase())}" data-ef="${esc(x.id)}" aria-label="${esc(x.name)} — jonli efirni ko'rish"><span class="tvst">${PITCH}${x.logo?`<img class="tvlg" src="${esc(x.logo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.outerHTML='<span class=&quot;tvbdg&quot;>${ini(x.name)}</span>'">`:`<span class="tvbdg">${ini(x.name)}</span>`}<span class="tvlive"><i></i>JONLI</span><span class="tvpl">${PL}</span></span><span class="tvin"><b>${esc(x.name)}</b>${sch(x)}</span></button>`;
-  const html=`<h2 class="pt">TELEKANALLAR</h2><p class="tvsub">${L.length?`Sport kanallari: ${L.length} ta`:"Hozircha kanal yo'q"}</p>`+(L.length>8?`<input id="tvq" class="tvq" type="search" placeholder="Kanal qidirish…" autocomplete="off" value="${esc(tvq)}">`:"")+(L.length?`<div class="tvgrid">${L.map(card).join("")}</div>`:`<div class="empty">Hozircha kanallar qo'shilmagan.</div>`);
+  /* kanalning asl logotipi (M3U tvg-logo); http bo'lsa https ga o'tkaziladi (sayt https da, aks holda brauzer bloklaydi); yuklanmasa bosh harflar */
+  const lg=u=>String(u||"").replace(/^http:\/\//i,"https://");
+  const now=x=>{const t=Date.now(),z=(x.pg||[]).find(q=>q[0]<=t&&q[1]>t);return z?`<i></i><time>${hm(z[0])}</time><span>${esc(z[2])}</span>`:`<i></i><span>Jonli efir</span>`};
+  const card=x=>`<button class="tvit" data-n="${esc(String(x.name||"").toLowerCase())}" data-ef="${esc(x.id)}" aria-label="${esc(x.name)} — jonli efirni ko'rish"><span class="tvlogo${x.logo?"":" ini"}">${x.logo?`<img src="${esc(lg(x.logo))}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="var p=this.parentNode;p.className='tvlogo ini';p.textContent='${ini(x.name)}'">`:ini(x.name)}</span><span class="tvtx"><b>${esc(x.name)}</b><small>${now(x)}</small></span><span class="tvgo">${PL}</span></button>`;
+  const html=`<h2 class="pt">TELEKANALLAR</h2><p class="tvsub">${L.length?`Sport kanallari: ${L.length} ta`:"Hozircha kanal yo'q"}</p>`+(L.length>8?`<input id="tvq" class="tvq" type="search" placeholder="Kanal qidirish…" autocomplete="off" value="${esc(tvq)}">`:"")+(L.length?`<div class="tvlist">${L.map(card).join("")}</div>`:`<div class="empty">Hozircha kanallar qo'shilmagan.</div>`);
   if(box.dataset.h!==html){box.innerHTML=html;box.dataset.h=html}
   tvFilter();
 }
 let tvq="";
-function tvFilter(){const q=tvq.trim().toLowerCase();document.querySelectorAll("#tvbox .tvcard").forEach(c=>{c.style.display=q&&!(c.dataset.n||"").includes(q)?"none":""});}
+function tvFilter(){const q=tvq.trim().toLowerCase();document.querySelectorAll("#tvbox .tvit").forEach(c=>{c.style.display=q&&!(c.dataset.n||"").includes(q)?"none":""});}
 document.addEventListener("input",e=>{if(e.target&&e.target.id==="tvq"){tvq=e.target.value;tvFilter();}});
 async function loadTV(){
   if(window.__TG)return;
