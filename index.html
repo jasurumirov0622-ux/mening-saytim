@@ -1604,7 +1604,7 @@ function tvHbStart(id){if(_hbOn||String(id).indexOf("t_")!==0)return;_hbOn=true;
 function tvHbStop(){if(!_hbOn)return;_hbOn=false;clearInterval(_hbT);tvPing(true);}
 addEventListener("pagehide",tvHbStop);
 /* TV efirdagi logotiplar: bot orqali joylashtiriladi; joylashuv Telegram efiri (onsports.py) bilan bir xil */
-function tvLogos(o,w,v,lg,slot){
+function tvLogos(o,w,v,lg,slot,m3u){
   const els={};let cfg=[];
   const lay=()=>{
     const W=w.clientWidth,H=w.clientHeight;
@@ -1615,7 +1615,7 @@ function tvLogos(o,w,v,lg,slot){
   const load=async()=>{
     try{
       const r=await fetch(WORKER+"/tvlogo");if(!r.ok)return;
-      cfg=((await r.json()).items||[]).filter(c=>!c.c||c.c===slot); /* c=0 — hammasida, c=1–4 — faqat shu kanalda */
+      cfg=((await r.json()).items||[]).filter(c=>m3u?(c.c===200||c.c===slot):(!c.c||c.c===slot)); /* ONSPORTS TV 1–4: c=0 hammasi, c=1–4 shu kanal; M3U kanallar: c=101+ shu kanal, c=200 barcha M3U */
       const ids=new Set(cfg.map(c=>String(c.id)));
       Object.keys(els).forEach(k=>{if(!ids.has(k)){els[k].remove();delete els[k];}});
       cfg.forEach(c=>{
@@ -1756,7 +1756,7 @@ async function openEfir(id){
       }
     }
     o._hb=hb;}
-    if(!e.o)tvLogos(o,w,v,lg,SLOT);   /* M3U dagi asl kanallarda sayt logotipi qo'yilmaydi */
+    tvLogos(o,w,v,lg,e.o?100+(e.pi||0):SLOT,!!e.o);   /* M3U kanallarda faqat botda shu kanalga biriktirilgan logolar chiqadi */
     /* faqat jonli rejim: standart boshqaruv (vaqt, surish chizig'i, pauza) olib tashlanadi; faqat ovoz va to'liq ekran qoladi */
     v.removeAttribute("controls");v.controls=false;
     v.addEventListener("contextmenu",e=>e.preventDefault());
@@ -2086,7 +2086,7 @@ function tvRender(){
   const d=TVD;
   /* M3U dagi sport kanallari: worker d.channels=[{id,name,logo,g}] qaytaradi; nom va logotip asl holida ko'rsatiladi */
   const L=(d.channels||[]).filter(x=>x&&x.id);   /* ro'yxatni worker (TV_PICK) belgilaydi; guruh bo'yicha qayta filtr yo'q */
-  TVC={};L.forEach(x=>{TVC[x.id]={k:x.k,h:x.name||"TV",a:"",s:0,o:1,l:x.logo||""}});
+  TVC={};L.forEach(x=>{TVC[x.id]={k:x.k,h:x.name||"TV",a:"",s:0,o:1,pi:x.pi||0,l:x.logo||""}});
   const PL='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5z"/></svg>';
   const PITCH='<svg class="tvpitch" viewBox="0 0 200 128" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect x="10" y="10" width="180" height="108" rx="4"/><line x1="100" y1="10" x2="100" y2="118"/><circle cx="100" cy="64" r="24"/><rect x="10" y="38" width="26" height="52"/><rect x="164" y="38" width="26" height="52"/></svg>';
   const hm=ms=>new Date(ms).toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit",timeZone:"Asia/Tashkent"});
