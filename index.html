@@ -162,6 +162,16 @@ header{background:none;backdrop-filter:none;border:0;padding:0}
 .mh .t{flex-direction:column;text-align:center;gap:6px}
 .mh .t img{width:44px;height:44px}
 .mh .t b{white-space:normal}
+.pbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 16px 0;padding:9px 14px;border-radius:14px;background:var(--card);color:var(--mu);font-size:13px}
+.pbar button,.pbtn{border:0;border-radius:99px;background:var(--pill,var(--ac));color:var(--onp,#04130c);font-weight:700;font-size:12px;padding:7px 14px;cursor:pointer;flex:none}
+.prp{margin:12px 0 0;padding:12px;border:1px solid var(--line);border-radius:16px;text-align:center;font-size:13px;color:var(--mu)}
+.prp .sc{display:flex;justify-content:center;align-items:center;gap:8px;margin:10px 0}
+.prp input{width:54px;height:46px;text-align:center;font-size:22px;font-weight:700;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--tx)}
+.prp input.nm{width:100%;max-width:220px;height:38px;font-size:14px;font-weight:400;margin-bottom:10px}
+.plink{border:0;background:none;color:var(--ac);font-size:13px;cursor:pointer;padding:7px 10px}
+.prr{display:grid;grid-template-columns:32px 1fr auto;gap:8px;align-items:center;padding:9px 4px;border-top:1px solid var(--line);font-size:14px}
+.prr i{font-style:normal;font-weight:700;color:var(--ac)}
+.tvk{display:block;font-style:normal;font-size:9px;font-weight:700;letter-spacing:.6px;color:var(--ac);margin-top:1px}
 .fv{border:0;background:none;color:var(--mu);font-size:20px;line-height:1;cursor:pointer;padding:2px 6px;-webkit-tap-highlight-color:transparent}
 .fv.on{color:#f5b301}
 .shw{display:flex;justify-content:center;margin:12px 0 0}
@@ -1034,7 +1044,8 @@ const bdg=()=>`<i class="pw" title="${esc(T("penw"))}">✓</i>`;
 /* ===== Mening jamoam (sevimli jamoalar, qurilmada saqlanadi) ===== */
 let FAV=[];try{FAV=JSON.parse(localStorage.getItem("fav1")||"[]");if(!Array.isArray(FAV))FAV=[];}catch(e){FAV=[];}
 const favHas=n=>FAV.includes(nk(n));
-function favToggle(n){const k=nk(n);if(!k)return;const i=FAV.indexOf(k);if(i>=0)FAV.splice(i,1);else FAV.push(k);try{localStorage.setItem("fav1",JSON.stringify(FAV));}catch(e){}}
+let FAVN={};try{FAVN=JSON.parse(localStorage.getItem("fav1n")||"{}")||{};}catch(e){FAVN={};}
+function favToggle(n){const k=nk(n);if(!k)return;const i=FAV.indexOf(k);if(i>=0){FAV.splice(i,1);delete FAVN[k];}else{FAV.push(k);FAVN[k]=String(n);}try{localStorage.setItem("fav1",JSON.stringify(FAV));localStorage.setItem("fav1n",JSON.stringify(FAVN));}catch(e){}if(typeof pushSync==="function")pushSync();}
 function favSec(ms){
   const ru=lang==="ru";
   if(!FAV.length){
@@ -1043,6 +1054,72 @@ function favSec(ms){
   }
   const f=ms.filter(m=>favHas(m.h)||favHas(m.a));
   return f.length?cards(f.map(m=>({...m,comp:"\u2605 "+(ru?"Моя команда":"Mening jamoam")})),false):"";
+}
+/* ===== Bildirishnomalar: sevimli jamoa gol urganda (sayt orqali, Web Push) ===== */
+const PUSHOK=("serviceWorker" in navigator)&&("PushManager" in window)&&("Notification" in window);
+const pushFlag=()=>{try{return localStorage.getItem("os_push")==="1";}catch(e){return false;}};
+const b64uArr=s=>{const b=atob((s+"=".repeat((4-s.length%4)%4)).replace(/-/g,"+").replace(/_/g,"/"));return Uint8Array.from(b,c=>c.charCodeAt(0));};
+const swActive=reg=>new Promise((ok,no)=>{if(reg.active)return ok(reg);const w=reg.installing||reg.waiting;if(!w)return no(new Error("sw"));w.addEventListener("statechange",()=>{if(w.state==="activated")ok(reg);else if(w.state==="redundant")no(new Error("sw"));});});
+const pushReg=async()=>swActive(await navigator.serviceWorker.register("/push-sw.js",{scope:"/__push/"}));
+async function pushPost(sub){await fetch(WORKER+"/push/sub",{method:"POST",body:JSON.stringify({sub:sub.toJSON(),fav:Object.values(FAVN).slice(0,30),lang}),keepalive:true});}
+async function pushOn(){
+  if(!PUSHOK)return false;
+  if(await Notification.requestPermission()!=="granted")return false;
+  const reg=await pushReg();
+  let sub=await reg.pushManager.getSubscription();
+  if(!sub){const k=(await(await fetch(WORKER+"/push/key")).json()).key;sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64uArr(k)});}
+  await pushPost(sub);try{localStorage.setItem("os_push","1");}catch(e){}return true;
+}
+async function pushOff(){
+  try{const reg=await navigator.serviceWorker.getRegistration("/__push/"),sub=reg&&await reg.pushManager.getSubscription();if(sub){await fetch(WORKER+"/push/unsub",{method:"POST",body:JSON.stringify({endpoint:sub.endpoint})}).catch(()=>{});await sub.unsubscribe();}}catch(e){}
+  try{localStorage.removeItem("os_push");}catch(e){}
+}
+let _psT=0;
+function pushSync(){if(!PUSHOK||!pushFlag())return;clearTimeout(_psT);_psT=setTimeout(async()=>{try{const reg=await navigator.serviceWorker.getRegistration("/__push/"),sub=reg&&await reg.pushManager.getSubscription();if(sub)await pushPost(sub);}catch(e){}},1500);}
+function pushBar(){
+  if(!PUSHOK||Notification.permission==="denied")return"";
+  const ru=lang==="ru",on=pushFlag();
+  if(!on&&!FAV.length)return"";
+  return `<div class="pbar"><span>${on?(ru?"Уведомления о голах включены":"Gol bildirishnomalari yoqilgan"):(ru?"Получайте уведомление, когда любимая команда забивает":"Sevimli jamoangiz gol urganda xabar oling")}</span><button type="button" ${on?"data-pshoff":"data-pshon"}>${on?(ru?"Выключить":"O'chirish"):(ru?"Включить":"Yoqish")}</button></div>`;
+}
+/* ===== Bashorat o'yini: hisobni toping, ball yig'ing (natijalar worker da hisoblanadi) ===== */
+function uidOf(){let id="";try{id=localStorage.getItem("os_uid")||"";if(!id){id=Math.random().toString(36).slice(2,12)+Date.now().toString(36);localStorage.setItem("os_uid",id);}}catch(e){}return id||"anon"+Math.random().toString(36).slice(2,10);}
+let NICK="";try{NICK=localStorage.getItem("os_nick")||"";}catch(e){}
+const PR={};let PRD={};
+const prOk=m=>/^e\d+$/.test(String(m.id));
+async function prLoad(ids){try{const r=await fetch(WORKER+"/pred/my?u="+encodeURIComponent(uidOf())+"&ids="+ids.join(","));const d=await r.json();Object.assign(PR,d.p||{});}catch(e){}}
+function prBar(){const ru=lang==="ru";return `<div class="pbar"><span>${ru?"Игра прогнозов: откройте матч и угадайте счёт":"Bashorat o'yini: o'yinni oching va hisobni toping"}</span><button type="button" data-prt>${ru?"Рейтинг":"Reyting"}</button></div>`;}
+function prPanel(m){
+  if(!prOk(m))return"";
+  const ru=lang==="ru",mine=PR[m.id],up=m.st==="TIMED"&&!isLive(m)&&Date.parse(m.utc)>Date.now(),d=PRD.id===m.id?PRD:null;
+  const top=`<button type="button" class="plink" data-prt>${ru?"Рейтинг":"Reyting"}</button>`;
+  if(up){
+    const vh=d?d.h:(mine?mine[0]:""),va=d?d.a:(mine?mine[1]:"");
+    return `<div class="prp"><div>${ru?"Угадайте счёт: точный — 3 балла, исход — 1 балл":"Hisobni toping: aniq hisob — 3 ball, natija — 1 ball"}</div><div class="sc"><input id="prh" type="number" inputmode="numeric" min="0" max="20" value="${esc(vh)}" aria-label="${esc(tn(m.h))}"><span>–</span><input id="pra" type="number" inputmode="numeric" min="0" max="20" value="${esc(va)}" aria-label="${esc(tn(m.a))}"></div>${NICK?"":`<input id="prn" class="nm" maxlength="16" placeholder="${ru?"Ваше имя":"Ismingiz"}" value="${esc(d?d.n:"")}">`}<button type="button" class="pbtn" data-prs>${mine?(ru?"Изменить":"O'zgartirish"):(ru?"Сохранить прогноз":"Bashorat qilish")}</button>${top}</div>`;
+  }
+  if(mine)return `<div class="prp">${ru?"Ваш прогноз":"Sizning bashoratingiz"}: <b>${mine[0]} – ${mine[1]}</b>${mine[2]!=null?` · +${mine[2]} ${ru?"б.":"ball"}`:(m.st==="FINISHED"?` · ${ru?"считается":"hisoblanmoqda"}`:"")}<br>${top}</div>`;
+  return "";
+}
+async function prSave(){
+  const m=M.find(x=>x.id===curM);if(!m)return;
+  const ru=lang==="ru",h=($("#prh").value||"").trim(),a=($("#pra").value||"").trim(),nEl=$("#prn"),hv=+h,av=+a;
+  if(h===""||a===""||!Number.isInteger(hv)||!Number.isInteger(av)||hv<0||av<0||hv>20||av>20){alert(ru?"Введите счёт от 0 до 20":"Hisobni 0 dan 20 gacha kiriting");return;}
+  const nick=nEl?nEl.value.trim():NICK;
+  try{
+    const r=await fetch(WORKER+"/pred/set",{method:"POST",body:JSON.stringify({u:uidOf(),n:nick||NICK||"",id:m.id,h:hv,a:av,ko:m.utc})}),d=await r.json();
+    if(r.ok&&d.ok){PR[m.id]=[hv,av,null];if(nick&&nick!==NICK){NICK=nick;try{localStorage.setItem("os_nick",nick);}catch(e){}}PRD={};paintModal();return;}
+    alert(d.err==="late"?(ru?"Матч уже начался":"O'yin allaqachon boshlangan"):(ru?"Не удалось сохранить":"Saqlab bo'lmadi"));
+  }catch(e){alert(ru?"Нет соединения":"Internet bilan muammo");}
+}
+async function openTop(){
+  const ru=lang==="ru",mc=$("#mc"),ttl=`<div class="mcomp">${ru?"Рейтинг прогнозов":"Bashorat reytingi"}</div>`;
+  curM=null;curN=null;clearInterval(mt);$("#mo").hidden=false;document.body.style.overflow="hidden";
+  mc.innerHTML=ttl+`<div class="empty" style="padding:18px">${T("loading")}</div>`;
+  try{
+    const d=await(await fetch(WORKER+"/pred/top?u="+encodeURIComponent(uidOf()))).json();
+    const rows=(d.top||[]).map((x,i)=>`<div class="prr"><span>${i+1}</span><b>${esc(x.n)}</b><i>${x.p}</i></div>`).join("");
+    mc.innerHTML=ttl+(rows||`<div class="empty" style="padding:18px">${ru?"Рейтинг пока пуст":"Hozircha reyting bo'sh"}</div>`)+(d.me?`<div class="prp">${ru?"Ваше место":"Sizning o'rningiz"}: <b>${d.me.rank}</b> · ${d.me.p} ${ru?"б.":"ball"}</div>`:"")+`<div class="prp">${ru?"Точный счёт — 3 балла, верный исход (победа/ничья) — 1 балл":"Aniq hisob — 3 ball, to'g'ri natija (g'alaba/durang) — 1 ball"}</div>`;
+  }catch(e){mc.innerHTML=ttl+`<div class="empty" style="padding:18px">${ru?"Не удалось загрузить":"Yuklab bo'lmadi"}</div>`;}
 }
 /* ===== Ulashish: o'yin kartasi rasmi (canvas) → Telegram va boshqa ilovalar ===== */
 function shareMatch(){
@@ -1083,12 +1160,12 @@ function cards(ms,dt){
   const lc={};ms.forEach(m=>{if(isLive(m))lc[m.comp]=(lc[m.comp]||0)+1});
   let comp=null,h="";
   for(const m of ms){
-    const live=isLive(m),done=m.st==="FINISHED",off=m.st==="POSTPONED"||m.st==="CANCELLED",pw=penWin(m);
+    const live=isLive(m),done=m.st==="FINISHED",off=m.st==="POSTPONED"||m.st==="CANCELLED",pw=penWin(m),tvk=EFIR[m.id]&&!done&&!off?'<em class="tvk">TV</em>':"";
     if(m.comp!==comp){if(comp!==null)h+="</div>";comp=m.comp;
       h+=`<div class="lg"><div class="lgh"><b>${esc(comp)}</b>${lc[comp]?`<em>${lc[comp]} ${T("live1")}</em>`:""}</div>`;}
     const mid=live||done
-      ?`<div class="c ${live?"live":""}">${m.hs??0} – ${m.as??0}<small>${subOf(m)}</small>${pnOf(m)}</div>`
-      :`<div class="c">${off?"–":tm(m.utc)}<small>${off?(m.st==="POSTPONED"?T("postp"):T("canc")):dt?dshort(m.utc):""}</small></div>`;
+      ?`<div class="c ${live?"live":""}">${m.hs??0} – ${m.as??0}<small>${subOf(m)}</small>${pnOf(m)}${tvk}</div>`
+      :`<div class="c">${off?"–":tm(m.utc)}<small>${off?(m.st==="POSTPONED"?T("postp"):T("canc")):dt?dshort(m.utc):""}</small>${tvk}</div>`;
     const k=live||done||m.st==="TIMED";
     h+=`<div class="m ${live?"lv":""} ${k?"k":""}"${k?` data-m="${esc(m.id)}" tabindex="0" role="button"`:""}><div class="t r"><b>${esc(tn(m.h))}</b>${pw==="h"?bdg():""}${img(m.hc)}</div>${mid}<div class="t">${img(m.ac)}<b>${esc(tn(m.a))}</b>${pw==="a"?bdg():""}</div></div>`;
   }
@@ -1119,7 +1196,7 @@ function renderMatches(){
     PUT("#out").innerHTML=`<div class="empty">${day==="live"?T("nolive"):T("nogames")}</div>`+(up.length?`<h3 class="sec">${T("soon")}</h3>`+cards(up,true):"");
     return;}
   const shown=cf==="*"?all:all.filter(m=>m.comp===cf);
-  PUT("#out").innerHTML=lHero(shown)+favSec(shown)+cards(shown,false);
+  PUT("#out").innerHTML=lHero(shown)+favSec(shown)+pushBar()+prBar()+cards(shown,false);
 }
 
 
@@ -1212,12 +1289,13 @@ function formHtml(m,d){
 }
 function paintModal(){
   const m=M.find(x=>x.id===curM);if(!m)return;
+  {const eh=document.getElementById("prh");if(eh)PRD={id:m.id,h:eh.value,a:(document.getElementById("pra")||{}).value||"",n:(document.getElementById("prn")||{}).value||""};}
   const d=SM[m.id]||null,lv=isLive(m),up=m.st==="TIMED"&&!lv,pw=penWin(m);
   const mid=up?`<div class="c">${tm(m.utc)}<small>${dshort(m.utc)}</small></div>`
     :`<div class="c ${isLive(m)?"live":""}">${m.hs??0} – ${m.as??0}<small>${subOf(m)}</small>${pnOf(m)}</div>`;
   let h=`<div class="mcomp">${esc(m.comp)} · ${dshort(m.utc)}, ${tm(m.utc)}</div>`
    +`<div class="mh"><div class="t">${img(m.hc)}<b>${esc(tn(m.h))}</b><button type="button" class="fv${favHas(m.h)?" on":""}" data-fv="h" aria-pressed="${favHas(m.h)}" aria-label="${lang==="ru"?"Моя команда":"Mening jamoam"}">\u2605</button></div>${mid}<div class="t">${img(m.ac)}<b>${esc(tn(m.a))}</b><button type="button" class="fv${favHas(m.a)?" on":""}" data-fv="a" aria-pressed="${favHas(m.a)}" aria-label="${lang==="ru"?"Моя команда":"Mening jamoam"}">\u2605</button></div></div>`
-   +`<div class="shw"><button type="button" class="shr" data-shr>${lang==="ru"?"Поделиться":"Ulashish"}</button></div>`;
+   +`<div class="shw"><button type="button" class="shr" data-shr>${lang==="ru"?"Поделиться":"Ulashish"}</button></div>`+prPanel(m);
   if(pw)h+=`<div style="display:flex;justify-content:center;margin-top:10px"><span class="pwr">${bdg()}<b>${esc(tn(pw==="h"?m.h:m.a))}</b> <small style="color:var(--mu)">— ${esc(T("penw"))}</small></span></div>`;
   const sr=up?"":statRows(m,d),hh=up?h2hHtml(m,d):"",fm=up?formHtml(m,d):"",sf=SF[m.id];
   const tabs=[];
@@ -1492,6 +1570,7 @@ function openMatch(id,t){
   curM=id;mTab=t||null;mFT="h";$("#mo").hidden=false;document.body.style.overflow="hidden";
   setUrl(matchPath(id,t));
   paintModal();loadSum();clearInterval(mt);
+  if(prOk({id}))prLoad([id]).then(()=>{if(curM===id)paintModal();});
   mt=setInterval(()=>{const m=M.find(x=>x.id===curM);if(m&&isLive(m)&&!document.hidden&&!window.__sumBusy){window.__sumBusy=1;loadSum().finally(()=>{window.__sumBusy=0;});}},3000);
 }
 /* ===== Jonli efir: tashqi havola (yangi oynada ochiladi) ===== */
@@ -2106,6 +2185,10 @@ document.addEventListener("click",e=>{
   if(fvb){const m0=M.find(x=>x.id===curM);if(m0){favToggle(fvb.dataset.fv==="h"?m0.h:m0.a);paintModal();try{renderMatches();}catch(_){}}return;}
   if(e.target.closest("[data-fvx]")){try{localStorage.setItem("os_fvh","1");}catch(_){}try{renderMatches();}catch(_){}return;}
   if(e.target.closest("[data-shr]")){shareMatch();return;}
+  if(e.target.closest("[data-prs]")){prSave();return;}
+  if(e.target.closest("[data-prt]")){openTop();return;}
+  if(e.target.closest("[data-pshon]")){const ru=lang==="ru";pushOn().then(ok=>{if(!ok)alert(ru?"Разрешите уведомления в настройках браузера":"Bildirishnomaga ruxsat bering (brauzer sozlamalarida)");try{renderMatches();}catch(_){}}).catch(()=>{alert(ru?"Не удалось включить уведомления":"Bildirishnomani yoqib bo'lmadi");});return;}
+  if(e.target.closest("[data-pshoff]")){pushOff().then(()=>{try{renderMatches();}catch(_){}});return;}
   const nw=e.target.closest("[data-n]");if(nw){e.preventDefault();openNews(nw.dataset.n);return;}
   const d=e.target.closest("[data-d]"),c=e.target.closest("[data-c]"),l=e.target.closest("[data-l]");
   const tb=e.target.closest("[data-tab]"),mm=e.target.closest("[data-m]");
