@@ -162,6 +162,12 @@ header{background:none;backdrop-filter:none;border:0;padding:0}
 .mh .t{flex-direction:column;text-align:center;gap:6px}
 .mh .t img{width:44px;height:44px}
 .mh .t b{white-space:normal}
+.fv{border:0;background:none;color:var(--mu);font-size:20px;line-height:1;cursor:pointer;padding:2px 6px;-webkit-tap-highlight-color:transparent}
+.fv.on{color:#f5b301}
+.shw{display:flex;justify-content:center;margin:12px 0 0}
+.shr{border:1px solid var(--line);background:none;color:var(--tx);border-radius:99px;padding:8px 18px;font-size:13px;cursor:pointer}
+.fvh{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 16px 0;padding:10px 14px;border:1px dashed var(--line);border-radius:14px;color:var(--mu);font-size:13px}
+.fvh button{border:0;background:none;color:var(--mu);font-size:20px;line-height:1;cursor:pointer}
 .mh .pwr{display:flex;align-items:center;gap:6px}
 .sec2{margin:20px 0 8px;font-size:13px;color:var(--mu);font-weight:700;letter-spacing:.5px;text-transform:uppercase;text-align:center}
 .ev{display:grid;grid-template-columns:1fr 56px 1fr;gap:8px;align-items:center;padding:7px 0;border-top:1px solid var(--line);font-size:14px}
@@ -1025,6 +1031,54 @@ const subOf=m=>isLive(m)?(m.pk?T("pens"):m.st==="PAUSED"?T("pause"):esc(m.clk)||
 const pnOf=m=>m.pen?`<small class="pn">${T("pen")} ${m.hp??0} – ${m.ap??0}</small>`:"";
 const penWin=m=>m.pen&&m.st==="FINISHED"&&m.hp!=null&&m.ap!=null?(m.hp>m.ap?"h":m.ap>m.hp?"a":""):"";
 const bdg=()=>`<i class="pw" title="${esc(T("penw"))}">✓</i>`;
+/* ===== Mening jamoam (sevimli jamoalar, qurilmada saqlanadi) ===== */
+let FAV=[];try{FAV=JSON.parse(localStorage.getItem("fav1")||"[]");if(!Array.isArray(FAV))FAV=[];}catch(e){FAV=[];}
+const favHas=n=>FAV.includes(nk(n));
+function favToggle(n){const k=nk(n);if(!k)return;const i=FAV.indexOf(k);if(i>=0)FAV.splice(i,1);else FAV.push(k);try{localStorage.setItem("fav1",JSON.stringify(FAV));}catch(e){}}
+function favSec(ms){
+  const ru=lang==="ru";
+  if(!FAV.length){
+    let hid=0;try{hid=localStorage.getItem("os_fvh");}catch(e){}
+    return hid||!ms.length?"":`<div class="fvh"><span>\u2605 ${ru?"Отметьте любимую команду: откройте матч и нажмите \u2605":"Sevimli jamoangizni belgilang: o'yinni oching va \u2605 ni bosing"}</span><button type="button" data-fvx aria-label="${ru?"Закрыть":"Yopish"}">\u00d7</button></div>`;
+  }
+  const f=ms.filter(m=>favHas(m.h)||favHas(m.a));
+  return f.length?cards(f.map(m=>({...m,comp:"\u2605 "+(ru?"Моя команда":"Mening jamoam")})),false):"";
+}
+/* ===== Ulashish: o'yin kartasi rasmi (canvas) → Telegram va boshqa ilovalar ===== */
+function shareMatch(){
+  const m=M.find(x=>x.id===curM);if(!m)return;
+  const ru=lang==="ru",lv=isLive(m),done=m.st==="FINISHED",W=1080,H=1350;
+  const c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");
+  x.fillStyle="#0a0a0a";x.fillRect(0,0,W,H);
+  x.strokeStyle="#1f1f23";x.lineWidth=4;x.strokeRect(70,640,940,640);x.beginPath();x.moveTo(540,640);x.lineTo(540,1280);x.stroke();x.beginPath();x.arc(540,960,110,0,7);x.stroke();
+  x.textAlign="center";x.textBaseline="alphabetic";
+  x.font="800 64px system-ui,sans-serif";const w1=x.measureText("ONSPORTS").width,w2=x.measureText(".UZ").width,x0=540-(w1+w2)/2;
+  x.textAlign="left";x.fillStyle="#fff";x.fillText("ONSPORTS",x0,130);x.fillStyle="#c6ff3d";x.fillText(".UZ",x0+w1,130);
+  x.textAlign="center";x.fillStyle="#a1a1aa";x.font="600 38px system-ui,sans-serif";x.fillText(String(m.comp||""),540,230);
+  const fit=(t,max,fs)=>{x.font=`800 ${fs}px system-ui,sans-serif`;while(x.measureText(t).width>max&&fs>24){fs-=2;x.font=`800 ${fs}px system-ui,sans-serif`;}return t;};
+  const ini=n=>String(tn(n)||"").replace(/[^\p{L}\p{N}]/gu,"").slice(0,3).toUpperCase();
+  [[m.h,230],[m.a,850]].forEach(([n,cx])=>{
+    x.fillStyle="#c6ff3d";x.beginPath();x.arc(cx,430,120,0,7);x.fill();
+    x.fillStyle="#0a0a0a";x.font="800 70px system-ui,sans-serif";x.fillText(ini(n),cx,455);
+    x.fillStyle="#fff";x.fillText(fit(String(tn(n)),400,48),cx,620);
+  });
+  x.fillStyle="#f4f4f5";
+  if(lv||done){x.font="800 150px system-ui,sans-serif";x.fillText(`${m.hs??0} – ${m.as??0}`,540,470);}
+  else{x.font="800 130px system-ui,sans-serif";x.fillText(tm(m.utc),540,470);}
+  const sub=lv?(m.pk?(ru?"Пенальти":"Penaltilar"):m.st==="PAUSED"?(ru?"Перерыв":"Tanaffus"):String(m.clk||(ru?"В эфире":"Jonli"))):done?(ru?"Матч завершён":"Yakunlandi"):dshort(m.utc);
+  if(lv){x.fillStyle="#c6ff3d";const bw=Math.max(260,x.measureText(sub).width+80);x.font="800 44px system-ui,sans-serif";const w=x.measureText(sub).width+90;x.beginPath();x.roundRect?x.roundRect(540-w/2,520,w,76,38):x.rect(540-w/2,520,w,76);x.fill();x.fillStyle="#0a0a0a";x.fillText(sub,540,574);}
+  else{x.fillStyle="#a1a1aa";x.font="700 46px system-ui,sans-serif";x.fillText(sub,540,570);}
+  x.fillStyle="#c6ff3d";x.font="800 52px system-ui,sans-serif";x.fillText("onsports.uz",540,1230);
+  const link=location.origin+BASE+matchPath(m.id),txt=`${tn(m.h)} – ${tn(m.a)} | ONSPORTS.UZ`;
+  const fallback=()=>{const u="https://t.me/share/url?url="+encodeURIComponent(link)+"&text="+encodeURIComponent(txt);try{if(window.Telegram&&Telegram.WebApp&&Telegram.WebApp.openTelegramLink){Telegram.WebApp.openTelegramLink(u);return;}}catch(e){}window.open(u,"_blank","noopener");};
+  c.toBlob(b=>{
+    try{
+      if(b&&navigator.canShare){const f=new File([b],"onsports-match.png",{type:"image/png"});if(navigator.canShare({files:[f]})){navigator.share({files:[f],title:txt,text:txt+"\n"+link}).catch(()=>{});return;}}
+      if(navigator.share){navigator.share({title:txt,text:txt,url:link}).catch(()=>{});return;}
+    }catch(e){}
+    fallback();
+  },"image/png");
+}
 function cards(ms,dt){
   const lc={};ms.forEach(m=>{if(isLive(m))lc[m.comp]=(lc[m.comp]||0)+1});
   let comp=null,h="";
@@ -1065,7 +1119,7 @@ function renderMatches(){
     PUT("#out").innerHTML=`<div class="empty">${day==="live"?T("nolive"):T("nogames")}</div>`+(up.length?`<h3 class="sec">${T("soon")}</h3>`+cards(up,true):"");
     return;}
   const shown=cf==="*"?all:all.filter(m=>m.comp===cf);
-  PUT("#out").innerHTML=lHero(shown)+cards(shown,false);
+  PUT("#out").innerHTML=lHero(shown)+favSec(shown)+cards(shown,false);
 }
 
 
@@ -1162,7 +1216,8 @@ function paintModal(){
   const mid=up?`<div class="c">${tm(m.utc)}<small>${dshort(m.utc)}</small></div>`
     :`<div class="c ${isLive(m)?"live":""}">${m.hs??0} – ${m.as??0}<small>${subOf(m)}</small>${pnOf(m)}</div>`;
   let h=`<div class="mcomp">${esc(m.comp)} · ${dshort(m.utc)}, ${tm(m.utc)}</div>`
-   +`<div class="mh"><div class="t">${img(m.hc)}<b>${esc(tn(m.h))}</b></div>${mid}<div class="t">${img(m.ac)}<b>${esc(tn(m.a))}</b></div></div>`;
+   +`<div class="mh"><div class="t">${img(m.hc)}<b>${esc(tn(m.h))}</b><button type="button" class="fv${favHas(m.h)?" on":""}" data-fv="h" aria-pressed="${favHas(m.h)}" aria-label="${lang==="ru"?"Моя команда":"Mening jamoam"}">\u2605</button></div>${mid}<div class="t">${img(m.ac)}<b>${esc(tn(m.a))}</b><button type="button" class="fv${favHas(m.a)?" on":""}" data-fv="a" aria-pressed="${favHas(m.a)}" aria-label="${lang==="ru"?"Моя команда":"Mening jamoam"}">\u2605</button></div></div>`
+   +`<div class="shw"><button type="button" class="shr" data-shr>${lang==="ru"?"Поделиться":"Ulashish"}</button></div>`;
   if(pw)h+=`<div style="display:flex;justify-content:center;margin-top:10px"><span class="pwr">${bdg()}<b>${esc(tn(pw==="h"?m.h:m.a))}</b> <small style="color:var(--mu)">— ${esc(T("penw"))}</small></span></div>`;
   const sr=up?"":statRows(m,d),hh=up?h2hHtml(m,d):"",fm=up?formHtml(m,d):"",sf=SF[m.id];
   const tabs=[];
@@ -2047,6 +2102,10 @@ document.addEventListener("click",e=>{
     openEfir(ei);return;}
   const tgb=e.target.closest("[data-tvg]");if(tgb){tvg=tgb.dataset.tvg;renderTV();return;}
   const nfb=e.target.closest("[data-nf]");if(nfb){nf=nfb.dataset.nf;renderNews();return;}
+  const fvb=e.target.closest("[data-fv]");
+  if(fvb){const m0=M.find(x=>x.id===curM);if(m0){favToggle(fvb.dataset.fv==="h"?m0.h:m0.a);paintModal();try{renderMatches();}catch(_){}}return;}
+  if(e.target.closest("[data-fvx]")){try{localStorage.setItem("os_fvh","1");}catch(_){}try{renderMatches();}catch(_){}return;}
+  if(e.target.closest("[data-shr]")){shareMatch();return;}
   const nw=e.target.closest("[data-n]");if(nw){e.preventDefault();openNews(nw.dataset.n);return;}
   const d=e.target.closest("[data-d]"),c=e.target.closest("[data-c]"),l=e.target.closest("[data-l]");
   const tb=e.target.closest("[data-tab]"),mm=e.target.closest("[data-m]");
