@@ -1992,7 +1992,7 @@ async function loadTable(slug){
     const d=await jget(`${ESPN2}${slug}/standings`);
     const ch=d.children||[];
     const g=(e,n)=>{const s=(e.stats||[]).find(x=>x.name===n);return s?s.value:null;};
-    ch.forEach((cd,ci)=>{((cd.standings||{}).entries||[]).forEach((e,i)=>rows.push({pos:g(e,"rank")??i+1,n:(e.team||{}).shortDisplayName||(e.team||{}).displayName||"",
+    ch.forEach((cd,ci)=>{((cd.standings||{}).entries||[]).forEach((e,i)=>rows.push({id:(e.team||{}).id||"",pos:g(e,"rank")??i+1,n:(e.team||{}).shortDisplayName||(e.team||{}).displayName||"",
       c:(((e.team||{}).logos||[])[0]||{}).href||"",p:g(e,"gamesPlayed")??0,gd:g(e,"pointDifferential")??0,pts:g(e,"points")??0,
       gi:ci,grp:ch.length>1?(cd.name||cd.abbreviation||""):""}));});
     rows.sort((a,b)=>a.gi-b.gi||a.pos-b.pos);
@@ -2012,11 +2012,12 @@ function renderTable(){
   paintTabs();
   const c=TB[lg];if(!c)return;
   let h="",last=null;
+  const tidOf=n=>{for(const m of M){if(m.slug!==lg)continue;if(m.h===n&&m.hid)return m.hid;if(m.a===n&&m.aid)return m.aid;}return ""};
   if(c.rows.length){
-    h=`<div class="lgcap">${esc(LN(lg))}</div><div class="row h"><span>#</span><span>${T("team")}</span><span>${T("pl")}</span><span>+/-</span><span>${T("pts")}</span></div>`;
+    h=`<div class="lgcap">${esc(LN(lg))}</div><div class="anote tkh">${lang==="ru"?"Нажмите на команду: ближайшие и последние матчи":"Jamoani bosing: keyingi va oldingi o'yinlari chiqadi"}</div><div class="row h"><span>#</span><span>${T("team")}</span><span>${T("pl")}</span><span>+/-</span><span>${T("pts")}</span></div>`;
     c.rows.forEach(r=>{
       if(r.grp&&r.grp!==last){h+=`<div class="grp">${esc(r.grp)}</div>`;}last=r.grp;
-      h+=`<div class="row"><span>${esc(r.pos)}</span><div class="n">${img(r.c)}<span>${esc(tn(r.n))}</span></div><span>${esc(r.p)}</span><span>${esc(r.gd)}</span><b>${esc(r.pts)}</b></div>`;});
+      const tid=r.id||tidOf(r.n);h+=`<div class="row${tid?" tk":""}"${tid?` data-tm="${esc(lg+"|"+tid+"|"+r.n+"|"+(r.c||""))}" tabindex="0" role="button"`:""}><span>${esc(r.pos)}</span><div class="n">${img(r.c)}<span>${esc(tn(r.n))}</span></div><span>${esc(r.p)}</span><span>${esc(r.gd)}</span><b>${esc(r.pts)}</b></div>`;});
   }else h=`<div class="empty">${T("notable")}</div>`;
   $("#tbl").innerHTML=h;
 }
@@ -2521,5 +2522,13 @@ if(out){new MutationObserver(function(){clearTimeout(build.t);build.t=setTimeout
 document.querySelectorAll(".empty[data-i=loading]").forEach(function(e){e.innerHTML='<div class="sk"></div><div class="sk"></div><div class="sk"></div>'});
 })();
 </script>
+<style id="jt">
+.tkh{margin:0 16px 6px;font-size:12px}
+.row.tk{cursor:pointer;transition:background .15s}
+.row.tk:hover,.row.tk:focus-visible{background:color-mix(in srgb,var(--ac) 9%,transparent)}
+.row.tk:hover .n span{text-decoration:underline}
+.row.tk:focus-visible{outline:2px solid var(--ac);outline-offset:-2px}
+</style>
+<script>document.addEventListener("keydown",function(e){if(e.key!=="Enter"&&e.key!==" ")return;var r=e.target.closest&&e.target.closest(".row.tk");if(r){e.preventDefault();r.click()}});</script>
 </body>
 </html>
