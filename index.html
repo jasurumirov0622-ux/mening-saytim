@@ -736,6 +736,26 @@ html.tg .mt button{color:var(--mu);border-radius:11px;font-weight:700}
 html.tg .mt button.on{background:var(--g);color:var(--onp);box-shadow:0 4px 12px color-mix(in srgb,var(--ac) 35%,transparent)}
 html.tg .efbtn{border-radius:14px}
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>/* YANGI DIZAYN: "Tun stadioni" */
+:root:not([data-theme="light"]){--bg:#070b14;--card:#0e1628;--line:#1c2a47;--mu:#9aa6bf;--ac:#c6ff3d}
+:root[data-theme="light"]{--ac:#0f8f58}
+:root{--hf:"Barlow Condensed","Arial Narrow",system-ui,sans-serif}
+.logo,.pt,.nhero h2,.nbody h3,.hero h2,.nr h4,.lgh,.tgcta b{font-family:var(--hf);text-transform:uppercase;letter-spacing:.01em}
+.logo{font-size:28px;font-weight:800}.nhero h2{font-size:clamp(26px,4vw,46px);line-height:1.05;font-weight:800}
+.nbody h3{font-size:20px;line-height:1.1;font-weight:700}.pt{font-size:30px}
+.bar{border-radius:99px;padding:0 14px}.bar nav a{border-radius:99px}.bar nav a.on{background:var(--ac);color:#0a1a0a}
+.nhero{border-radius:26px;min-height:440px}.ncard,.lg,.card,.tgcta{border-radius:20px}
+.ncard:hover{border-color:var(--ac);transform:translateY(-2px);transition:.15s}
+.chip.on{background:var(--ac);border-color:var(--ac);color:#0a1a0a}
+.m.lv::before{background:var(--live)}.tgcta{background:linear-gradient(135deg,#1c2b10,#0e1628 75%)}
+:root[data-theme="light"] .tgcta{background:linear-gradient(135deg,#e6f7c8,#e6edf8)}
+:root[data-theme="light"] .bar nav a.on{color:#fff}
+.dlb{background:var(--ac);color:#0a1a0a;font-weight:700;font-size:14px;padding:9px 16px;border-radius:99px;text-decoration:none;white-space:nowrap;margin-left:auto}
+:root[data-theme="light"] .dlb{color:#fff}
+html.app .dlb,html.tg .dlb{display:none}
+@media(max-width:820px){.dlb{display:none}.nhero{min-height:320px}.logo{font-size:24px}}
+</style>
 </head>
 <body>
 <script>/* ilova ochilish ekrani (har sessiyada 1 marta) */
@@ -748,7 +768,7 @@ addEventListener("load",function(){setTimeout(_h,Math.max(0,5000-(Date.now()-_t0
 <script>
 /* REKLAMA BANNERI: rasm manzili va havolani shu yerga yozing. img — kompyuter uchun (1200×200), imgM — telefon uchun (800×250; bo'lmasa img ishlatiladi).
    on:false — banner butunlay yashiriladi. img bo'sh bo'lsa — "Reklama joyi" belgisi ko'rinadi. */
-const AD_TOP={on:true,img:"",imgM:"",url:""};
+const AD_TOP={on:false,img:"",imgM:"",url:""};
 /* Reklama joyi bo'sh bo'lsa (img yozilmagan) — slaydlar 10 soniyadan almashadi: asosiy banner → Telegram → Instagram → TikTok → APK ilova.
    Manzillarni shu yerda o'zgartiring. APK havolasini tayyor bo'lganda AD_LINK.apk ga yozing (hozircha Telegram kanal). */
 const AD_MS=10000;   /* har bir slayd necha millisekund turadi */
@@ -832,7 +852,7 @@ function adCarousel(b){
   <a class="logo" href="/"><span>ONSPORTS</span>.UZ</a>
   <nav><a href="#yangilik" data-tab="yangilik" class="on"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg><span data-i="home">Asosiy</span></a><a href="#oyinlar" data-tab="oyinlar"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5l3.6 2.6-1.4 4.2H9.8L8.4 10.1z"/></svg><span data-i="games">O'yinlar</span></a><a href="#jadval" data-tab="jadval"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 10h16M10 10v10"/></svg><span data-i="tab">Jadval</span></a><a class="tgb" href="https://t.me/onsportsuz" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 4L3 11l6 2.2L11 20l3-4.5 4.5 3.3z"/><path d="M9 13.2L21 4"/></svg><span>Telegram</span></a></nav>
   <a href="#tv" data-tab="tv" class="tvb" aria-label="ONSPORTS TV"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="12" rx="3"/><path d="M8 3l4 4 4-4"/></svg><span>TV</span><i class="lv"></i></a>
-  <div class="tools"><input id="sq" type="search" placeholder="Qidirish…" aria-label="Qidirish" hidden><button id="sb" class="ib" aria-label="Qidirish"></button><button id="tb" class="ib" aria-label="Kun/tun rejimi"></button><button id="lb" class="ib lb" aria-label="Til"></button></div>
+  <a class="dlb" href="/onsports_uz.apk" download="onsports.uz.apk">Ilovani yuklab olish</a><div class="tools"><input id="sq" type="search" placeholder="Qidirish…" aria-label="Qidirish" hidden><button id="sb" class="ib" aria-label="Qidirish"></button><button id="tb" class="ib" aria-label="Kun/tun rejimi"></button><button id="lb" class="ib lb" aria-label="Til"></button></div>
 </div></header>
 <script>if(document.documentElement.classList.contains("app")){var _n=document.querySelector(".bar nav"),_t=document.querySelector(".tvb");if(_n&&_t)_n.appendChild(_t)}</script>
 
