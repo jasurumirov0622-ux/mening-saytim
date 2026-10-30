@@ -534,6 +534,24 @@ header{top:0!important}
  #out{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));align-items:start}
  #out>.empty{grid-column:1/-1}
 }
+/* ===== B dizayn: Hozir jonli lenta + jamoa sahifasi ===== */
+.lvt{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);margin:6px 0 2px}
+.lvs{display:flex;gap:10px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none}
+.lvk{flex:none;width:210px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;cursor:pointer}
+.lvh{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:600;color:var(--mu)}
+.lvh em{font-style:normal;background:#c6f432;color:#121a00;border-radius:99px;padding:2px 8px;font-weight:800}
+.lvr{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:600;font-size:14px}
+.lvr span{display:flex;align-items:center;gap:8px;min-width:0}
+.lvr b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lvr i{font-style:normal;color:#c6f432;font-size:24px;font-weight:800;line-height:1}
+.m .t b[data-tm]{cursor:pointer}.m .t b[data-tm]:hover{text-decoration:underline}
+.tph{display:flex;align-items:center;gap:14px;padding:6px 4px 10px}.tph img{width:56px;height:56px}.tph b{font-size:22px;display:block}.tph small{color:var(--mu)}
+.tpf{display:flex;gap:6px;align-items:center;color:var(--mu);font-size:13px;padding:0 4px 4px}
+.tpt{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);padding:14px 4px 4px}
+.tpr{display:grid;grid-template-columns:64px 1fr auto;gap:8px;align-items:center;min-height:44px;padding:0 4px;border-top:1px solid var(--line);font-size:14px;font-weight:600}
+.tpd{color:var(--mu);font-size:12px}.tpo{display:flex;align-items:center;gap:8px;min-width:0}.tps{display:flex;align-items:center;gap:8px;font-weight:800}
+u.fG,u.fD,u.fM{text-decoration:none;width:22px;height:22px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
+u.fG{background:#c6f432;color:#121a00}u.fD{background:#243044;color:#eef2fa}u.fM{background:#ff8a8a;color:#2a0000}
 </style>
 <script>/* Telegram ichida (menyu tugmasi orqali) ochilganda: Telegram skriptini yuklab, oynani to'liq balandlikka yoyadi. Oddiy brauzerda hech narsa yuklanmaydi */
 if(window.__TG||/tgWebApp/.test(location.hash)){document.write('<script src="https://telegram.org/js/telegram-web-app.js"><\/script>');addEventListener("DOMContentLoaded",function(){try{var w=window.Telegram&&Telegram.WebApp;if(w){w.ready();w.expand();
@@ -1167,7 +1185,7 @@ function cards(ms,dt){
       ?`<div class="c ${live?"live":""}">${m.hs??0} – ${m.as??0}<small>${subOf(m)}</small>${pnOf(m)}${tvk}</div>`
       :`<div class="c">${off?"–":tm(m.utc)}<small>${off?(m.st==="POSTPONED"?T("postp"):T("canc")):dt?dshort(m.utc):""}</small>${tvk}</div>`;
     const k=live||done||m.st==="TIMED";
-    h+=`<div class="m ${live?"lv":""} ${k?"k":""}"${k?` data-m="${esc(m.id)}" tabindex="0" role="button"`:""}><div class="t r"><b>${esc(tn(m.h))}</b>${pw==="h"?bdg():""}${img(m.hc)}</div>${mid}<div class="t">${img(m.ac)}<b>${esc(tn(m.a))}</b>${pw==="a"?bdg():""}</div></div>`;
+    h+=`<div class="m ${live?"lv":""} ${k?"k":""}"${k?` data-m="${esc(m.id)}" tabindex="0" role="button"`:""}><div class="t r"><b${tmA(m,"h")}>${esc(tn(m.h))}</b>${pw==="h"?bdg():""}${img(m.hc)}</div>${mid}<div class="t">${img(m.ac)}<b${tmA(m,"a")}>${esc(tn(m.a))}</b>${pw==="a"?bdg():""}</div></div>`;
   }
   return h+(comp!==null?"</div>":"");
 }
@@ -1184,6 +1202,36 @@ function lHero(ms){
   const ini=x=>esc(String(tn(x)||"").replace(/[^\p{L}\p{N}]/gu,"").slice(0,3).toUpperCase());
   return `<div class="lhero" data-m="${esc(m.id)}" tabindex="0" role="button"><div class="lhp"><span><i></i>${lang==="ru"?"ПРЯМОЙ ЭФИР":"JONLI"}</span><b>${subOf(m)}</b></div><div class="lhs"><span class="lhc">${ini(m.h)}${img(m.hc)}</span><span class="lhn">${m.hs??0} – ${m.as??0}</span><span class="lhc">${ini(m.a)}${img(m.ac)}</span></div><div class="lht"><span>${esc(tn(m.h))}</span><span>${esc(tn(m.a))}</span></div>${bar?`<div class="lhb"><i style="width:${w}%"></i></div>`:""}</div>`;
 }
+/* ===== B dizayn: Hozir jonli lenta ===== */
+function liveStrip(){
+  if(day==="live"||document.documentElement.classList.contains("app"))return"";
+  const L=M.filter(isLive);if(!L.length)return"";
+  return `<div class="lvt"><span class="ld"></span>${T("tabLive")}</div><div class="lvs">`+L.map(m=>`<div class="lvk" data-m="${esc(m.id)}" tabindex="0" role="button"><div class="lvh"><span>${esc(m.comp)}</span><em>${subOf(m)}</em></div><div class="lvr"><span>${img(m.hc)}<b>${esc(tn(m.h))}</b></span><i>${m.hs??0}</i></div><div class="lvr"><span>${img(m.ac)}<b>${esc(tn(m.a))}</b></span><i>${m.as??0}</i></div></div>`).join("")+`</div>`;
+}
+/* ===== B dizayn: jamoa sahifasi (jamoa nomini bosganda) ===== */
+const tmA=(m,k)=>{const id=m[k+"id"];return id&&m.slug?` data-tm="${esc(m.slug+"|"+id+"|"+m[k]+"|"+(m[k+"c"]||""))}"`:"";};
+const TPL={uz:{n:"Keyingi 5 o'yin",l:"Oxirgi 5 o'yin",f:"Shakl",e:"Ma'lumot topilmadi"},ru:{n:"Следующие 5 матчей",l:"Последние 5 матчей",f:"Форма",e:"Данные не найдены"}};
+const rl=r=>lang==="ru"?({G:"В",D:"Н",M:"П"}[r]||r):r;
+async function openTeam(slug,id,name,logo){
+  const L=TPL[lang]||TPL.uz,mc=$("#mc");
+  curM=null;curN=null;clearInterval(mt);$("#mo").hidden=false;document.body.style.overflow="hidden";
+  const head=`<div class="tph">${logo?`<img src="${esc(logo)}" alt="">`:""}<div><b>${esc(tn(name))}</b><small>${esc(LN(slug))}</small></div></div>`;
+  mc.innerHTML=head+`<div class="empty" style="padding:18px">${T("loading")}</div>`;
+  let d=null;
+  for(const b of ESPN_B){try{d=await jget(`${b}${slug}/teams/${id}/schedule`);if(d&&d.events)break;}catch(e){}}
+  if(!d||!d.events||!d.events.length){mc.innerHTML=head+`<div class="empty" style="padding:18px">${L.e}</div>`;return;}
+  const ev=[],sv=x=>x.score&&typeof x.score==="object"?x.score.displayValue:x.score;
+  for(const e of d.events){try{
+    const c=(e.competitions||[{}])[0],cs=c.competitors||[],me=cs.find(x=>String((x.team||{}).id)===String(id)),ot=cs.find(x=>x!==me);if(!me||!ot)continue;
+    const st=((c.status||e.status||{}).type||{}).state,ot_=ot.team||{};
+    ev.push({d:e.date,st,home:me.homeAway==="home",o:ot_.shortDisplayName||ot_.displayName||"",oc:ot_.logo||"",a:sv(me),b:sv(ot),r:st==="post"?(me.winner===true?"G":ot.winner===true?"M":"D"):""});
+  }catch(x){}}
+  const nx=ev.filter(x=>x.st==="pre").sort((a,b)=>a.d<b.d?-1:1).slice(0,5),ls=ev.filter(x=>x.st==="post").sort((a,b)=>a.d<b.d?1:-1).slice(0,5);
+  const row=(x,done)=>`<div class="tpr"><span class="tpd">${dshort(x.d)}</span><span class="tpo">${img(x.oc)}<b>${x.home?"":"@ "}${esc(tn(x.o))}</b></span><span class="tps">${done?`${x.a??0}:${x.b??0}<u class="f${x.r}">${rl(x.r)}</u>`:tm(x.d)}</span></div>`;
+  if($("#mo").hidden)return;
+  mc.innerHTML=head+`<div class="tpf">${L.f}: ${ls.slice().reverse().map(x=>`<u class="f${x.r}">${rl(x.r)}</u>`).join("")}</div><div class="tpt">${L.n}</div>${nx.map(x=>row(x,false)).join("")||"–"}<div class="tpt">${L.l}</div>${ls.map(x=>row(x,true)).join("")||"–"}`;
+}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-tm]");if(!b)return;const p=b.dataset.tm.split("|");e.preventDefault();e.stopPropagation();openTeam(p[0],p[1],p[2],p.slice(3).join("|"));},true);
 function renderMatches(){
   PUT("#days").innerHTML=[["-1",T("yest")],["0",T("today")],["1",T("tom")]].map(([k,v])=>`<button class="chip ${k==String(day)?"on":""}" data-d="${k}">${v}</button>`).join("")+`<button class="chip lvc ${day==="live"?"on":""}" data-d="live"><span class="ld"></span>${T("tabLive")}<i>${M.filter(isLive).length}</i></button>`;
   const all=sortMs(dayMs(day)),comps=[...new Set(all.map(m=>m.comp))];
@@ -1196,7 +1244,7 @@ function renderMatches(){
     PUT("#out").innerHTML=`<div class="empty">${day==="live"?T("nolive"):T("nogames")}</div>`+(up.length?`<h3 class="sec">${T("soon")}</h3>`+cards(up,true):"");
     return;}
   const shown=cf==="*"?all:all.filter(m=>m.comp===cf);
-  PUT("#out").innerHTML=lHero(shown)+favSec(shown)+pushBar()+prBar()+cards(shown,false);
+  PUT("#out").innerHTML=liveStrip()+lHero(shown)+favSec(shown)+pushBar()+prBar()+cards(shown,false);
 }
 
 
